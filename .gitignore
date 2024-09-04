@@ -8,6 +8,9 @@ api/logs
 
 db/data
 
+infra/kc_volume/*
+infra/sql_volume
+
 
 # CORE
 .env
