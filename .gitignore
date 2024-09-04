@@ -1,9 +1,9 @@
 # API
-api/.env
-api/api.http
-api/node_modules
-api/docs
-api/logs
+app/.env
+app/api.http
+app/node_modules
+app/docs
+app/logs
 
 
 db/data
@@ -14,3 +14,5 @@ infra/sql_volume
 
 # CORE
 .env
+
+app/API.md
