@@ -1,0 +1,13 @@
+# API
+api/.env
+api/api.http
+api/node_modules
+api/docs
+api/logs
+
+
+db/data
+
+
+# CORE
+.env
