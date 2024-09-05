@@ -1,5 +1,5 @@
-import logger from '../logger/logger.js'
-import { loggerDIC } from '../logger/loggerDic.js'
+const logger = require('./utils/logger/logger.js')
+const  loggerDIC  = require('./utils/logger/loggerDic.js')
 
 /**
  * @param {*} server
@@ -22,9 +22,12 @@ function terminate(server, options = { coredump: false, timeout: 500 }) {
       })
     }
 
-    server.close(exit);
-    setTimeout(exit, options.timeout).unref();
+    console.log(`${code}:${reason}:${err}`)
+
+    // console.log(server)
+    // server.close(exit);
+    // setTimeout(exit, options.timeout).unref();
   };
 }
 
-export default terminate;
+module.exports = terminate;

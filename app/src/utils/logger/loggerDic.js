@@ -1,4 +1,4 @@
-export const loggerDIC = {
+const loggerDIC = {
     error: {
       default: 'Error',
       process: 'Process had error',
@@ -23,3 +23,5 @@ export const loggerDIC = {
     },
   };
   
+
+  module.exports = loggerDIC

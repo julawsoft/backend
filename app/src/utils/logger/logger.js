@@ -1,4 +1,4 @@
-import winston from 'winston';
+const winston = require('winston');
 
 const logger = winston.createLogger({
   format: winston.format.combine(
@@ -16,4 +16,4 @@ const logger = winston.createLogger({
     new winston.transports.File({ filename: './logs/combined.log' }), ],
 });
 
-export default logger;
+module.exports = logger;
