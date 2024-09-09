@@ -1,4 +1,5 @@
-const { Sequelize } = require('sequelize')
+const { Sequelize } = require('sequelize');
+const { ColaboradorEntity } = require('./models/Colaborador');
 
 class SequelizeConnection {
 
@@ -8,7 +9,7 @@ class SequelizeConnection {
         this.instance = new Sequelize('julaw', 'root', 'c9qMGlXD3Mmlvf1Dx0', {
         host: 'db',
         dialect: 'mysql',
-        timestamps: true,
+        // timestamps: true,
       });
     }
   }

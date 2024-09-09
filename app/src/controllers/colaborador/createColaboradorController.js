@@ -3,18 +3,23 @@ const { validationResult } = require('express-validator')
 
 async function createColaboradorController(req, res) {
 
-        const errors = validationResult(req);
-        // if (!errors.isEmpty()) {
-        //     return res.status(400).json({ errors: errors.array() });
-        // }
+        try {
+                const errors = validationResult(req);
+                // if (!errors.isEmpty()) {
+                //     return res.status(400).json({ errors: errors.array() });
+                // }
 
-        const data = req.body
-        console.log("data", data)
+                const data = req.body
+                console.log("data", data)
 
-       await createColaborador(data)
+                await createColaborador(data)
 
-        return res.send("POST SAVE...")
-        
+                return res.send("POST SAVE...")
+        } catch (e) {
+
+        }
+
+
 }
 
 

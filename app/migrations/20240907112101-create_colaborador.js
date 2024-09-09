@@ -18,11 +18,21 @@ module.exports = {
         allowNull: false,
         unique: true,
       },
-      createdAt: {
+      uuid: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        unique: true,
+      },
+      status: {
+        type: Sequelize.ENUM('active', 'inactive', 'pending'),
+        allowNull: false,
+        defaultValue: 'pending',
+      },
+      created_at: {
         allowNull: false,
         type: Sequelize.DATE
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: Sequelize.DATE
       }
