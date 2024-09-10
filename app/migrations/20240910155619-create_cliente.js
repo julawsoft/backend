@@ -2,29 +2,44 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('colaboradores', {
+    await queryInterface.createTable('clientes', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      name_completo: {
+      denominacao: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      name_profissional: {
-        type: Sequelize.STRING,
+      tipo_id: {
+        type: Sequelize.INTEGER,
         allowNull: false,
       },
-      data_nascimento: {
-        type: Sequelize.DATE,
+      nif: {
+        type: Sequelize.STRING,
         allowNull: true
       },
-      uuid: {
+      endereco_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
+      contacto_id: {
+        type: Sequelize.INTEGER,
+        allowNull: true
+      },
+      pessoa_contacto: {
         type: Sequelize.STRING,
-        allowNull: false,
-        unique: true,
+        allowNull: false
+      },
+      contacto_cobranca: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      nota: {
+        type: Sequelize.STRING,
+        allowNull: true
       },
       status: {
         type: Sequelize.ENUM('active', 'inactive', 'pending'),
@@ -42,6 +57,6 @@ module.exports = {
     });
   },
   down: async (queryInterface) => {
-    await queryInterface.dropTable('colaboradores');
+    await queryInterface.dropTable('clientes');
   }
 };

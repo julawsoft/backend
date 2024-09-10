@@ -11,11 +11,27 @@ class Colaborador extends Model {
 
 // lincar com a Table no banco e validar os valores do constructor
 Colaborador.init({
-  name: {
+  id: {
+    type: DataTypes.INTEGER,
+  },
+  name_completo: {
     type: DataTypes.STRING,
     allowNull: false
   },
-  created_at: { // Alterado de 'createdAt' para 'created_at'
+  name_profissional: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  data_nascimento: {
+    type: DataTypes.DATE
+  },
+  uuid: {
+    type: DataTypes.STRING
+  },
+  status: {
+    type: DataTypes.STRING
+  },
+  created_at: { 
     type: DataTypes.DATE,
     allowNull: false
   },

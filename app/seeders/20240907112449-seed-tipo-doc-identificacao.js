@@ -17,13 +17,24 @@ module.exports = {
         updated_at: new Date(),
       },
       {
-        description: 'Ordem dos Advogados',
-        code: 'Ord. Adv',
+        description: 'Cartão de Residente',
+        code: 'C. Residente',
+        created_at: new Date(),
+        updated_at: new Date(),
+      },
+      {
+        description: 'Cédula OAA',
+        code: 'Cédula OAA',
+        created_at: new Date(),
+        updated_at: new Date(),
+      },
+      {
+        description: 'Outro',
+        code: 'Outro',
         created_at: new Date(),
         updated_at: new Date(),
       }
     ], {});
-
   },
   async down(queryInterface, Sequelize) {
     // await queryInterface.bulkDelete('tipo_doc_identificacao', null, {});

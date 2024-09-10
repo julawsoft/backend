@@ -19,6 +19,10 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      description: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
       colaboradorId: {
         type: Sequelize.INTEGER,
         allowNull: true,

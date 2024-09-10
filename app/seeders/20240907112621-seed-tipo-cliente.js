@@ -3,24 +3,34 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    await queryInterface.bulkInsert('tipo_colaboradores', [
+    await queryInterface.bulkInsert('tipo_clientes', [
       {
-        description: 'Administrativo',
+        description: 'Empresa',
         created_at: new Date(),
         updated_at: new Date(),
       },
       {
-        description: 'Advogado - Júnior',
+        description: 'Particular',
         created_at: new Date(),
         updated_at: new Date(),
       },
       {
-        description: 'Advogado - Sénior',
+        description: 'Ministério',
         created_at: new Date(),
         updated_at: new Date(),
       },
       {
-        description: 'Advogado - Estagiário',
+        description: 'Instituto Público',
+        created_at: new Date(),
+        updated_at: new Date(),
+      },
+      {
+        description: 'Associação',
+        created_at: new Date(),
+        updated_at: new Date(),
+      },
+      {
+        description: 'Outro',
         created_at: new Date(),
         updated_at: new Date(),
       },
