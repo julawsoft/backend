@@ -3,17 +3,16 @@ const SequelizeConnection = require('../SequelizeConnection.js');  // Importa a 
 
 const sequelize = SequelizeConnection.getConnection().instance
 
-class Colaborador extends Model {
+class Cliente extends Model {
   static associate(models) {
     // Defina associações, se houver
   }
 }
 
-// lincar com a Table no banco e validar os valores do constructor
-Colaborador.init({}, {
+Cliente.init({}, {
   sequelize,
-  modelName: 'Colaborador',
-  tableName: 'colaboradores',
+  modelName: 'Cliente',
+  tableName: 'clientes',
   createdAt: 'created_at',
   updatedAt: 'updated_at'
 });
@@ -21,10 +20,10 @@ Colaborador.init({}, {
 
 /**
  * @param {string} name - Description
- * @returns {Object} ColaboradorEntity
+ * @returns {Object} ClienteEntity
  */
 async function create({name}) {
-  console.log("AKJSKASJKSJk", name, await Colaborador.create({name}))
+  console.log("AKJSKASJKSJk", name, await Cliente.create({name}))
 }
 
 module.exports = {create};

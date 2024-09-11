@@ -1,7 +1,6 @@
-const createCliente = require('../../services/Cliente/createCliente.js')
 const { validationResult } = require('express-validator')
 
-async function createColaboradoController(req, res) {
+async function createClienteController(req, res) {
 
         try {
                 const errors = validationResult(req);
