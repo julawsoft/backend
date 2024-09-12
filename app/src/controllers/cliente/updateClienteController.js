@@ -1,4 +1,4 @@
-const createCliente = require('../../services/Cliente/createCliente.js')
+const createCliente = require('../../services/cliente/createCliente.js')
 const { validationResult } = require('express-validator')
 
 async function updateClienteController(req, res) {

@@ -16,18 +16,18 @@ module.exports = {
       tipo_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
+        references: {
+          model: 'tipo_cliente',
+          key: 'id',
+        },
       },
       nif: {
         type: Sequelize.STRING,
         allowNull: true
       },
-      endereco_id: {
-        type: Sequelize.INTEGER,
+      endereco: {
+        type: Sequelize.STRING,
         allowNull: false
-      },
-      contacto_id: {
-        type: Sequelize.INTEGER,
-        allowNull: true
       },
       pessoa_contacto: {
         type: Sequelize.STRING,

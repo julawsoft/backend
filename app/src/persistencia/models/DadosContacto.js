@@ -3,46 +3,49 @@ const SequelizeConnection = require('../SequelizeConnection.js');  // Importa a 
 
 const sequelize = SequelizeConnection.getConnection().instance
 
-class TipoCliente extends Model {
-  static associate(models) {
-    // Defina associações, se 
-    // TipoCliente.belongsTo(models.Cliente)
-  }
+class DadosContacto extends Model {
+  static associate(models) {}
 }
 
-TipoCliente.init({
+DadosContacto.init({
+  type: {
+    type: DataTypes.STRING
+  },
+  value: {
+    type: DataTypes.STRING
+  },
   description: {
     type: DataTypes.STRING
   },
-  code: {
-    type: DataTypes.STRING
-  }
+  colaboradorId: {
+    type: DataTypes.NUMBER
+  },
 }, {
   sequelize,
-  modelName: 'TipoCliente',
-  tableName: 'tipo_cliente',
+  modelName: 'DadosContacto',
+  tableName: 'dados_contactos',
   createdAt: 'created_at',
   updatedAt: 'updated_at'
 });
 
 /**
- * @returns {Object} ClienteEntity
+ * @returns {Object}
  */
 async function listAll() {
-  return TipoCliente.findAll()
+  return DadosContacto.findAll()
 }
 
 /**
  * @param id number
- * @returns {Object} TipoCliente
+ * @returns {Object} DadosContacto
  */
 
 async function listById(id) {
-  return await TipoCliente.findOne({where: {id}})
+  return await DadosContacto.findOne({where: {id}})
 }
 
 module.exports = {
     listAll,
     listById,
-    TipoCliente
+    DadosContacto
 };

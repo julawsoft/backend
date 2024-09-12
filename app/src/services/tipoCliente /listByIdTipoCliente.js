@@ -2,7 +2,7 @@ const { listById } = require("../../persistencia/models/TipoCliente.js")
 
 
 /**
- * @param id number
+ * @param {number} id
  */
 async function listByIdTipoCliente (id) {
     try {

@@ -1,21 +1,21 @@
 const express = require('express');
 
-const createClienteController = require('../controllers/Cliente/createClienteController.js')
-const getByIdClienteController = require('../controllers/Cliente/getByIdClienteController.js')
-const getAllClienteController = require('../controllers/Cliente/getAllClienteController.js')
-const updateClienteController = require('../controllers/Cliente/updateClienteController.js')
+const createClienteController = require('../controllers/cliente/createClienteController.js')
+const getByIdClienteController = require('../controllers/cliente/getByIdClienteController.js')
+const getAllClienteController = require('../controllers/cliente/getAllClienteController.js')
+const updateClienteController = require('../controllers/cliente/updateClienteController.js')
 
 const validateCreateCliente = require('../middlewares/validateCreateCliente.js')
 
-const ClienteRouter = express.Router()
+const clienteRouter = express.Router()
 
 const ROUTES_PATH = {
-    INDEX: '/Cliente'
+    INDEX: '/cliente'
 }
 
-ClienteRouter.post(ROUTES_PATH.INDEX, validateCreateCliente, createClienteController)
-ClienteRouter.get(`${ROUTES_PATH.INDEX}:id`, getByIdClienteController)
-ClienteRouter.get(ROUTES_PATH.INDEX, getAllClienteController)
-ClienteRouter.put(ROUTES_PATH.INDEX, validateCreateCliente, updateClienteController)
+clienteRouter.get(ROUTES_PATH.INDEX, getAllClienteController)
+// clienteRouter.get(`${ROUTES_PATH.INDEX}/:id`, getByIdClienteController)
+clienteRouter.post(ROUTES_PATH.INDEX, validateCreateCliente, createClienteController)
+// clienteRouter.put(ROUTES_PATH.INDEX, validateCreateCliente, updateClienteController)
 
-module.exports = ClienteRouter
+module.exports = clienteRouter

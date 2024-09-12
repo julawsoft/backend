@@ -1,24 +1,14 @@
-const createCliente = require('../../services/Cliente/createCliente.js')
+const createCliente = require('../../services/cliente/createCliente.js')
 const { validationResult } = require('express-validator')
 
 async function getByIdClienteController(req, res) {
 
         try {
-                const errors = validationResult(req);
-                // if (!errors.isEmpty()) {
-                //     return res.status(400).json({ errors: errors.array() });
-                // }
-
-                const data = req.body
-                console.log("data", data)
-
-                await createCliente(data)
-
-                return res.send("POST SAVE...")
+                const listClienteData = await getC()
+                return res.send(listClienteData).status(200)
         } catch (e) {
-
+                return res.send(e.getMessage()).status(400)
         }
-
 
 }
 

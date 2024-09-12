@@ -1,23 +1,42 @@
-const { create } = require("../../persistencia/models/Cliente")
+const { create, Cliente } = require("../../persistencia/models/Cliente.js")
+const listByIdTipoCliente = require("../tipoCliente /listByIdTipoCliente.js")
 
-
-async function createCliente () {
-
-    try {
-          /*const newCliente = await Cliente.create({
-        name: 'Anselmo',
-        email: 'acambinza@gmail.com'
-    })
-    */
-
-    //console.log('createCliente Service', newCliente.toJSON())
-    console.log("Cliente service ... ", await create({name: "ansel"}))
-
-    }catch(e){
-        console.log('createCliente Service: ', e.message)
+/**
+* @param {string} denominacao
+* @param {number} tipoId
+* @param {string} nif
+* @param {string} endereco
+* @param {string} pessoaContacto
+* @param {string} contactoCobranca
+* @param {string} nota
+* @param {string} status
+*
+* @returns {Array} Cliente
+*/
+async function createCliente (
+    {
+        denominacao, 
+        tipoId, 
+        nif,
+        endereco,
+        pessoaContacto,
+        contactoCobranca,
+        nota,
+        status
     }
-       
-  
+) {    
+        const newCliente = await create({
+            "denominacao": denominacao,
+            "tipoId": tipoId, 
+            "nif": nif,
+            "endereco": endereco,
+            "pessoaContacto": pessoaContacto,
+            "contactoCobranca": contactoCobranca,
+            "nota": nota,
+            "status": status
+        })
+        let tipoCliente = await  listByIdTipoCliente(newCliente.tipo_id)
+        return {...newCliente.dataValues, tipo: tipoCliente}   
 }
 
 module.exports = createCliente

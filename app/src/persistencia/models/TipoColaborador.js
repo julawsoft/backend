@@ -3,14 +3,11 @@ const SequelizeConnection = require('../SequelizeConnection.js');  // Importa a 
 
 const sequelize = SequelizeConnection.getConnection().instance
 
-class TipoCliente extends Model {
-  static associate(models) {
-    // Defina associações, se 
-    // TipoCliente.belongsTo(models.Cliente)
-  }
+class TipoColaborador extends Model {
+  static associate(models) {}
 }
 
-TipoCliente.init({
+TipoColaborador.init({
   description: {
     type: DataTypes.STRING
   },
@@ -19,30 +16,30 @@ TipoCliente.init({
   }
 }, {
   sequelize,
-  modelName: 'TipoCliente',
-  tableName: 'tipo_cliente',
+  modelName: 'TipoColaborador',
+  tableName: 'tipo_colaboradores',
   createdAt: 'created_at',
   updatedAt: 'updated_at'
 });
 
 /**
- * @returns {Object} ClienteEntity
+ * @returns {Object}
  */
 async function listAll() {
-  return TipoCliente.findAll()
+  return TipoColaborador.findAll()
 }
 
 /**
  * @param id number
- * @returns {Object} TipoCliente
+ * @returns {Object} TipoColaborador
  */
 
 async function listById(id) {
-  return await TipoCliente.findOne({where: {id}})
+  return await TipoColaborador.findOne({where: {id}})
 }
 
 module.exports = {
     listAll,
     listById,
-    TipoCliente
+    TipoColaborador
 };
