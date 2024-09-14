@@ -9,7 +9,9 @@ class DadosContacto extends Model {
 
 DadosContacto.init({
   type: {
-    type: DataTypes.STRING
+    type: DataTypes.ENUM('telefone', 'e-mail', 'endereco', 'outro'),
+    allowNull: false,
+    defaultValue: 'telefone',
   },
   value: {
     type: DataTypes.STRING
@@ -44,8 +46,53 @@ async function listById(id) {
   return await DadosContacto.findOne({where: {id}})
 }
 
+
+/**
+ * @returns {string} chave
+ * @returns {string} valor
+ */
+async function getAllByKeyValue(chave, valor) {
+  return DadosContacto.findAll({
+    where: {
+      [chave]: valor
+    }
+  })
+}
+
+
+/**
+* @param {number} tipo
+* @param {string} valor
+* @param {string} descricao
+* @param {number} colaboradorId
+*
+* @returns {Array} DadosContacto
+*/
+async function create(
+  {
+    tipo,
+    valor,
+    descricao,
+    colaboradorId
+}
+) {
+
+  console.log("here...", tipo)
+
+  return await DadosContacto.create({
+    "type": tipo,
+    "value": valor,
+    "description": descricao,
+    "colaboradorId": colaboradorId
+  })
+}
+
+
+
 module.exports = {
     listAll,
     listById,
+    getAllByKeyValue,
+    create,
     DadosContacto
 };
