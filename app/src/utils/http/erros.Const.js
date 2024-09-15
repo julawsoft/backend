@@ -21,8 +21,14 @@ const DADOS_CONTACTO = {
  }
 
 
+ const DADOS_IDENTIFICACAO = {
+    DADOS_IDENTIFICACAO_CREATED: "Dados Identicacao created successfully",
+    DADOS_IDENTIFICACAO_ERROR_CREATED: "Error to create a new Dados Identicacao"
+ }
+
 module.exports = {
     errosConst, 
     COLABORADOR,
-    DADOS_CONTACTO
+    DADOS_CONTACTO,
+    DADOS_IDENTIFICACAO,
 }

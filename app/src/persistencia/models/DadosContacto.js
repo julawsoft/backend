@@ -77,8 +77,6 @@ async function create(
 }
 ) {
 
-  console.log("here...", tipo)
-
   return await DadosContacto.create({
     "type": tipo,
     "value": valor,

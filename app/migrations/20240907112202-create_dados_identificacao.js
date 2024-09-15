@@ -1,5 +1,7 @@
 'use strict';
 
+const { DataTypes } = require('sequelize');
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -19,6 +21,10 @@ module.exports = {
         },
         onUpdate: 'CASCADE', // Ação em atualizações
         onDelete: 'SET NULL', // Ação em deleções
+      },
+      valor: {
+        type: DataTypes.STRING,
+        allowNull: false,
       },
       data_emissao: {
         type: Sequelize.DATE,

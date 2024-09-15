@@ -24,7 +24,7 @@ TipoDocIdentificacao.init({
 
 /**
  * @returns {Object}
- */
+*/
 async function listAll() {
   return TipoDocIdentificacao.findAll()
 }
@@ -33,8 +33,8 @@ async function listAll() {
  * @param id number
  * @returns {Object} TipoDocIdentificacao
  */
-
 async function listById(id) {
+  console.log("here...", id)
   return await TipoDocIdentificacao.findOne({where: {id}})
 }
 

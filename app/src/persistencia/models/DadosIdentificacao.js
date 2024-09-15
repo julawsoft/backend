@@ -9,7 +9,12 @@ class DadosIdentificacao extends Model {
 
 DadosIdentificacao.init({
   tipo_documento_id: {
-    type: DataTypes.STRING
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  valor: {
+    type: DataTypes.STRING,
+    allowNull: false,
   },
   data_emissao: {
     type: DataTypes.DATE,
@@ -20,7 +25,7 @@ DadosIdentificacao.init({
     allowNull: true
 
   },
-  colaboradorId: {
+  colaborador_id: {
     type: DataTypes.NUMBER
   },
 }, {
@@ -31,24 +36,52 @@ DadosIdentificacao.init({
   updatedAt: 'updated_at'
 });
 
-/**
- * @returns {Object}
- */
-async function listAll() {
-  return DadosIdentificacao.findAll()
-}
 
 /**
- * @param id number
- * @returns {Object} DadosIdentificacao
- */
-
-async function listById(id) {
-  return await DadosIdentificacao.findOne({where: {id}})
+* @param {number} tipoDocumentoId
+* @param {string} valor
+* @param {string} dataEmissao
+* @param {string} dataValidade
+* @param {number} colaboradorId
+*
+* @returns {Array} DadosContacto
+*/
+async function create(
+  {
+    tipoDocumentoId,
+    valor,
+    dataEmissao,
+    dataValidade,
+    colaboradorId
 }
+) {
+
+  return await DadosIdentificacao.create({
+    "tipo_documento_id": tipoDocumentoId,
+    "valor": valor,
+    "data_emissao": dataEmissao,
+    "data_validade": dataValidade,
+    "colaborador_id": colaboradorId
+  })
+}
+
+
+
+/**
+ * @returns {string} chave
+ * @returns {string} valor
+ */
+async function getAllByKeyValue(chave, valor) {
+  return DadosIdentificacao.findAll({
+    where: {
+      [chave]: valor
+    }
+  })
+}
+
 
 module.exports = {
-    listAll,
-    listById,
+    getAllByKeyValue,
+    create,
     DadosIdentificacao
 };
