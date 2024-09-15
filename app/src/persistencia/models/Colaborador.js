@@ -1,14 +1,12 @@
 const { Model, DataTypes } = require('sequelize');
 const SequelizeConnection = require('../SequelizeConnection.js');
 
-console.log("aqui", SequelizeConnection)
-
 const sequelize = SequelizeConnection.getConnection().instance
 
 class Colaborador extends Model {
   static associate(models) {}
 }
-// lincar com a Table no banco e validar os valores do constructor
+
 Colaborador.init({
   id: {
     allowNull: false,
@@ -16,21 +14,38 @@ Colaborador.init({
     primaryKey: true,
     type: DataTypes.INTEGER
   },
-  name_completo: {
+  nome_completo: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  name_profissional: {
+  nome_profissional: {
     type: DataTypes.STRING,
+    allowNull: false,
+  },
+  inicial: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  funcao: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  tipo_colaborador_id: {
+    type: DataTypes.INTEGER,
     allowNull: false,
   },
   data_nascimento: {
     type: DataTypes.DATE,
     allowNull: true
   },
+  token_reset: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
   uuid: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: false,
+    unique: true,
   },
   status: {
     type: DataTypes.ENUM('active', 'inactive', 'pending'),
@@ -52,6 +67,9 @@ Colaborador.init({
  * @param {string} dataNascimento - Description
  * @param {string} uuid - Description
  * @param {string} status - Description
+ * @param {string} funcao - Description
+ * @param {string} tipoColaboradorId - Description
+ * @param {string} inicial - Description
  * @returns {Object} Colaborador
  */
 async function create(
@@ -59,19 +77,23 @@ async function create(
     nomeCompleto, 
     nomeProfissional, 
     dataNascimento,
+    funcao,
+    tipoColaboradorId,
     uuid,
     status,
+    inicial,
   }
 ) {
-  console.log("nomeCompleto >>> ",nomeCompleto)
   return Colaborador.create(
     {
-      "name_completo": nomeCompleto, 
-      "name_profissional": nomeProfissional, 
+      "nome_completo": nomeCompleto, 
+      "nome_profissional": nomeProfissional, 
       "data_nascimento" : dataNascimento,
       "uuid" : uuid,
       "status" : status,
-
+      "funcao": funcao,
+      "tipo_colaborador_id": tipoColaboradorId,
+      "inicial": inicial,
     }
   )
 }
