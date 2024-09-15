@@ -38,8 +38,22 @@ async function listById(id) {
   return await TipoDocIdentificacao.findOne({where: {id}})
 }
 
+/**
+ * @returns {string} chave
+ * @returns {string} valor
+ */
+async function getAllByKeyValue(chave, valor) {
+  return TipoDocIdentificacao.findAll({
+    where: {
+      [chave]: valor
+    }
+  })
+}
+
+
 module.exports = {
     listAll,
     listById,
+    getAllByKeyValue,
     TipoDocIdentificacao
 };
