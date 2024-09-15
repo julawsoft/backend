@@ -15,8 +15,14 @@ const COLABORADOR = {
    COLABORADOR_ERROR_CREATED: "Error to create a new Colaborador"
 }
 
+const DADOS_CONTACTO = {
+    DADOS_CONTACTO_CREATED: "Dados Contacto created successfully",
+    DADOS_CONTACTO_ERROR_CREATED: "Error to create a new Dados Contacto"
+ }
+
 
 module.exports = {
     errosConst, 
-    COLABORADOR
+    COLABORADOR,
+    DADOS_CONTACTO
 }

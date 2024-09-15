@@ -1,5 +1,5 @@
 const { create } = require("../../persistencia/models/DadosContacto")
-
+const getAllByKeyValueColaborador = require("../colaborador/getAllByKeyValueColaborador")
 /**
 * @param {number} tipo
 * @param {string} valor
@@ -16,14 +16,6 @@ async function createDadosContacto (
         colaboradorId
     }
 ) { 
-    
-    console.log( {
-        tipo,
-        valor,
-        descricao,
-        colaboradorId
-    })
-
         const newDadosContacto = await create({
             "tipo": tipo,
             "valor": valor,
@@ -31,8 +23,7 @@ async function createDadosContacto (
             "colaboradorId": colaboradorId
         })
 
-        console.log("new .......", newDadosContacto)
-        let colaborador = await  listByKeyValueColaborador("id", newDadosContacto.colaboradorId)
+        let colaborador = await  getAllByKeyValueColaborador("id", newDadosContacto.colaboradorId)
         return {...newDadosContacto.dataValues, coloborador: colaborador}   
 }
 

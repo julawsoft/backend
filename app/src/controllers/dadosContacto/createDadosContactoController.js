@@ -5,7 +5,7 @@ const getAllByKeyValueCliente = require('../../services/cliente/getAllByKeyValue
 const defaultENUN = ['telefone', 'e-mail', 'endereco', 'outro']
 
 const { StatusCodes } = require('http-status-codes');
-const errosConst = require('../../utils/http/erros.Const');
+const {errosConst, DADOS_CONTACTO} = require('../../utils/http/erros.Const');
 const responseHttp = require('../../utils/http/response');
 const createDadosContacto = require('../../services/dadoContacto/createDadosContacto');
 
@@ -30,10 +30,10 @@ async function createDadosContactoController(req, res) {
                         }
                 )
             
-                return responseHttp(res, StatusCodes.CREATED, errosConst.CLIENT_ERROR_CREATE, dataReturned, [])
+                return responseHttp(res, StatusCodes.CREATED, DADOS_CONTACTO.DADOS_CONTACTO_CREATED, dataReturned, [])
 
         } catch (e) {
-                return responseHttp(res, StatusCodes.BAD_REQUEST, errosConst.CLIENT_ERROR_CREATE, {}, e.message)
+                return responseHttp(res, StatusCodes.BAD_REQUEST, DADOS_CONTACTO.DADOS_CONTACTO_ERROR_CREATED, {}, e.message)
         }
 }
 

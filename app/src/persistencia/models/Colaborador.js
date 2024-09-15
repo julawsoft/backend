@@ -76,4 +76,22 @@ async function create(
   )
 }
 
-module.exports = {create};
+
+/**
+ * @returns {string} chave
+ * @returns {string} valor
+ */
+async function getAllByKeyValue(chave, valor) {
+  console.log(chave)
+  return await Colaborador.findAll({
+    where: {
+      [chave]: valor
+    }
+  })
+}
+
+
+module.exports = {
+  create,
+  getAllByKeyValue,
+};
