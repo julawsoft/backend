@@ -1,9 +1,9 @@
 const { body } = require('express-validator')
 
 const validateCreateColaborador = [
-    body('name').isString().notEmpty().withMessage('O nome é obrigatório e deve ser uma string.'),
-    body('email').isEmail().withMessage('E-mail inválido.'),
-    body('age').isInt({ min: 18, max: 65 }).withMessage('A idade deve ser um número inteiro entre 18 e 65.'),
+    body('nome_completo').isString().notEmpty().withMessage('O nome é obrigatório e deve ser uma string.'),
+    body('nome_profissional').isString().notEmpty().withMessage('O nome é obrigatório e deve ser uma string.'),
+    body('data_nascimento').isString().withMessage('Data de Nascimento deve ser uma string.'),
 ]
 
 module.exports = validateCreateColaborador

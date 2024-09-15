@@ -1,6 +1,5 @@
 const { Model, DataTypes } = require('sequelize');
 const SequelizeConnection = require('../SequelizeConnection.js');  // Importa a instância Singleton do Sequelize
-const { TipoCliente } = require('./TipoCliente.js');
 
 const sequelize = SequelizeConnection.getConnection().instance
 

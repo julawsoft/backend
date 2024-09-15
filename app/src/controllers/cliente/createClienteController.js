@@ -33,7 +33,7 @@ async function createClienteController(req, res) {
                         }
                 )
             
-                return responseHttp(res, StatusCodes.CREATED, errosConst.CLIENT_ERROR_CREATE, dataReturned, [])
+                return responseHttp(res, StatusCodes.CREATED, errosConst.CLIENT_CREATED, dataReturned, [])
 
         } catch (e) {
                 return responseHttp(res, StatusCodes.BAD_REQUEST, errosConst.CLIENT_ERROR_CREATE, {}, e.message)

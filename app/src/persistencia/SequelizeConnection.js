@@ -1,5 +1,4 @@
 const { Sequelize } = require('sequelize');
-const { ColaboradorEntity } = require('./models/Colaborador');
 
 class SequelizeConnection {
 
