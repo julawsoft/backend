@@ -8,12 +8,17 @@ class TipoColaborador extends Model {
 }
 
 TipoColaborador.init({
-  description: {
-    type: DataTypes.STRING
+  id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    autoIncrement: true,
+    primaryKey: true,
   },
-  code: {
-    type: DataTypes.STRING
-  }
+  description: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: true,
+  },
 }, {
   sequelize,
   modelName: 'TipoColaborador',
@@ -35,7 +40,7 @@ async function listAll() {
  */
 
 async function listById(id) {
-  return await TipoColaborador.findOne({where: {id}})
+  return TipoColaborador.findOne({where: {id}})
 }
 
 module.exports = {

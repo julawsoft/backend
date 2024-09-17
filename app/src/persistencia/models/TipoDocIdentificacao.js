@@ -34,7 +34,6 @@ async function listAll() {
  * @returns {Object} TipoDocIdentificacao
  */
 async function listById(id) {
-  console.log("here...", id)
   return await TipoDocIdentificacao.findOne({where: {id}})
 }
 

@@ -84,6 +84,7 @@ async function create(
     inicial,
   }
 ) {
+
   return Colaborador.create(
     {
       "nome_completo": nomeCompleto, 
@@ -104,7 +105,6 @@ async function create(
  * @returns {string} valor
  */
 async function getAllByKeyValue(chave, valor) {
-  console.log(chave)
   return await Colaborador.findAll({
     where: {
       [chave]: valor

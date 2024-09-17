@@ -31,6 +31,8 @@ async function createColaboradorController(req, res) {
                                 "tipoColaboradorId": dataBody.tipo_colaborador_id,
                         }
                 )
+
+                console.log("dataReturned", dataReturned)
                 
                 if (dataBody.contactos && dataBody.contactos.length) {
                         for (let contactos of dataBody.contactos) {

@@ -1,6 +1,7 @@
 const { create } = require("../../persistencia/models/Colaborador.js");
 const { makeInitialColaborador } = require("../../utils/string.js");
-const createKeycloakColaborador = require("../keycloak/createColaborador.js")
+const createKeycloakColaborador = require("../keycloak/createColaborador.js");
+const listTipoColaboradorById = require("../tipoDeColaborador/listTipoColaboradorById.js");
 
 /**
 * @param {string} nomeCompleto
@@ -13,8 +14,6 @@ const createKeycloakColaborador = require("../keycloak/createColaborador.js")
 */
 async function createColaborador({ nomeCompleto, nomeProfissional, dataNascimento, funcao, tipoColaboradorId }) {
            
-    try {
-
         const keyCloakColaborador = await createKeycloakColaborador()
         
         const dataToSave = {
@@ -26,16 +25,11 @@ async function createColaborador({ nomeCompleto, nomeProfissional, dataNasciment
             "uuid": keyCloakColaborador.uuid,
             "inicial":  makeInitialColaborador(nomeCompleto)
         }     
-            
-        return await create({...dataToSave})
-    }catch(e){
-        if(e.name === "SequelizeUniqueConstraintError")
-            throw new Error(JSON.stringify(e.original.sqlMessage))
-        return e
-    }
+
+        const dataColaborador = await create({...dataToSave})
+        const tipoColadorador = await listTipoColaboradorById(dataColaborador.dataValues.tipo_colaborador_id) 
+        return await {...dataColaborador.dataValues, tipo: tipoColadorador }
+
  }
-
-
-
 
 module.exports = createColaborador
