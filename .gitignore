@@ -5,6 +5,7 @@ app/node_modules
 app/docs
 app/logs
 app/config
+app/jsdocs
 
 
 db/data

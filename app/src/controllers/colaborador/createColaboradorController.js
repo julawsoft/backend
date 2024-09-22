@@ -24,6 +24,7 @@ async function createColaboradorController(req, res) {
                 // levar as function para o service ou crie um use-case
                const dataReturned = await createColaborador(
                         {
+                                "username": dataBody.username,
                                 "nomeCompleto": dataBody.nome_completo,
                                 "nomeProfissional": dataBody.nome_profissional,
                                 "dataNascimento": dataBody.data_nascimento,

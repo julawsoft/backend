@@ -54,7 +54,10 @@ services:
       - keycloak_db
     networks:
       - kc_netwotk
+      - julaw-auth
 
 networks:
   kc_netwotk:
     driver: bridge
+  julaw-auth: 
+    external: true
