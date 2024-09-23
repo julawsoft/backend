@@ -22,41 +22,45 @@ async function createColaboradorController(req, res) {
                 // verificar a funcao
 
                 // levar as function para o service ou crie um use-case
-               const dataReturned = await createColaborador(
+                const dataReturned = await createColaborador(
                         {
                                 "username": dataBody.username,
                                 "nomeCompleto": dataBody.nome_completo,
                                 "nomeProfissional": dataBody.nome_profissional,
                                 "dataNascimento": dataBody.data_nascimento,
                                 "funcao": dataBody.funcao,
-                                "tipoColaboradorId": dataBody.tipo_colaborador_id,
+                                "tipoColaboradorId": dataBody.tipo_colaborador_id
                         }
                 )
 
                 console.log("dataReturned", dataReturned)
-                
-                if (dataBody.contactos && dataBody.contactos.length) {
-                        for (let contactos of dataBody.contactos) {
-                                createDadosContacto({
-                                        "tipo": contactos.tipo,
-                                        "valor": contactos.valor,
-                                        "descricao": contactos.descricao,
-                                        "colaboradorId": dataReturned.id
-                                })
+                if (dataReturned.id) {
+
+
+                        if (dataBody.contactos && dataBody.contactos.length) {
+                                for (let contactos of dataBody.contactos) {
+                                        createDadosContacto({
+                                                "tipo": contactos.tipo,
+                                                "valor": contactos.valor,
+                                                "descricao": contactos.descricao,
+                                                "colaboradorId": dataReturned.id
+                                        })
+                                }
+                        }
+
+                        if (dataBody.identificacoes && dataBody.identificacoes.length) {
+                                for (let identificacoes of dataBody.identificacoes) {
+                                        createDadosIdentificacao({
+                                                "tipoDocumentoId": identificacoes.tipo,
+                                                "valor": identificacoes.valor,
+                                                "dataEmissao": identificacoes.data_emissao,
+                                                "dataValidade": identificacoes.data_validade,
+                                                "colaboradorId": dataReturned.id
+                                        })
+                                }
                         }
                 }
 
-                if (dataBody.identificacoes && dataBody.identificacoes.length) {
-                        for (let identificacoes of dataBody.identificacoes) {
-                                createDadosIdentificacao({
-                                        "tipoDocumentoId": identificacoes.tipo,
-                                        "valor": identificacoes.valor,
-                                        "dataEmissao": identificacoes.data_emissao,
-                                        "dataValidade": identificacoes.data_validade,
-                                        "colaboradorId": dataReturned.id
-                                })
-                        }
-                }
                 return responseHttp(res, StatusCodes.CREATED, COLABORADOR.COLABORADOR_CREATED, dataReturned, [])
         } catch (e) {
                 /*logger.error({

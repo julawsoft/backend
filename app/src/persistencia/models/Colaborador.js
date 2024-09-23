@@ -3,6 +3,10 @@ const SequelizeConnection = require('../SequelizeConnection.js');
 
 const sequelize = SequelizeConnection.getConnection().instance
 
+/**
+ * Gerenciador integracao keycloak.
+ * @class
+ */
 class Colaborador extends Model {
   static associate(models) {}
 }
@@ -113,7 +117,14 @@ async function getAllByKeyValue(chave, valor) {
 }
 
 
+async function getAll() {
+  return await Colaborador.findAll()
+}
+
+
+
 module.exports = {
   create,
   getAllByKeyValue,
+  getAll,
 };

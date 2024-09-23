@@ -3,6 +3,10 @@ const SequelizeConnection = require('../SequelizeConnection.js');  // Importa a 
 
 const sequelize = SequelizeConnection.getConnection().instance
 
+/**
+ * Gerenciador integracao keycloak.
+ * @class
+ */
 class TipoCliente extends Model {
   static associate(models) {
     // Defina associações, se 

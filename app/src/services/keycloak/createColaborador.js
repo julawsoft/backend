@@ -12,7 +12,6 @@ const Keycloak = require("../../infra/keycloak")
 async function createKeycloakColaborador({username, password, email, firstName, lastName, groups}) {
 
     try {
-        console.log("creating keycloak" , username , password , email, firstName, lastName, groups)
         const returnUserKeycloak = await Keycloak.createUser(username, password, email, firstName, lastName, groups)
         return { "uuid": returnUserKeycloak.id }
     }catch (e) { 

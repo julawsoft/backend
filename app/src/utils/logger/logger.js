@@ -61,11 +61,4 @@ const logger = createLogger({
   ],
 });
 
-// Exemplos de logs
-logger.info('Aplicação iniciada com sucesso');
-logger.warn('Este é um aviso');
-logger.error('Ocorreu um erro crítico');
-logger.http('Recebido um pedido HTTP');
-
-
 module.exports = logger;

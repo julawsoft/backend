@@ -1,5 +1,6 @@
 const { realm } = require('./config.json');
 const keycloakConnection = require('./KeycloakConnection.js'); 
+
 /**
  * Gerenciador integracao keycloak.
  * @class
@@ -7,7 +8,6 @@ const keycloakConnection = require('./KeycloakConnection.js');
 class Keycloak {
     
     /**
-    *  @param {Object}
     *  @param {string} username 
     *  @param {string} password 
     *  @param {string} email 
