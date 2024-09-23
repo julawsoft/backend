@@ -9,7 +9,7 @@ async function getAllColaboradorController(req, res) {
         try {
                 const responseColabData = await getAllColaboradorService()
 
-                return responseHttp(res, StatusCodes.CREATED, COLABORADOR.COLABORADOR_LIST_ALL, responseColabData, [])
+                return responseHttp(res, StatusCodes.OK, COLABORADOR.COLABORADOR_LIST_ALL, responseColabData, [])
         } catch (e) {
                 logger.error(e.message)
                 return responseHttp(res, StatusCodes.BAD_REQUEST, COLABORADOR.COLABORADOR_ERROR_LIST_ALL, {}, e.message)
