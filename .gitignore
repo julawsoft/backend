@@ -5,7 +5,7 @@ app/node_modules
 app/docs
 app/logs
 app/config
-
+app/src/persistencia/SequelizeConnection.js
 
 db/data
 
