@@ -4,5 +4,6 @@
     "clientId": "julaw-client",
     "userAdmin": "admin_julaw",
     "pwdAdmin": "7(mXw1?Ow*8m",
-    "grantType": "password"
+    "grantType": "password",
+    "discover": "http://keycloak:8080/realms/julaw-realm"
 }

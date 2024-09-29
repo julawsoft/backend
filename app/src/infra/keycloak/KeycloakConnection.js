@@ -1,6 +1,6 @@
 // const {KcAdminClient} = require('@keycloak/keycloak-admin-client')
 const KcAdminClient = require('keycloak-admin-client');
-const { realm, authServerURL, clientId, userAdmin, pwdAdmin, grantType } = require('./config.json');
+const { realm, authServerURL, clientId, userAdmin, pwdAdmin, grantType, clientSecret } = require('./config.json');
 const logger = require('../../utils/logger/logger');
 
 console.log(realm, authServerURL, clientId, userAdmin, pwdAdmin)
@@ -23,12 +23,14 @@ class KeycloakConnection {
           username: userAdmin,
           password: pwdAdmin,
           grant_type: grantType,
-          client_id: clientId
+          client_id: clientId,
+          // client_secret: clientSecret,
         }).then((response) => {
+          // console.log("response", response)
           this.instance = response;
           logger.info(`keycloak server connection successfully`)
         }).catch((error) => {
-          console.log("error: ", error)
+          console.log("error : >>><<< ", error)
           logger.error(`${error.error ?? error}`)
         }).finally(()=> {
             logger.http(`keycloak server`)
