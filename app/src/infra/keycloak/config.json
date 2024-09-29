@@ -1,0 +1,8 @@
+{
+    "realm": "julaw-realm",
+    "authServerURL": "http://keycloak:8080",
+    "clientId": "julaw-client",
+    "userAdmin": "admin_julaw",
+    "pwdAdmin": "7(mXw1?Ow*8m",
+    "grantType": "password"
+}

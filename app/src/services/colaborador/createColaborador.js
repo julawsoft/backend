@@ -1,9 +1,11 @@
+const { ROLES } = require("../../const.js");
 const { create } = require("../../persistencia/models/Colaborador.js");
 const { makeInitialColaborador } = require("../../utils/string.js");
 const createKeycloakColaborador = require("../keycloak/createColaborador.js");
 const listTipoColaboradorById = require("../tipoDeColaborador/listTipoColaboradorById.js");
 
 /**
+* @param {string} username
 * @param {string} nomeCompleto
 * @param {string} nomeProfissional
 * @param {string} dataNascimento
@@ -12,9 +14,19 @@ const listTipoColaboradorById = require("../tipoDeColaborador/listTipoColaborado
 *
 * @returns {Array} Colaborador
 */
-async function createColaborador({ nomeCompleto, nomeProfissional, dataNascimento, funcao, tipoColaboradorId }) {
+async function createColaborador({ username, nomeCompleto, nomeProfissional, dataNascimento, funcao, tipoColaboradorId }) {
            
-        const keyCloakColaborador = await createKeycloakColaborador()
+        const defaultPassword = "julaw"
+        const role = switchRole(funcao)
+        const [firstName, lastName] = nomeCompleto.split(" ")
+
+        const keyCloakColaborador = await createKeycloakColaborador({
+            username,
+            password: defaultPassword,
+            firstName,
+            lastName, 
+            groups: role
+        })
         
         const dataToSave = {
             "nomeCompleto": nomeCompleto,
@@ -22,7 +34,7 @@ async function createColaborador({ nomeCompleto, nomeProfissional, dataNasciment
             "dataNascimento": dataNascimento,
             "funcao": funcao,
             "tipoColaboradorId": tipoColaboradorId,
-            "uuid": keyCloakColaborador.uuid,
+            "uuid": keyCloakColaborador.uuid.toString(),
             "inicial":  makeInitialColaborador(nomeCompleto)
         }     
 
@@ -30,6 +42,21 @@ async function createColaborador({ nomeCompleto, nomeProfissional, dataNasciment
         const tipoColadorador = await listTipoColaboradorById(dataColaborador.dataValues.tipo_colaborador_id) 
         return await {...dataColaborador.dataValues, tipo: tipoColadorador }
 
+ }
+
+ function switchRole (role) {
+    switch (role) {
+        case ROLES.ROOT:
+            return ROLES.ROOT;
+        case ROLES.ADV_ESTAGIARIO:
+            return ROLES.ADV_ESTAGIARIO;
+        case ROLES.ADV_JUNIOR:
+            return ROLES.ADV_JUNIOR;
+        case ROLES.ADV_SENIOR:
+            return ROLES.ADV_SENIOR;
+        default:
+            return ROLES.ADMIN;
+    }
  }
 
 module.exports = createColaborador

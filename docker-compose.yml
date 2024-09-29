@@ -19,6 +19,7 @@ services:
     networks:
       - julaw-api
       - julaw-ui
+      - julaw-auth
 
   db:
     image: mysql:8.0
@@ -39,3 +40,5 @@ services:
 networks:
   julaw-api:
   julaw-ui:
+  julaw-auth:
+    external: true

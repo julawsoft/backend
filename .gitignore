@@ -4,8 +4,9 @@ app/api.http
 app/node_modules
 app/docs
 app/logs
-app/config
-app/src/persistencia/SequelizeConnection.js
+app/config/config.json
+app/jsdocs
+
 
 db/data
 

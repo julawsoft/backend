@@ -4,7 +4,7 @@ const cors = require('cors')
 const routesRoot = require('./routes/index.js')
 const { API_VERSION }  = require('./const.js')
 const { corsOptions } = require('./cors.js')
-
+const keycloakConnection = require('./infra/keycloak/KeycloakConnection.js')
 const SequelizeConnection = require('./persistencia/SequelizeConnection.js')
 
 new SequelizeConnection().init()

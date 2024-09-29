@@ -1,11 +1,16 @@
 const { Sequelize } = require('sequelize');
+const config = require('./config.js')
 
+/**
+ * Gerenciador integracao keycloak.
+ * @class
+ */
 class SequelizeConnection {
 
   static instance
   constructor() {
     if (!this.instance) {
-        this.instance = new Sequelize('julaw', 'root', 'c9qMGlXD3Mmlvf1Dx0', {
+        this.instance = new Sequelize(config.database, config.username, config.password, {
         host: 'db',
         dialect: 'mysql',
         // timestamps: true,

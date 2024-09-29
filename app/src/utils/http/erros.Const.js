@@ -12,7 +12,9 @@ const errosConst = {
 
 const COLABORADOR = {
    COLABORADOR_CREATED: "Colaborador created successfully",
-   COLABORADOR_ERROR_CREATED: "Error to create a new Colaborador"
+   COLABORADOR_ERROR_CREATED: "Error to create a new Colaborador",
+   COLABORADOR_LIST_ALL: "List of Colaborador",
+   COLABORADOR_ERROR_LIST_ALL: "Error to get the List of Colaborador"
 }
 
 const DADOS_CONTACTO = {
