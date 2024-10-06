@@ -103,6 +103,51 @@ async function create(
   )
 }
 
+/**
+ * @param {string} nomeCompleto - Description
+ * @param {string} nomeProfissional - Description
+ * @param {string} dataNascimento - Description
+ * @param {string} uuid - Description
+ * @param {string} status - Description
+ * @param {string} funcao - Description
+ * @param {string} tipoColaboradorId - Description
+ * @param {string} inicial - Description
+ * @returns {number} id
+ * @returns {Object} Colaborador
+ */
+async function update(
+  {
+    nomeCompleto, 
+    nomeProfissional, 
+    dataNascimento,
+    funcao,
+    tipoColaboradorId,
+    uuid,
+    status,
+    inicial,
+    id
+  }
+) {
+
+  return Colaborador.update(
+    {
+      "nome_completo": nomeCompleto, 
+      "nome_profissional": nomeProfissional, 
+      "data_nascimento" : dataNascimento,
+      "uuid" : uuid,
+      "status" : status,
+      "funcao": funcao,
+      "tipo_colaborador_id": tipoColaboradorId,
+      "inicial": inicial,
+    },
+    {
+      where: {
+        id
+      }
+    }
+  )
+}
+
 
 /**
  * @returns {string} chave
@@ -116,7 +161,6 @@ async function getAllByKeyValue(chave, valor) {
   })
 }
 
-
 async function getAll() {
   return await Colaborador.findAll()
 }
@@ -127,4 +171,5 @@ module.exports = {
   create,
   getAllByKeyValue,
   getAll,
+  update
 };
