@@ -7,7 +7,9 @@ const errosConst = {
     VALIDATION_ERROR: "Invalid request",
     SUCCESS: "Success",
     ERROR: "Error",
-    DADO_CONTACTO_TIPO_ERRO: "O tipo não corresponde ao ENUN"
+    DADO_CONTACTO_TIPO_ERRO: "O tipo não corresponde ao ENUN",
+    PROCESSO_CREATED: "Processo created successfully",
+    PROCESSO_ERROR_TO_CREATED: "Error to Processo create a new process"
 }
 
 const COLABORADOR = {

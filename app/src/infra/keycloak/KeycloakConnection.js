@@ -28,7 +28,7 @@ class KeycloakConnection {
         }).then((response) => {
           // console.log("response", response)
           this.instance = response;
-          logger.info(`keycloak server connection successfully`)
+          logger.info(`keycloak server connected successfully`)
         }).catch((error) => {
           console.log("error : >>><<< ", error)
           logger.error(`${error.error ?? error}`)

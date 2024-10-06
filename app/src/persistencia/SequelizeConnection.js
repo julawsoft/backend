@@ -1,21 +1,24 @@
 const { Sequelize } = require('sequelize');
-const config = require('./config.js')
+const config = require('./config.js');
+const logger = require('../utils/logger/logger.js');
 
 /**
- * Gerenciador integracao keycloak.
+ *
  * @class
  */
 class SequelizeConnection {
 
   static instance
+
   constructor() {
     if (!this.instance) {
-        this.instance = new Sequelize(config.database, config.username, config.password, {
+      this.instance = new Sequelize(config.database, config.username, config.password, {
         host: 'db',
         dialect: 'mysql',
         // timestamps: true,
       });
     }
+    logger.info(`BD Server connected successfully`)
   }
 
   async auth() {
@@ -23,12 +26,12 @@ class SequelizeConnection {
   }
 
   async init() {
-      await this.auth()
-      await this.instance.sync({ force: true });
+    await this.auth()
+    await this.instance.sync({ force: true });
   }
   
   static getConnection() {
-      return this.instance ?? new SequelizeConnection()
+    return this.instance ?? new SequelizeConnection()
   }
 }
 
