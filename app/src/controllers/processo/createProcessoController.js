@@ -20,6 +20,7 @@ async function createProcessoController(req, res) {
                                 "fase": dataBody.fase,
                                 "instituicaoId": dataBody.instituicaoId,
                                 "modoFacturacaoId": dataBody.modoFacturacaoId,
+                                "clienteId": dataBody.clienteId,
                                 "gestorId": dataBody.gestorId,
                                 "contraParte": dataBody.contraParte,
                                 "dataRegisto": dataBody.dataRegisto,

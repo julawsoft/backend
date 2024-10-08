@@ -42,6 +42,10 @@ Processos.init({
     type: DataTypes.INTEGER,
     allowNull: false,
   },
+  cliente_id: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+  },
   gestor_id: {
     type: DataTypes.INTEGER,
     allowNull: true,
@@ -111,6 +115,7 @@ Processos.init({
  * @param {string} fase 
  * @param {number} instituicaoId 
  * @param {number} modoFacturacaoId 
+ * @param {number} clienteId
  * @param {number} gestorId 
  * @param {string} contraParte 
  * @param {string} dataRegisto 
@@ -132,6 +137,7 @@ async function create(
     fase,
     instituicaoId,
     modoFacturacaoId,
+    clienteId,
     gestorId,
     contraParte,
     dataRegisto,
@@ -156,6 +162,7 @@ async function create(
       "fase": fase,
       "instituicao_id": instituicaoId,
       "modo_facturacao_id": modoFacturacaoId,
+      "cliente_id": clienteId,
       "gestor_id": gestorId,
       "contra_parte": contraParte,
       "data_registo": dataRegisto,
@@ -196,7 +203,9 @@ async function getAll() {
   p_facturacao.descricao AS modo_facturacao,
   c.nome_completo AS gestor,
   c_suspendeu.nome_completo AS colaborador_suspendeu,
-  c_enderrou.nome_completo AS colaborador_encerrou
+  c_enderrou.nome_completo AS colaborador_encerrou,
+  cli.denominacao AS cliente,
+  tcli.description AS tipo_cliente
   
   FROM processos p
   
@@ -211,7 +220,11 @@ async function getAll() {
   LEFT JOIN colaboradores c_suspendeu
   ON p.colaborador_id_suspendeu = c_suspendeu.id
   LEFT JOIN colaboradores c_enderrou
-  ON p.colaborador_id_encerrou = c_enderrou.id`;
+  ON p.colaborador_id_encerrou = c_enderrou.id
+  LEFT JOIN clientes cli
+  ON p.cliente_id = cli.id
+  LEFT JOIN tipo_cliente tcli
+  ON cli.tipo_id = tcli.id`;
 
   return  sequelize.query(queryString, {
   type: QueryTypes.SELECT,
@@ -228,7 +241,9 @@ async function getById(id) {
   p_facturacao.descricao AS modo_facturacao,
   c.nome_completo AS gestor,
   c_suspendeu.nome_completo AS colaborador_suspendeu,
-  c_enderrou.nome_completo AS colaborador_encerrou
+  c_enderrou.nome_completo AS colaborador_encerrou,
+  cli.denominacao AS cliente,
+  tcli.description AS tipo_cliente
   
   FROM processos p
   
@@ -244,6 +259,10 @@ async function getById(id) {
   ON p.colaborador_id_suspendeu = c_suspendeu.id
   LEFT JOIN colaboradores c_enderrou
   ON p.colaborador_id_encerrou = c_enderrou.id
+  LEFT JOIN clientes cli
+  ON p.cliente_id = cli.id
+  LEFT JOIN tipo_cliente tcli
+  ON cli.tipo_id = tcli.id
   where p.id = ${id}
   `;
   

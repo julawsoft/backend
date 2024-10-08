@@ -50,6 +50,14 @@ module.exports = {
           key: 'id',
         },
       },
+      cliente_id: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        references: {
+          model: 'clientes',
+          key: 'id',
+        },
+      },
       contra_parte: {
         type: Sequelize.STRING,
         allowNull: true,
