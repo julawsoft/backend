@@ -9,7 +9,8 @@ const errosConst = {
     ERROR: "Error",
     DADO_CONTACTO_TIPO_ERRO: "O tipo não corresponde ao ENUN",
     PROCESSO_CREATED: "Processo created successfully",
-    PROCESSO_ERROR_TO_CREATED: "Error to Processo create a new process"
+    PROCESSO_ERROR_TO_CREATED: "Error to Processo create a new process",
+    PROCESSO_NOT_FOUND: "Id do Processo não encontrado"
 }
 
 const COLABORADOR = {

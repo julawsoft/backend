@@ -273,10 +273,89 @@ async function getById(id) {
 
 
 
+/**
+ * @param {number} processoId 
+ * @param {string} assunto 
+ * @param {string} area 
+ * @param {string} fase 
+ * @param {number} instituicaoId 
+ * @param {number} modoFacturacaoId 
+ * @param {number} clienteId
+ * @param {number} gestorId 
+ * @param {string} contraParte 
+ * @param {string} dataRegisto 
+ * @param {string} dataSuspensao 
+ * @param {string} colaboradorIdSuspendeu 
+ * @param {string} dataEncerramento 
+ * @param {string} colaboradorIdEnderrou 
+ * @param {string} metodologia 
+ * @param {string} estrategia 
+ * @param {string} factos 
+ * @param {string} objectivos 
+ * @param {string} dataImportantes 
+ * @returns {Processos}
+ */
+async function update(
+  {
+    processoId,
+    assunto,
+    area,
+    fase,
+    instituicaoId,
+    modoFacturacaoId,
+    clienteId,
+    gestorId,
+    contraParte,
+    dataRegisto,
+    dataSuspensao,
+    colaboradorIdSuspendeu,
+    dataEncerramento,
+    colaboradorIdEnderrou,
+    metodologia,
+    estrategia,
+    factos,
+    objectivos,
+    dataImportantes,
+    statusId
+  }
+) {
+  
+
+  return Processos.update(
+    {
+      "assunto": assunto,
+      "area": area,
+      "fase": fase,
+      "instituicao_id": instituicaoId,
+      "modo_facturacao_id": modoFacturacaoId,
+      "cliente_id": clienteId,
+      "gestor_id": gestorId,
+      "contra_parte": contraParte,
+      "data_registo": dataRegisto,
+      "data_suspensao": dataSuspensao,
+      "colaborador_id_suspendeu": colaboradorIdSuspendeu,
+      "data_encerramento": dataEncerramento,
+      "colaborador_id_encerrou": colaboradorIdEnderrou,
+      "metodologia": metodologia,
+      "estrategia": estrategia,
+      "factos": factos,
+      "objectivos": objectivos,
+      "dados_importantes": dataImportantes,
+      "status_id": statusId
+    },
+    {
+      where: {
+        id: processoId,
+      }
+    }
+  )
+}
+
 
 module.exports = {
   create,
   getAllByKeyValue,
   getAll,
   getById,
+  update,
 };

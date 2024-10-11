@@ -3,6 +3,7 @@ const {
   create,
   getAll,
   getById,
+  update,
 } = require("../../persistencia/models/Processos");
 const {
   getAllByKeyValue: TarefaGetByKey,
@@ -161,24 +162,22 @@ class ProcessoServive {
 
   static async getByIdProcesso(id) {
     try {
-      const processos = await getById(id);
+      const processo = await getById(id);
 
       let processoDTO = [];
 
-      for (let processo of processos) {
-        if (processo.id) {
-          let tarefas = await TarefaGetByKey("processo_id", processo.id);
-          let precedentes = await PrecedenteGetByKey(processo.id);
-          let equipas = await EquipaGetByKey("processo_id", processo.id);
+        if (processo[0].id) {
+          let tarefas = await TarefaGetByKey("processo_id", processo[0].id);
+          let precedentes = await PrecedenteGetByKey(processo[0].id);
+          let equipas = await EquipaGetByKey(processo[0].id);
 
           processoDTO.push({
-            ...processo,
+            ...processo[0],
             tarefas: tarefas ?? [],
             precedentes: precedentes ?? [],
             equipas: equipas ?? [],
           });
         }
-      }
 
       return {
         data: processoDTO,
@@ -186,8 +185,6 @@ class ProcessoServive {
         status: StatusCodes.OK,
       };
     } catch (e) {
-      console.log(">>>>>>><<<<", e);
-
       return {
         data: __filename,
         message: e.message,
@@ -195,6 +192,149 @@ class ProcessoServive {
       };
     }
   }
+
+
+  static async addRecursosProcesso({
+    processoId,
+    precedentes,
+    equipas,
+    tarefas,
+  }) {
+    try {
+
+      if (precedentes) {
+        for (let precedente of precedentes) {
+          createPrecedente({
+            processo_id: processoId,
+            precedente_id: precedente,
+          });
+        }
+      }
+
+      if (equipas) {
+        for (let equipa of equipas) {
+          createEquipa({
+            processo_id: processoId,
+            colaborador_id: equipa,
+          });
+        }
+      }
+
+      if (tarefas) {
+        for (let tarefa of tarefas) {
+          createTarefa({
+            processo_id: processoId,
+            descricao: tarefa,
+          });
+        }
+      }
+
+      const response = await this.getByIdProcesso(processoId);
+
+      return {
+        data: response.data,
+        message: "RESOURCES.PROCESS:ADDED",
+        status: StatusCodes.CREATED,
+      };
+    } catch (e) {
+      return {
+        data: __filename,
+        message: e.message,
+        status: StatusCodes.BAD_REQUEST,
+      };
+    }
+  }
+
+
+  static async addAnexoProcesso({
+    processoId,
+    anexos,
+  }) {
+    try {
+
+      console.log(anexos)
+
+      return 0
+
+     
+      return {
+        data: [],
+        message: "RESOUCES.PROCESS:ADDED",
+        status: StatusCodes.CREATED,
+      };
+    } catch (e) {
+      return {
+        data: __filename,
+        message: e.message,
+        status: StatusCodes.BAD_REQUEST,
+      };
+    }
+  }
+
+
+  static async updateProcesso({
+    processoId,
+    assunto,
+    area,
+    fase,
+    instituicaoId,
+    modoFacturacaoId,
+    clienteId,
+    gestorId,
+    contraParte,
+    dataRegisto,
+    dataSuspensao,
+    colaboradorIdSuspendeu,
+    dataEncerramento,
+    colaboradorIdEnderrou,
+    metodologia,
+    estrategia,
+    factos,
+    objectivos,
+    dataImportantes,
+    statusId
+  }) {
+    try {
+      const processoUpdated = await update({
+        processoId,
+        assunto,
+        area,
+        fase,
+        instituicaoId,
+        modoFacturacaoId,
+        clienteId,
+        gestorId,
+        contraParte,
+        dataRegisto,
+        dataSuspensao,
+        colaboradorIdSuspendeu,
+        dataEncerramento,
+        colaboradorIdEnderrou,
+        metodologia,
+        estrategia,
+        factos,
+        objectivos,
+        dataImportantes,
+        statusId,
+      });      
+
+      const response = await this.getByIdProcesso(processoId);
+
+      return {
+        data: response,
+        message: "PROCESS:UPDATED",
+        status: StatusCodes.OK,
+      };
+    } catch (e) {
+      return {
+        data: __filename,
+        message: e.message,
+        status: StatusCodes.BAD_REQUEST,
+      };
+    }
+  }
+
+
 }
 
 module.exports = ProcessoServive;
