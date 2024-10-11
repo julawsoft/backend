@@ -38,6 +38,7 @@ class ProcessoController {
                 const response = await ProcessoServive.addAnexoProcesso(
                         {
                                 "processoId": dataBody.processoId,
+                                "colaboradorId": dataBody.colaboradorId,
                                 "anexos": dataBody.anexos,
                         }
                 )

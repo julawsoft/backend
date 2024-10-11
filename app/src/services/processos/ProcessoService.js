@@ -1,3 +1,4 @@
+const { v4: uuidv4 } = require('uuid');
 const { StatusCodes } = require("http-status-codes");
 const {
   create,
@@ -17,6 +18,9 @@ const {
   getByProcessoId: EquipaGetByKey,
   createEquipa,
 } = require("../../persistencia/models/ProcessosEquipa");
+const saveBase64Image = require("../../utils/saveBase64Image");
+const { createAnexo, getByProcessosId } = require('../../persistencia/models/ProcessosAnexos');
+
 
 class ProcessoServive {
   /**
@@ -248,17 +252,31 @@ class ProcessoServive {
 
   static async addAnexoProcesso({
     processoId,
+    colaboradorId,
     anexos,
   }) {
     try {
 
-      console.log(anexos)
+      const uuid = uuidv4();
+      const fileName = `${uuid}_processo_${processoId}`
 
-      return 0
+      if(anexos) {
+        for (let anexo of anexos) {
+          let {data} = await saveBase64Image(fileName, anexo.anexo);
+          let path = `${data.path}@${data.fileName}`
+          await createAnexo({
+              "processoId": processoId,
+              "colaboradorId": colaboradorId,
+              "descricao": anexo.descricao,
+              "path": path
+          })
+        }
+      }
 
+      let response = await getByProcessosId(processoId)
      
       return {
-        data: [],
+        data: response,
         message: "RESOUCES.PROCESS:ADDED",
         status: StatusCodes.CREATED,
       };

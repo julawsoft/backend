@@ -1,3 +1,5 @@
+const path = require('path');
+
 const API_VERSION = "/api/v1/"
 const STATIC_FILES = `${API_VERSION}/static_files/`
 const PORT = process.env.API_PORT || 3000
@@ -9,9 +11,12 @@ const ROLES = {
     ADV_ESTAGIARIO: "adv_estagiario",
 }
 
+const STORAGE_PATH = path.join(__dirname, '/storage');
+
 module.exports = {
     API_VERSION,
     STATIC_FILES,
     PORT,
-    ROLES
+    ROLES,
+    STORAGE_PATH,
 }
