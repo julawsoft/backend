@@ -64,7 +64,7 @@ console.log('aqui',dataBody );
                         if (dataBody.custoFinanceiro) {
                                 createDadosCustoFinanceiro({
                                         "taxaHoraria": dataBody.custoFinanceiro.taxa_horaria,
-                                        colaboradorId: dataReturned.id
+                                        "colaboradorId": dataReturned.id
                                         
                                 })
                         }
@@ -76,6 +76,7 @@ console.log('aqui',dataBody );
                         label: "error", message: `${COLABORADOR.COLABORADOR_ERROR_CREATED} : ${e.message}`
                       })
                 */
+                      console.log('este é o :', e);
                 return responseHttp(res, StatusCodes.BAD_REQUEST, COLABORADOR.COLABORADOR_ERROR_CREATED, {}, e.message)
         }
 }
