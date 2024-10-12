@@ -6,6 +6,7 @@ const { errosConst, COLABORADOR } = require('../../utils/http/erros.Const.js');
 const createDadosContacto = require('../../services/dadoContacto/createDadosContacto.js');
 const logger = require('../../utils/logger/logger.js');
 const createDadosIdentificacao = require('../../services/dadoIdentificacao/createDadosIdentificacao.js');
+const createDadosCustoFinanceiro = require('../../services/dadocustofinanceiro/createDadosCustoFinanceiro.js');
 
 
 async function createColaboradorController(req, res) {
@@ -17,7 +18,7 @@ async function createColaboradorController(req, res) {
                 }
 
                 const dataBody = req.body
-
+console.log('aqui',dataBody );
                 // verificar o tipo de colaborador Id
                 // verificar a funcao
 
@@ -58,6 +59,14 @@ async function createColaboradorController(req, res) {
                                                 "colaboradorId": dataReturned.id
                                         })
                                 }
+                        }
+
+                        if (dataBody.custoFinanceiro) {
+                                createDadosCustoFinanceiro({
+                                        "taxaHoraria": dataBody.custoFinanceiro.taxa_horaria,
+                                        colaboradorId: dataReturned.id
+                                        
+                                })
                         }
                 }
 

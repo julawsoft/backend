@@ -20,7 +20,8 @@ async function getAllColaboradorService() {
                                 ...colaborador.dataValues,
                                 tipo: tipoColaborador ?? {},
                                 identificacoes: dadosIdentificacao ?? [],
-                                contactos: dadosContactos ?? []
+                                contactos: dadosContactos ?? [],
+                                custoFinanceiro: dadosCustoFinanceiro ?? {}
 
                         })
                 }

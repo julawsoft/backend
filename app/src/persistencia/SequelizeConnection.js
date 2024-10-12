@@ -11,7 +11,7 @@ class SequelizeConnection {
   constructor() {
     if (!this.instance) {
         this.instance = new Sequelize(config.database, config.username, config.password, {
-        host: 'db',
+        host: config.host,
         dialect: 'mysql',
         // timestamps: true,
       });
