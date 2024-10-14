@@ -137,13 +137,15 @@ class ProcessoServive {
         if (processo.id) {
           let tarefas = await TarefaGetByKey("processo_id", processo.id);
           let precedentes = await PrecedenteGetByKey(processo.id);
-          let equipas = await EquipaGetByKey("processo_id", processo.id);
+          let equipas = await EquipaGetByKey(processo.id);
+          let anexos = await getByProcessosId(processo.id)
 
           processoDTO.push({
             ...processo,
             tarefas: tarefas ?? [],
             precedentes: precedentes ?? [],
             equipas: equipas ?? [],
+            anexos: anexos ?? [],
           });
         }
       }
@@ -174,12 +176,14 @@ class ProcessoServive {
           let tarefas = await TarefaGetByKey("processo_id", processo[0].id);
           let precedentes = await PrecedenteGetByKey(processo[0].id);
           let equipas = await EquipaGetByKey(processo[0].id);
+          let anexos = await getByProcessosId(processo[0].id)
 
           processoDTO.push({
             ...processo[0],
             tarefas: tarefas ?? [],
             precedentes: precedentes ?? [],
             equipas: equipas ?? [],
+            anexos: anexos ?? [],
           });
         }
 
@@ -313,7 +317,8 @@ class ProcessoServive {
     statusId
   }) {
     try {
-      const processoUpdated = await update({
+      
+      await update({
         processoId,
         assunto,
         area,
