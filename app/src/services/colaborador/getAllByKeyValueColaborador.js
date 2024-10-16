@@ -1,5 +1,6 @@
 const { getAllByKeyValue } = require("../../persistencia/models/Colaborador");
 const getAllByKeyValueDadosContacto = require("../dadoContacto/getAllByKeyValueDadosContacto");
+const getAllByKeyValueDadosCustoFinanceiro = require("../dadocustofinanceiro/getAllByKeyValueDadosCustoFinanceiro");
 const getAllByKeyValueDadosIdentificacao = require("../dadoIdentificacao/getAllByKeyValueDadosIdentificacao");
 const listTipoColaboradorById = require("../tipoDeColaborador/listTipoColaboradorById");
 
@@ -24,11 +25,14 @@ async function getAllByKeyValueColaborador(chave, valor) {
       oneColab.id
     );
 
+    let dadosCustoFinanceiro = await getAllByKeyValueDadosCustoFinanceiro("colaboradorId", oneColab.id)
+
     colaboradorDTO.push({
       ...oneColab,
       tipo: tipoColaborador ?? {},
       identificacoes: dadosIdentificacao ?? [],
       contactos: dadosContactos ?? [],
+      custoFinanceiro: dadosCustoFinanceiro ?? {}
     });
   }
 
