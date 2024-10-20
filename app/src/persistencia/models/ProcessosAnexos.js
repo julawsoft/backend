@@ -110,8 +110,22 @@ async function getAllByKeyValue(key, value) {
 }
 
 
+async function removeAnexoByProcesso(id) {
+  if(!id)
+    throw new Error('ID is required');
+
+  let queryString = `DELETE FROM processo_anexos WHERE processo_anexos.id = ${id}`;
+  
+  return  sequelize.query(queryString, {
+  type: QueryTypes.DELETE,
+  });
+  
+
+}
+
 module.exports = {
   createAnexo,
   getAllByKeyValue,
-  getByProcessosId
+  getByProcessosId,
+  removeAnexoByProcesso,
 };

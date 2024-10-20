@@ -1,4 +1,4 @@
-const { Model, DataTypes } = require('sequelize');
+const { Model, DataTypes, QueryTypes } = require('sequelize');
 const SequelizeConnection = require('../SequelizeConnection.js');  // Importa a instância Singleton do Sequelize
 
 const sequelize = SequelizeConnection.getConnection().instance
@@ -82,8 +82,58 @@ async function getAllByKeyValue(chave, valor) {
   })
 }
 
+async function removeTarefaByProcesso(id) {
+  if(!id)
+    throw new Error('ID is required');
+
+  let queryString = `DELETE FROM processo_tarefas WHERE processo_tarefas.id = ${id}`;
+  
+  return  sequelize.query(queryString, {
+  type: QueryTypes.DELETE,
+  });
+
+}
+
+async function updateTarefaByProcesso(id, descricao, status) {
+
+  console.log('Updating processo_tarefas', id, descricao, status);
+
+  const result = ProcessosTarefas.sequelize.query(`
+    UPDATE processo_tarefas
+    SET 
+      descricao=?,
+      status=?
+    WHERE id = ? 
+  `, {
+    replacements: [
+      descricao, 
+      `${status}`,
+      id
+    ]
+  });
+
+
+  console.log(result)
+
+  return (await result);
+
+}
+
+async function getTarefaById(id) {
+
+  let queryString = `SELECT * FROM processo_tarefas WHERE processo_tarefas.id = ${id} limit 1`;
+
+  return  sequelize.query(queryString, {
+  type: QueryTypes.SELECT,
+  });
+
+}
+
 module.exports = {
   createTarefa,
   getAll,
   getAllByKeyValue,
+  removeTarefaByProcesso,
+  updateTarefaByProcesso,
+  getTarefaById
 };

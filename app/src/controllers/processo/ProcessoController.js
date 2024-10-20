@@ -89,6 +89,75 @@ class ProcessoController {
               
                 return responseHttp(res, response.status, response.message, response.data, [])
         }
+
+        
+        async viewAnexoProcesso(req, res) {
+
+                const {id} = req.params
+                const response = await ProcessoServive.viewAnexoProcesso(
+                        {
+                                "processoId": id
+                        }
+                )
+
+                console.log(response)
+                return responseHttp(res, response.status, response.message, response.data, [])
+        }
+
+        async downloadAnexoProcesso(req, res) {
+
+                const {id} = req.params
+                const response = await ProcessoServive.viewAnexoProcesso(
+                        {
+                                "processoId": id
+                        }
+                )
+
+                console.log(response)
+                return res.download(response.data.path, response.data.fileName, (err) => {
+                        if (err) {
+                          console.log('Erro ao enviar o arquivo:', err);
+                        }
+                })
+                // return responseHttp(res, response.status, response.message, response.data, [])
+        }
+
+        async removeRecursosProcesso(req, res) {
+
+                const errors = validationResult(req);
+                if (!errors.isEmpty()) {
+                        return responseHttp(res, StatusCodes.BAD_REQUEST, errosConst.VALIDATION_ERROR, {}, errors.array())
+                }
+
+                const dataBody = req.body
+                const response = await ProcessoServive.removeRecursosProcesso(
+                        {
+                                "type": dataBody.type,
+                                "valueId": dataBody.valueId
+                        }
+                )
+                
+                return responseHttp(res, response.status, response.message, response.data, [])
+        }
+
+        async updateTarefaProcesso(req, res) {
+
+                let id = req.params.id
+                const dataBody = req.body
+
+                let tarefaFinded = await ProcessoServive.getTaregaById(id)
+                if(!tarefaFinded.data)
+                        return responseHttp(res, StatusCodes.NOT_FOUND, "Tarefa não encontrada", [], [])
+                
+                const response = await ProcessoServive.updateTarefaProcesso({
+                        "id": id,
+                        "descricao": dataBody.descricao ?? tarefaFinded.data[0].descricao,
+                        "status": dataBody.status ?? tarefaFinded.data[0].status
+                })                            
+                
+                return responseHttp(res, response.status, response.message, response.data, [])
+        }
+        
         
 }
 

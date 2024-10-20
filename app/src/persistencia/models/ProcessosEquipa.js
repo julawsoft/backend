@@ -96,9 +96,22 @@ async function getByProcessoId(id) {
 });
 }
 
+async function removeEquipaByProcesso(id) {
+
+  if(!id)
+    throw new Error('ID is required');
+
+  let queryString = `DELETE FROM processo_equipa WHERE processo_equipa.id = ${id}`;
+  
+  return  sequelize.query(queryString, {
+  type: QueryTypes.DELETE,
+});
+}
+
 module.exports = {
   createEquipa,
   getAll,
   getAllByKeyValue,
-  getByProcessoId
+  getByProcessoId,
+  removeEquipaByProcesso
 };

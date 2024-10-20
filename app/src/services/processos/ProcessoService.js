@@ -1,3 +1,4 @@
+const fs = require('fs');
 const { v4: uuidv4 } = require('uuid');
 const { StatusCodes } = require("http-status-codes");
 const {
@@ -9,17 +10,23 @@ const {
 const {
   getAllByKeyValue: TarefaGetByKey,
   createTarefa,
+  removeTarefaByProcesso,
+  getTarefaById,
+  updateTarefaByProcesso,
 } = require("../../persistencia/models/ProcessosTarefas");
 const {
   getByProcessoId: PrecedenteGetByKey,
   createPrecedente,
+  removePrecedenteByProcesso,
 } = require("../../persistencia/models/ProcessosPrecedentes");
 const {
   getByProcessoId: EquipaGetByKey,
   createEquipa,
+  removeEquipaByProcesso,
 } = require("../../persistencia/models/ProcessosEquipa");
 const saveBase64Image = require("../../utils/saveBase64Image");
-const { createAnexo, getByProcessosId } = require('../../persistencia/models/ProcessosAnexos');
+const { createAnexo, getByProcessosId, getAllByKeyValue, removeAnexoByProcesso } = require('../../persistencia/models/ProcessosAnexos');
+const { STORAGE_PATH } = require('../../const');
 
 
 class ProcessoServive {
@@ -156,8 +163,6 @@ class ProcessoServive {
         status: StatusCodes.OK,
       };
     } catch (e) {
-      console.log(">>>>>>><<<<", e);
-
       return {
         data: __filename,
         message: e.message,
@@ -356,6 +361,137 @@ class ProcessoServive {
       };
     }
   }
+
+  static async viewAnexoProcesso({processoId}) {
+
+    try {
+
+      console.log(">>>>>>>>>>>>>>", processoId)
+
+        let data = await getAllByKeyValue("id", processoId);
+
+        if(data) {
+
+            let pathResponse = data[0].path
+            let [pathFolfder, fileName] = pathResponse.split("@");
+            
+            let filePathComplete = `${STORAGE_PATH}/${fileName}`;
+
+            console.log(filePathComplete)
+
+            if(fs.existsSync(filePathComplete)){
+              return {
+                data: {
+                    "path": filePathComplete,
+                    "fileName": fileName,
+                },
+                message: "ANEXO.PROCESSO",
+                status: StatusCodes.OK,
+              }
+            }else{
+                throw new Error("File not found")
+            }
+
+        }else {
+          return {
+            data: data,
+            message: "ANEXO.PROCESSO",
+            status: StatusCodes.OK,
+          };
+        }
+        console.log("viewAnexoProcesso <<<< >>>> :::: :::: " , data);
+    
+    }catch(e) {
+      return {
+        data: __filename,
+        message: e.message,
+        status: StatusCodes.BAD_REQUEST,
+      };
+    }
+  }
+
+  static async removeRecursosProcesso({
+    type,
+    valueId,
+  }) {
+    try {
+
+      if (type === "colaborador") {
+        await removeEquipaByProcesso(valueId)
+      }
+
+      if (type === "tarefa") {
+        await removeTarefaByProcesso(valueId)
+      }
+
+      if (type === "anexo") {
+        await removeAnexoByProcesso(valueId);
+      }
+
+      if(type === "precedente") {
+        await removePrecedenteByProcesso(valueId);
+      }
+
+      return {
+        data: [],
+        message: "RESOURCES.PROCESS:REMOVED",
+        status: StatusCodes.OK,
+      };
+    } catch (e) {
+      return {
+        data: __filename,
+        message: e.message,
+        status: StatusCodes.BAD_REQUEST,
+      };
+    }
+  }
+
+
+  static async getTaregaById(id) {
+    try {
+
+     let tarefa = await getTarefaById(id)
+
+      return {
+        data: tarefa.length ? tarefa : null,
+        message: "TAREFA:LIST.OK",
+        status: StatusCodes.OK,
+      };
+  
+    } catch (e) {
+      return {
+        data: __filename,
+        message: e.message,
+        status: StatusCodes.BAD_REQUEST,
+      };
+    }
+  }
+
+
+  static async updateTarefaProcesso({
+    id,
+    descricao,
+    status,
+  }) {
+    try {
+
+     let tarefa = await updateTarefaByProcesso(id, descricao, status)
+
+      return {
+        data: tarefa,
+        message: "TAREFA.UPDATED.OK",
+        status: StatusCodes.OK,
+      };
+  
+    } catch (e) {
+      return {
+        data: __filename,
+        message: e.message,
+        status: StatusCodes.BAD_REQUEST,
+      };
+    }
+  }
+
 
 
 }
