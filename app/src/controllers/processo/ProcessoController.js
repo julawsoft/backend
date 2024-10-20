@@ -100,7 +100,6 @@ class ProcessoController {
                         }
                 )
 
-                console.log(response)
                 return responseHttp(res, response.status, response.message, response.data, [])
         }
 
@@ -119,7 +118,6 @@ class ProcessoController {
                           console.log('Erro ao enviar o arquivo:', err);
                         }
                 })
-                // return responseHttp(res, response.status, response.message, response.data, [])
         }
 
         async removeRecursosProcesso(req, res) {

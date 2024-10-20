@@ -366,7 +366,6 @@ class ProcessoServive {
 
     try {
 
-      console.log(">>>>>>>>>>>>>>", processoId)
 
         let data = await getAllByKeyValue("id", processoId);
 
@@ -399,7 +398,6 @@ class ProcessoServive {
             status: StatusCodes.OK,
           };
         }
-        console.log("viewAnexoProcesso <<<< >>>> :::: :::: " , data);
     
     }catch(e) {
       return {

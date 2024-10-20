@@ -96,8 +96,6 @@ async function removeTarefaByProcesso(id) {
 
 async function updateTarefaByProcesso(id, descricao, status) {
 
-  console.log('Updating processo_tarefas', id, descricao, status);
-
   const result = ProcessosTarefas.sequelize.query(`
     UPDATE processo_tarefas
     SET 
@@ -111,9 +109,6 @@ async function updateTarefaByProcesso(id, descricao, status) {
       id
     ]
   });
-
-
-  console.log(result)
 
   return (await result);
 
