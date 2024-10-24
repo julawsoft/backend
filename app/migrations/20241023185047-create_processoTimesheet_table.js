@@ -20,7 +20,7 @@ module.exports = {
       },
       colaborador_id: {
         type: Sequelize.INTEGER,
-        allowNull: true,
+        allowNull: false,
         references: {
           model: 'colaboradores',
           key: 'id',
@@ -36,7 +36,7 @@ module.exports = {
       },
       processo_id: {
         type: Sequelize.INTEGER,
-        allowNull: true,
+        allowNull: false,
         references: {
           model: 'processos',
           key: 'id',
@@ -58,9 +58,9 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      localizacao: {
-        type: Sequelize.STRING,
-        allowNull: true,
+      dados_importantes: {
+        type: Sequelize.TEXT,
+        allowNull: false,
       },
       data_inicio: {
         allowNull: false,
