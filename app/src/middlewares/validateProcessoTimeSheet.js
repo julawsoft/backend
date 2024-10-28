@@ -5,8 +5,8 @@ const validateProcessoTimeSheet = [
     body('processoId').notEmpty().withMessage('Campo obrigatório'),
     body('descricao').notEmpty().withMessage('Campo obrigatório'),
     body('dadosImportantes').notEmpty().withMessage('Campo obrigatório'),
-    body('dataInicio').isDate().notEmpty().withMessage('Campo obrigatório'),
-    body('dataFim').isDate().notEmpty().withMessage('Status do Processo é um Campo obrigatório'),
+    body('dataInicio').isString().notEmpty().withMessage('Campo obrigatório'),
+    body('dataFim').isString().notEmpty().withMessage('Status do Processo é um Campo obrigatório'),
     body('horas').isNumeric().notEmpty().withMessage('Status do Processo é um Campo obrigatório'),
 ]
 

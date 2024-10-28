@@ -155,6 +155,12 @@ class ProcessoController {
                 
                 return responseHttp(res, response.status, response.message, response.data, [])
         }
+
+        async getProcessoByColaborador(req, res) {
+                let id = req.params.id
+                let response = await ProcessoServive.getProcessoByColaborador(id)
+                return responseHttp(res, response.status, response.message, response.data, [])
+        }
         
         
 }

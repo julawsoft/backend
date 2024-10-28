@@ -156,10 +156,14 @@ async function getAllOrById(id = null) {
 async function getAllOrByProcessoId(idProcesso) {
 
   let queryString = `SELECT 
+  pr.ref as referencia_processo,
+  pr.assunto as assunto_processo,
+  p.id,
   p.dados_importantes,
   p.data_inicio,
   p.data_fim,
   p.horas,
+  p.descricao,
   te.label AS tipo_evento,
   p_facturacao.descricao AS modo_facturacao,
   cli.denominacao AS cliente,
@@ -168,7 +172,9 @@ async function getAllOrByProcessoId(idProcesso) {
   
   FROM processos_timesheet p
     
-  INNER JOIN processo_facturacao p_facturacao
+  inner join processos pr 
+  on pr.id = p.id 
+  left JOIN processo_facturacao p_facturacao
   ON p.modo_facturacao = p_facturacao.id
   INNER JOIN tipo_eventos_timesheet te
   ON p.tipo_evento_id = te.id
