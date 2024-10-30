@@ -1,4 +1,4 @@
-const { getAll } = require("../../persistencia/models/Colaborador");
+const { getAll, getAllQuery } = require("../../persistencia/models/Colaborador");
 const getAllByKeyValueDadosContacto = require("../dadoContacto/getAllByKeyValueDadosContacto");
 const getAllByKeyValueDadosIdentificacao = require("../dadoIdentificacao/getAllByKeyValueDadosIdentificacao");
 const listTipoColaboradorById = require("../tipoDeColaborador/listTipoColaboradorById");
@@ -30,4 +30,9 @@ async function getAllColaboradorService() {
 
 }
 
-module.exports = getAllColaboradorService
+async function getAllColaborador() {
+        return await getAllQuery();
+}
+
+module.exports = getAllColaboradorService;
+module.exports.getAll = getAllColaborador;

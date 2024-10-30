@@ -63,10 +63,10 @@ async function createColaboradorController(req, res) {
 
                 return responseHttp(res, StatusCodes.CREATED, COLABORADOR.COLABORADOR_CREATED, dataReturned, [])
         } catch (e) {
-                /*logger.error({
+                logger.error({
                         label: "error", message: `${COLABORADOR.COLABORADOR_ERROR_CREATED} : ${e.message}`
-                      })
-                */
+                })
+
                 return responseHttp(res, StatusCodes.BAD_REQUEST, COLABORADOR.COLABORADOR_ERROR_CREATED, {}, e.message)
         }
 }
