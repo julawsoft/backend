@@ -1,3 +1,5 @@
+const fs = require('fs');
+const { v4: uuidv4 } = require('uuid');
 const { StatusCodes } = require("http-status-codes");
 const {
   create,
@@ -8,15 +10,24 @@ const {
 const {
   getAllByKeyValue: TarefaGetByKey,
   createTarefa,
+  removeTarefaByProcesso,
+  getTarefaById,
+  updateTarefaByProcesso,
 } = require("../../persistencia/models/ProcessosTarefas");
 const {
   getByProcessoId: PrecedenteGetByKey,
   createPrecedente,
+  removePrecedenteByProcesso,
 } = require("../../persistencia/models/ProcessosPrecedentes");
 const {
   getByProcessoId: EquipaGetByKey,
   createEquipa,
+  removeEquipaByProcesso,
 } = require("../../persistencia/models/ProcessosEquipa");
+const saveBase64Image = require("../../utils/saveBase64Image");
+const { createAnexo, getByProcessosId, getAllByKeyValue, removeAnexoByProcesso } = require('../../persistencia/models/ProcessosAnexos');
+const { STORAGE_PATH } = require('../../const');
+
 
 class ProcessoServive {
   /**
@@ -133,13 +144,15 @@ class ProcessoServive {
         if (processo.id) {
           let tarefas = await TarefaGetByKey("processo_id", processo.id);
           let precedentes = await PrecedenteGetByKey(processo.id);
-          let equipas = await EquipaGetByKey("processo_id", processo.id);
+          let equipas = await EquipaGetByKey(processo.id);
+          let anexos = await getByProcessosId(processo.id)
 
           processoDTO.push({
             ...processo,
             tarefas: tarefas ?? [],
             precedentes: precedentes ?? [],
             equipas: equipas ?? [],
+            anexos: anexos ?? [],
           });
         }
       }
@@ -150,8 +163,6 @@ class ProcessoServive {
         status: StatusCodes.OK,
       };
     } catch (e) {
-      console.log(">>>>>>><<<<", e);
-
       return {
         data: __filename,
         message: e.message,
@@ -170,12 +181,14 @@ class ProcessoServive {
           let tarefas = await TarefaGetByKey("processo_id", processo[0].id);
           let precedentes = await PrecedenteGetByKey(processo[0].id);
           let equipas = await EquipaGetByKey(processo[0].id);
+          let anexos = await getByProcessosId(processo[0].id)
 
           processoDTO.push({
             ...processo[0],
             tarefas: tarefas ?? [],
             precedentes: precedentes ?? [],
             equipas: equipas ?? [],
+            anexos: anexos ?? [],
           });
         }
 
@@ -248,17 +261,31 @@ class ProcessoServive {
 
   static async addAnexoProcesso({
     processoId,
+    colaboradorId,
     anexos,
   }) {
     try {
 
-      console.log(anexos)
+      const uuid = uuidv4();
+      const fileName = `${uuid}_processo_${processoId}`
 
-      return 0
+      if(anexos) {
+        for (let anexo of anexos) {
+          let {data} = await saveBase64Image(fileName, anexo.anexo);
+          let path = `${data.path}@${data.fileName}`
+          await createAnexo({
+              "processoId": processoId,
+              "colaboradorId": colaboradorId,
+              "descricao": anexo.descricao,
+              "path": path
+          })
+        }
+      }
 
+      let response = await getByProcessosId(processoId)
      
       return {
-        data: [],
+        data: response,
         message: "RESOUCES.PROCESS:ADDED",
         status: StatusCodes.CREATED,
       };
@@ -295,7 +322,8 @@ class ProcessoServive {
     statusId
   }) {
     try {
-      const processoUpdated = await update({
+      
+      await update({
         processoId,
         assunto,
         area,
@@ -333,6 +361,135 @@ class ProcessoServive {
       };
     }
   }
+
+  static async viewAnexoProcesso({processoId}) {
+
+    try {
+
+
+        let data = await getAllByKeyValue("id", processoId);
+
+        if(data) {
+
+            let pathResponse = data[0].path
+            let [pathFolfder, fileName] = pathResponse.split("@");
+            
+            let filePathComplete = `${STORAGE_PATH}/${fileName}`;
+
+            console.log(filePathComplete)
+
+            if(fs.existsSync(filePathComplete)){
+              return {
+                data: {
+                    "path": filePathComplete,
+                    "fileName": fileName,
+                },
+                message: "ANEXO.PROCESSO",
+                status: StatusCodes.OK,
+              }
+            }else{
+                throw new Error("File not found")
+            }
+
+        }else {
+          return {
+            data: data,
+            message: "ANEXO.PROCESSO",
+            status: StatusCodes.OK,
+          };
+        }
+    
+    }catch(e) {
+      return {
+        data: __filename,
+        message: e.message,
+        status: StatusCodes.BAD_REQUEST,
+      };
+    }
+  }
+
+  static async removeRecursosProcesso({
+    type,
+    valueId,
+  }) {
+    try {
+
+      if (type === "colaborador") {
+        await removeEquipaByProcesso(valueId)
+      }
+
+      if (type === "tarefa") {
+        await removeTarefaByProcesso(valueId)
+      }
+
+      if (type === "anexo") {
+        await removeAnexoByProcesso(valueId);
+      }
+
+      if(type === "precedente") {
+        await removePrecedenteByProcesso(valueId);
+      }
+
+      return {
+        data: [],
+        message: "RESOURCES.PROCESS:REMOVED",
+        status: StatusCodes.OK,
+      };
+    } catch (e) {
+      return {
+        data: __filename,
+        message: e.message,
+        status: StatusCodes.BAD_REQUEST,
+      };
+    }
+  }
+
+
+  static async getTaregaById(id) {
+    try {
+
+     let tarefa = await getTarefaById(id)
+
+      return {
+        data: tarefa.length ? tarefa : null,
+        message: "TAREFA:LIST.OK",
+        status: StatusCodes.OK,
+      };
+  
+    } catch (e) {
+      return {
+        data: __filename,
+        message: e.message,
+        status: StatusCodes.BAD_REQUEST,
+      };
+    }
+  }
+
+
+  static async updateTarefaProcesso({
+    id,
+    descricao,
+    status,
+  }) {
+    try {
+
+     let tarefa = await updateTarefaByProcesso(id, descricao, status)
+
+      return {
+        data: tarefa,
+        message: "TAREFA.UPDATED.OK",
+        status: StatusCodes.OK,
+      };
+  
+    } catch (e) {
+      return {
+        data: __filename,
+        message: e.message,
+        status: StatusCodes.BAD_REQUEST,
+      };
+    }
+  }
+
 
 
 }

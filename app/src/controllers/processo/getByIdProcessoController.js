@@ -8,7 +8,6 @@ const ProcessoServive = require('../../services/processos/ProcessoService');
 async function getByIdProcessoController(req, res) {
 
                 const {id} = req.params
-
                 const response = await ProcessoServive.getByIdProcesso(id)
         return responseHttp(res, response.status, response.message, response.data, [])
 

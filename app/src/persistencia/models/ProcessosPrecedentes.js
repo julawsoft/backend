@@ -86,9 +86,24 @@ async function getByProcessoId(id) {
   });
 }
 
+
+async function removePrecedenteByProcesso(id) {
+  if(!id)
+    throw new Error('ID is required');
+
+  let queryString = `DELETE FROM processo_precedentes WHERE processo_precedentes.id = ${id}`;
+  
+  return  sequelize.query(queryString, {
+  type: QueryTypes.DELETE,
+  });
+  
+}
+
+
 module.exports = {
   createPrecedente,
   getAll,
   getAllByKeyValue,
   getByProcessoId,
+  removePrecedenteByProcesso
 };
