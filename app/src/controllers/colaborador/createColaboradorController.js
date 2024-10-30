@@ -18,7 +18,7 @@ async function createColaboradorController(req, res) {
                 }
 
                 const dataBody = req.body
-console.log('aqui',dataBody );
+                console.log('aqui', dataBody);
                 // verificar o tipo de colaborador Id
                 // verificar a funcao
 
@@ -61,22 +61,20 @@ console.log('aqui',dataBody );
                                 }
                         }
 
-                        if (dataBody.custoFinanceiro) {
+                        /* if (dataBody.custoFinanceiro) {
                                 createDadosCustoFinanceiro({
                                         "taxaHoraria": dataBody.custoFinanceiro.taxa_horaria,
                                         "colaboradorId": dataReturned.id
-                                        
+
                                 })
-                        }
+                        } */
                 }
 
                 return responseHttp(res, StatusCodes.CREATED, COLABORADOR.COLABORADOR_CREATED, dataReturned, [])
         } catch (e) {
-                /*logger.error({
+                logger.error({
                         label: "error", message: `${COLABORADOR.COLABORADOR_ERROR_CREATED} : ${e.message}`
-                      })
-                */
-                      console.log('este é o :', e);
+                })
                 return responseHttp(res, StatusCodes.BAD_REQUEST, COLABORADOR.COLABORADOR_ERROR_CREATED, {}, e.message)
         }
 }

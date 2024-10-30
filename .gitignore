@@ -20,3 +20,8 @@ infra/sql_volume
 .env
 
 app/API.md
+app/src/infra/keycloak/config.json
+docker-compose.yml
+infra/docker-compose.yml
+start-app.sh
+start-db.sh

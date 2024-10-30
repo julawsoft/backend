@@ -1,4 +1,4 @@
-const getAllColaboradorService = require('../../services/colaborador/getAllColaborador.js')
+const service = require('../../services/colaborador/getAllColaborador.js')
 const logger = require('../../utils/logger/logger.js')
 const responseHttp = require('../../utils/http/response.js')
 const { StatusCodes } = require('http-status-codes')
@@ -7,7 +7,7 @@ const { COLABORADOR } = require('../../utils/http/erros.Const.js')
 async function getAllColaboradorController(req, res) {
 
         try {
-                const responseColabData = await getAllColaboradorService()
+                const responseColabData = await service.getAll();
 
                 return responseHttp(res, StatusCodes.OK, COLABORADOR.COLABORADOR_LIST_ALL, responseColabData, [])
         } catch (e) {
