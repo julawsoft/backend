@@ -1,5 +1,6 @@
-const { getAll } = require("../../persistencia/models/Colaborador");
+const { getAll, getAllQuery } = require("../../persistencia/models/Colaborador");
 const getAllByKeyValueDadosContacto = require("../dadoContacto/getAllByKeyValueDadosContacto");
+const getAllByKeyValueDadosCustoFinanceiro = require("../dadocustofinanceiro/getAllByKeyValueDadosCustoFinanceiro");
 const getAllByKeyValueDadosIdentificacao = require("../dadoIdentificacao/getAllByKeyValueDadosIdentificacao");
 const listTipoColaboradorById = require("../tipoDeColaborador/listTipoColaboradorById");
 
@@ -15,12 +16,14 @@ async function getAllColaboradorService() {
                         let tipoColaborador = await listTipoColaboradorById(colaborador.id)
                         let dadosIdentificacao = await getAllByKeyValueDadosIdentificacao("colaborador_id", colaborador.id)
                         let dadosContactos = await getAllByKeyValueDadosContacto("colaboradorId", colaborador.id)
+                        let dadosCustoFinanceiro = await getAllByKeyValueDadosCustoFinanceiro("colaboradorId", colaborador.id)
 
                         colaboradorDTO.push({
                                 ...colaborador.dataValues,
                                 tipo: tipoColaborador ?? {},
                                 identificacoes: dadosIdentificacao ?? [],
-                                contactos: dadosContactos ?? []
+                                contactos: dadosContactos ?? [],
+                                custoFinanceiro: dadosCustoFinanceiro ?? {}
 
                         })
                 }
@@ -30,4 +33,9 @@ async function getAllColaboradorService() {
 
 }
 
-module.exports = getAllColaboradorService
+async function getAllColaborador() {
+        return await getAllQuery();
+}
+
+module.exports = getAllColaboradorService;
+module.exports.getAll = getAllColaborador;

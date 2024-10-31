@@ -7,7 +7,10 @@ const errosConst = {
     VALIDATION_ERROR: "Invalid request",
     SUCCESS: "Success",
     ERROR: "Error",
-    DADO_CONTACTO_TIPO_ERRO: "O tipo não corresponde ao ENUN"
+    DADO_CONTACTO_TIPO_ERRO: "O tipo não corresponde ao ENUN",
+    PROCESSO_CREATED: "Processo created successfully",
+    PROCESSO_ERROR_TO_CREATED: "Error to Processo create a new process",
+    PROCESSO_NOT_FOUND: "Id do Processo não encontrado"
 }
 
 const COLABORADOR = {
@@ -28,9 +31,16 @@ const DADOS_CONTACTO = {
     DADOS_IDENTIFICACAO_ERROR_CREATED: "Error to create a new Dados Identicacao"
  }
 
+
+ const DADOS_CUSTO_FINANCEIRO = {
+    DADOS_CUSTO_FINANCEIRO_CREATED: "Dados Custo Financeiro created successfully",
+    DADOS_CUSTO_FINANCEIRO_ERROR_CREATED: "Error to create a new Dados Custo Financeiro"
+ }
+
 module.exports = {
     errosConst, 
     COLABORADOR,
     DADOS_CONTACTO,
     DADOS_IDENTIFICACAO,
+    DADOS_CUSTO_FINANCEIRO,
 }

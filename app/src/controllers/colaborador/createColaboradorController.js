@@ -6,6 +6,7 @@ const { errosConst, COLABORADOR } = require('../../utils/http/erros.Const.js');
 const createDadosContacto = require('../../services/dadoContacto/createDadosContacto.js');
 const logger = require('../../utils/logger/logger.js');
 const createDadosIdentificacao = require('../../services/dadoIdentificacao/createDadosIdentificacao.js');
+const createDadosCustoFinanceiro = require('../../services/dadocustofinanceiro/createDadosCustoFinanceiro.js');
 
 
 async function createColaboradorController(req, res) {
@@ -17,7 +18,7 @@ async function createColaboradorController(req, res) {
                 }
 
                 const dataBody = req.body
-
+                console.log('aqui', dataBody);
                 // verificar o tipo de colaborador Id
                 // verificar a funcao
 
@@ -59,14 +60,21 @@ async function createColaboradorController(req, res) {
                                         })
                                 }
                         }
+
+                        /* if (dataBody.custoFinanceiro) {
+                                createDadosCustoFinanceiro({
+                                        "taxaHoraria": dataBody.custoFinanceiro.taxa_horaria,
+                                        "colaboradorId": dataReturned.id
+
+                                })
+                        } */
                 }
 
                 return responseHttp(res, StatusCodes.CREATED, COLABORADOR.COLABORADOR_CREATED, dataReturned, [])
         } catch (e) {
-                /*logger.error({
+                logger.error({
                         label: "error", message: `${COLABORADOR.COLABORADOR_ERROR_CREATED} : ${e.message}`
-                      })
-                */
+                })
                 return responseHttp(res, StatusCodes.BAD_REQUEST, COLABORADOR.COLABORADOR_ERROR_CREATED, {}, e.message)
         }
 }

@@ -120,9 +120,81 @@ async function getAllByKeyValue(chave, valor) {
   })
 }
 
+/**
+* @param {string} denominacao
+* @param {number} tipo_id
+* @param {string} nif
+* @param {string} endereco
+* @param {string} pessoa_contacto
+* @param {string} contacto_cobranca
+* @param {string} nota
+* @param {string} status
+* @returns {Array} Cliente
+*/
+async function updateById(
+  {
+    denominacao,
+    tipoId,
+    nif,
+    endereco,
+    pessoaContacto,
+    contactoCobranca,
+    nota,
+    status,
+    id
+  }
+) {
+
+  try {
+
+    console.log(`THIS IS BEFORE UPDATE`);
+    const result = Cliente.sequelize.query(`
+      UPDATE clientes
+      SET 
+        denominacao=?,
+        nif=?,
+        endereco=?,
+        nota=?,
+        status=?,
+        pessoa_contacto=?,
+        tipo_id=?,
+        contacto_cobranca=?
+      WHERE id = ? 
+    `, {
+      replacements: [
+        denominacao,nif,endereco,nota,status,
+        pessoaContacto,tipoId,contactoCobranca,id
+      ]
+    });
+  
+    return (await result);
+    
+  } catch (error) {
+    
+    console.log(`ERROR ON UPDATE: `,error);
+
+  }
+  return result;
+
+
+  /* return await Cliente.update({
+      "denominacao": denominacao,
+      "tipo_id": tipoId,
+      "nif": nif,
+      "endereco": endereco,
+      "pessoa_contacto": pessoaContacto,
+      "contacto_cobranca": contactoCobranca,
+      "nota": nota,
+      "status": status
+  }, {
+    where: { id }
+  }) */
+}
+
 module.exports = {
   create,
   getAll,
   getAllByKeyValue,
   Cliente,
+  updateById
 };

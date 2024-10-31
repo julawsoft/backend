@@ -5,6 +5,9 @@ const tipoClienteRouter = require('./tipoCliente.js')
 const clienteRouter = require('./cliente.js')
 const dadoContactoRouter = require("./dadoContacto.js")
 const dadosIdentificacaoRouter = require("./dadoIdentificacao.js")
+const authRouter = require("./auth.js")
+const processo = require("./processo.js")
+const processoTimeSheet = require("./processoTimeSheet.js")
 
 const INDEX_ROUTE= "/"
 const routesRoot = Router()
@@ -14,6 +17,9 @@ routesRoot.use(tipoClienteRouter)
 routesRoot.use(clienteRouter)
 routesRoot.use(dadoContactoRouter)
 routesRoot.use(dadosIdentificacaoRouter)
+routesRoot.use(authRouter)
+routesRoot.use(processo)
+routesRoot.use(processoTimeSheet)
 
 routesRoot.get(INDEX_ROUTE, (req, res) => {
     return res.send({

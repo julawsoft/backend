@@ -1,5 +1,5 @@
-const createColaborador = require('../../services/colaborador/createColaborador.js')
-const { validationResult } = require('express-validator')
+const updateColaborador = require('../../services/colaborador/updateColaborador.js');
+const { validationResult } = require('express-validator');
 
 async function updateColaboradorController(req, res) {
 
@@ -12,9 +12,9 @@ async function updateColaboradorController(req, res) {
                 const data = req.body
                 console.log("data", data)
 
-                await createColaborador(data)
+                const result = await updateColaborador(data);
 
-                return res.send("POST SAVE...")
+                return res.send(result)
         } catch (e) {
 
         }

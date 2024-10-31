@@ -20,13 +20,13 @@ async function createColaborador({ username, nomeCompleto, nomeProfissional, dat
         const role = switchRole(funcao)
         const [firstName, lastName] = nomeCompleto.split(" ")
 
-        const keyCloakColaborador = await createKeycloakColaborador({
+        /**const keyCloakColaborador = await createKeycloakColaborador({
             username,
             password: defaultPassword,
             firstName,
             lastName, 
             groups: role
-        })
+        })**/
         
         const dataToSave = {
             "nomeCompleto": nomeCompleto,
@@ -34,7 +34,8 @@ async function createColaborador({ username, nomeCompleto, nomeProfissional, dat
             "dataNascimento": dataNascimento,
             "funcao": funcao,
             "tipoColaboradorId": tipoColaboradorId,
-            "uuid": keyCloakColaborador.uuid.toString(),
+            "uuid": Math.random().toString().slice(2) + new Date().getTime().toString(),
+            /**keyCloakColaborador.uuid.toString()***/
             "inicial":  makeInitialColaborador(nomeCompleto)
         }     
 
