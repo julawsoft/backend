@@ -272,6 +272,47 @@ async function getById(id) {
 }
 
 
+async function getByColaboradorId(idColaborador) {
+  // return await Processos.findAll() 
+  let queryString = ` 
+  SELECT 
+  p.*,
+  p_status.descricao AS estado,
+  p_instituicoes.descricao AS instituicao,
+  p_facturacao.descricao AS modo_facturacao,
+  c.nome_completo AS gestor,
+  c_suspendeu.nome_completo AS colaborador_suspendeu,
+  c_enderrou.nome_completo AS colaborador_encerrou,
+  cli.denominacao AS cliente,
+  tcli.description AS tipo_cliente
+  
+  FROM processos p
+  
+  INNER JOIN processo_estado p_status
+  ON p.status_id = p_status.id
+  INNER JOIN processo_instituicoes p_instituicoes
+  ON p.instituicao_id = p_instituicoes.id
+  INNER JOIN processo_facturacao p_facturacao
+  ON p.modo_facturacao_id = p_facturacao.id
+  LEFT JOIN colaboradores c
+  ON p.gestor_id = c.id
+  LEFT JOIN colaboradores c_suspendeu
+  ON p.colaborador_id_suspendeu = c_suspendeu.id
+  LEFT JOIN colaboradores c_enderrou
+  ON p.colaborador_id_encerrou = c_enderrou.id
+  LEFT JOIN clientes cli
+  ON p.cliente_id = cli.id
+  LEFT JOIN tipo_cliente tcli
+  ON cli.tipo_id = tcli.id
+  WHERE p.id IN  (SELECT processo_equipa.processo_id FROM processo_equipa
+   WHERE processo_equipa.colaborador_id = ${idColaborador})`;
+  
+  return  sequelize.query(queryString, {
+  type: QueryTypes.SELECT,
+});
+}
+
+
 
 /**
  * @param {number} processoId 
@@ -358,4 +399,5 @@ module.exports = {
   getAll,
   getById,
   update,
+  getByColaboradorId,
 };

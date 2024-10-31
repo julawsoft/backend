@@ -57,6 +57,7 @@ class ProcessoTimeSheetService {
     static async getProcessoTimeSheetByProcessoId(idProcesso) {
         try {
 
+            console.log(">>>>>>>>>>>", idProcesso)
             let response = await getAllOrByProcessoId(idProcesso)
             return {
                 data: response,

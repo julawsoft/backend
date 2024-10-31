@@ -119,37 +119,33 @@ async function create(data) {
 
 async function getAllOrById(id = null) {
 
-  let where = id == null ? '' : 'where';
+  console.log(id)
+
+  let where = id == null ? '' : 'where p.id = ' + id;
 
   let queryString = `SELECT 
-  p.*,
-  p_status.descricao AS estado,
-  p_instituicoes.descricao AS instituicao,
+  p.dados_importantes,
+  p.data_inicio,
+  p.data_fim,
+  p.horas,
+  te.label AS tipo_evento,
   p_facturacao.descricao AS modo_facturacao,
-  c.nome_completo AS gestor,
-  c_suspendeu.nome_completo AS colaborador_suspendeu,
-  c_enderrou.nome_completo AS colaborador_encerrou,
   cli.denominacao AS cliente,
-  tcli.description AS tipo_cliente
+  tcli.description AS tipo_cliente,
+  c.nome_completo AS colaborador
   
-  FROM processos p
-  
-  INNER JOIN processo_estado p_status
-  ON p.status_id = p_status.id
-  INNER JOIN processo_instituicoes p_instituicoes
-  ON p.instituicao_id = p_instituicoes.id
+  FROM processos_timesheet p
+    
   INNER JOIN processo_facturacao p_facturacao
-  ON p.modo_facturacao_id = p_facturacao.id
+  ON p.modo_facturacao = p_facturacao.id
+  INNER JOIN tipo_eventos_timesheet te
+  ON p.tipo_evento_id = te.id
   LEFT JOIN colaboradores c
-  ON p.gestor_id = c.id
-  LEFT JOIN colaboradores c_suspendeu
-  ON p.colaborador_id_suspendeu = c_suspendeu.id
-  LEFT JOIN colaboradores c_enderrou
-  ON p.colaborador_id_encerrou = c_enderrou.id
+  ON p.colaborador_id = c.id
   LEFT JOIN clientes cli
   ON p.cliente_id = cli.id
   LEFT JOIN tipo_cliente tcli
-  ON cli.tipo_id = tcli.id`;
+  ON cli.tipo_id = tcli.id ${where}`;
 
   return sequelize.query(queryString, {
     type: QueryTypes.SELECT,
@@ -159,7 +155,39 @@ async function getAllOrById(id = null) {
 
 async function getAllOrByProcessoId(idProcesso) {
 
-  let queryString = ``;
+  let queryString = `SELECT 
+  pr.ref as referencia_processo,
+  pr.assunto as assunto_processo,
+  p.id,
+  p.dados_importantes,
+  p.data_inicio,
+  p.data_fim,
+  p.horas,
+  p.descricao,
+  te.label AS tipo_evento,
+  p_facturacao.descricao AS modo_facturacao,
+  cli.denominacao AS cliente,
+  tcli.description AS tipo_cliente,
+  c.nome_completo AS colaborador
+  
+  FROM processos_timesheet p
+    
+  inner join processos pr 
+  on pr.id = p.id 
+  left JOIN processo_facturacao p_facturacao
+  ON p.modo_facturacao = p_facturacao.id
+  INNER JOIN tipo_eventos_timesheet te
+  ON p.tipo_evento_id = te.id
+  LEFT JOIN colaboradores c
+  ON p.colaborador_id = c.id
+  LEFT JOIN clientes cli
+  ON p.cliente_id = cli.id
+  LEFT JOIN tipo_cliente tcli
+  ON cli.tipo_id = tcli.id 
+  where p.processo_id = ${idProcesso}`;
+
+
+  console.log(queryString)
 
   return sequelize.query(queryString, {
     type: QueryTypes.SELECT,
