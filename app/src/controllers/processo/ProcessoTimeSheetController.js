@@ -43,13 +43,17 @@ class ProcessoTimeSheetController {
                 if(!idProcesso){
                         return responseHttp(res, StatusCodes.BAD_REQUEST, errosConst.VALIDATION_ERROR, {}, [''])
                 }
+                const responseProcesso = await ProcessoServive.getByIdProcesso(idProcesso)
+
+                console.log(responseProcesso)
+                if(responseProcesso.status !== StatusCodes.OK)
+                        return responseHttp(res, StatusCodes.BAD_REQUEST, errosConst.VALIDATION_ERROR, {}, ['Processo not found'])
 
                 const response = await ProcessoTimeSheetService.getProcessoTimeSheetByProcessoId(idProcesso)
                 
                 return responseHttp(res, response.status, response.message, response.data, [])
         }
-        
-        
+         
 }
 
 module.exports = ProcessoTimeSheetController;

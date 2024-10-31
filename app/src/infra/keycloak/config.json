@@ -1,0 +1,11 @@
+{
+
+
+    "realm": "julaw-realm",
+    "authServerURL": "https://5.252.53.178:8443",
+    "clientId": "julaw-client",
+    "userAdmin": "adminjl",
+    "pwdAdmin": "Zsxdc@law1",
+    "grantType": "password",
+    "discover": "https://5.252.53.178:8443/realms/julaw-realm"
+  }

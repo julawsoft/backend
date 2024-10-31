@@ -4,10 +4,11 @@ const { realm, authServerURL, clientId, userAdmin, pwdAdmin, grantType, clientSe
 const logger = require('../../utils/logger/logger');
 
 console.log(realm, authServerURL, clientId, userAdmin, pwdAdmin)
+process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
 
 class KeycloakConnection {
 
-  static instance; 
+  static instance;
 
   constructor() {
     setTimeout(() => {
@@ -16,30 +17,30 @@ class KeycloakConnection {
   }
 
   async init() {
-      if (!this.instance) {
-        KcAdminClient({
-          baseUrl: authServerURL,
-          realmName: realm,
-          username: userAdmin,
-          password: pwdAdmin,
-          grant_type: grantType,
-          client_id: clientId,
-          // client_secret: clientSecret,
-        }).then((response) => {
-          // console.log("response", response)
-          this.instance = response;
-          logger.info(`keycloak server connected successfully`)
-        }).catch((error) => {
-          console.log("error : >>><<< ", error)
-          logger.error(`${error.error ?? error}`)
-        }).finally(()=> {
-            logger.http(`keycloak server`)
-        })
-      }
+    if (!this.instance) {
+      KcAdminClient({
+        baseUrl: authServerURL,
+        realmName: realm,
+        username: userAdmin,
+        password: pwdAdmin,
+        grant_type: grantType,
+        client_id: clientId,
+        // client_secret: clientSecret,
+      }).then((response) => {
+        console.log("response keycloak connection >>>>>> ", response)
+        this.instance = response;
+        logger.info(`keycloak server connected successfully`)
+      }).catch((error) => {
+        console.log("error  keycloak connection : >>><<< ", error)
+        logger.error(`${error.error ?? error}`)
+      }).finally(() => {
+        logger.http(`keycloak server`)
+      })
+    }
   }
 
   static getInstance() {
-    return this.instance ? this.instance: new KeycloakConnection();
+    return this.instance ? this.instance : new KeycloakConnection();
   }
 
 }

@@ -7,6 +7,9 @@ const exitHandler = terminate(app, {
   timeout: 500,
 });
 
+// remove this line when we are on production
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`))
 
 process.on('uncaughtException', exitHandler(1, 'Unexpected Error'));

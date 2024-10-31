@@ -6,6 +6,7 @@ const {
   getAll,
   getById,
   update,
+  getByColaboradorId,
 } = require("../../persistencia/models/Processos");
 const {
   getAllByKeyValue: TarefaGetByKey,
@@ -486,6 +487,47 @@ class ProcessoServive {
         data: __filename,
         message: e.message,
         status: StatusCodes.BAD_REQUEST,
+      };
+    }
+  }
+
+
+  
+  static async getProcessoByColaborador(idColaborador) {
+
+    try {
+      const processos = await getByColaboradorId(idColaborador);
+      
+      let processoDTO = [];
+
+      
+      for (let processo of processos) {
+        if (processo.id) {
+          let tarefas = await TarefaGetByKey("processo_id", processo.id);
+          let precedentes = await PrecedenteGetByKey(processo.id);
+          let equipas = await EquipaGetByKey(processo.id);
+          let anexos = await getByProcessosId(processo.id)
+
+          processoDTO.push({
+            ...processo,
+            tarefas: tarefas ?? [],
+            precedentes: precedentes ?? [],
+            equipas: equipas ?? [],
+            anexos: anexos ?? [],
+          });
+        }
+      }
+
+      return {
+        data: processoDTO,
+        message: "PROCESS.COLABORADOR.LIST.OK",
+        status: StatusCodes.OK,
+      };
+    } catch (e) {
+      return {
+        data: __filename,
+        message: e.message,
+        status: StatusCodes.INTERNAL_SERVER_ERROR,
       };
     }
   }

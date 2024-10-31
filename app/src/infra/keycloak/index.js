@@ -68,15 +68,10 @@ class Keycloak {
 
     try {
 
-      console.log("creating user in keycloak", keycloakConnection.instance.users.create)
-
       const keycloakResponse = await keycloakConnection.instance.users.create(realm, userDataToSave)
-
-      console.log("keycloakResponse ", keycloakResponse)
 
       return keycloakResponse;
     } catch (e) {
-      console.log("error creating user in keycloak", e)
       throw e;
     }
 
@@ -89,20 +84,11 @@ class Keycloak {
   */
   static async login(username, password) {
 
-    const payload = {
-      username: username,
-      password: username,
-    }
-
-
     try {
-
 
         const keycloakIssuer = await Issuer.discover(
           `${discover}`,
         );
-
-       // console.log("keycloakIssuer ", keycloakIssuer)
 
         const cliente =  new keycloakIssuer.Client({
             client_id: `${clientId}`,
@@ -115,15 +101,9 @@ class Keycloak {
           password,
           scope: 'openid profile email', 
         });  
-        
-        
-        // console.log(">>>>>>>>>>>>> ", keycloakConnection.instance)
+                
         const userInfo = await cliente.userinfo(tokenSet.access_token)
-       
-       
-        //console.log(">>>>>>>>>>>>>>>>>> ", tokenSet)
-        //console.log(">>>>>>>>>>>>>>>>>> ", userInfo)
-
+    
       return {
           tokenSet: tokenSet,
           userInfo: userInfo,
