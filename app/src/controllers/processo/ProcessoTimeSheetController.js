@@ -1,10 +1,11 @@
 const responseHttp = require('../../utils/http/response');
 const ProcessoEquipasService = require('../../services/processos/ProcessoEquipasService');
-const { validationResult } = require('express-validator');
+const { validationResult, header } = require('express-validator');
 const { StatusCodes } = require('http-status-codes');
 const { errosConst } = require('../../utils/http/erros.Const');
 const ProcessoServive = require('../../services/processos/ProcessoService');
 const ProcessoTimeSheetService = require('../../services/processos/ProcessoTimeSheetService');
+const getAllByKeyValueColaborador = require('../../services/colaborador/getAllByKeyValueColaborador');
 
 class ProcessoTimeSheetController {
 
@@ -50,6 +51,33 @@ class ProcessoTimeSheetController {
                         return responseHttp(res, StatusCodes.BAD_REQUEST, errosConst.VALIDATION_ERROR, {}, ['Processo not found'])
 
                 const response = await ProcessoTimeSheetService.getProcessoTimeSheetByProcessoId(idProcesso)
+                
+                return responseHttp(res, response.status, response.message, response.data, [])
+        }
+
+
+        async getProcessoTimeSheetByColaboradorId(req, res) {
+
+                const  {idProcesso, idColaborador}  = req.params
+
+                if(!idProcesso){
+                        return responseHttp(res, StatusCodes.BAD_REQUEST, errosConst.VALIDATION_ERROR, {}, ['Processo Id'])
+                }
+
+                if(!idColaborador){
+                        return responseHttp(res, StatusCodes.BAD_REQUEST, errosConst.VALIDATION_ERROR, {}, ['Colaborador Id'])
+                }
+
+                const responseProcesso = await ProcessoServive.getByIdProcesso(idProcesso)
+                if(responseProcesso.status !== StatusCodes.OK)
+                        return responseHttp(res, StatusCodes.BAD_REQUEST, errosConst.VALIDATION_ERROR, {}, ['Processo not found'])
+                
+                const responseColaborador = await getAllByKeyValueColaborador("id", idColaborador)
+
+                if(responseColaborador.length === 0)
+                        return responseHttp(res, StatusCodes.BAD_REQUEST, errosConst.VALIDATION_ERROR, {}, ['Colaborador not found'])
+
+                const response = await ProcessoTimeSheetService.getProcessoTimeSheetByProcessoIdAndColaboradorId(idProcesso, idColaborador)
                 
                 return responseHttp(res, response.status, response.message, response.data, [])
         }

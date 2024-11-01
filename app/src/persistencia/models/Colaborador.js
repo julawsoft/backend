@@ -154,9 +154,6 @@ async function update(
  * @returns {string} valor
  */
 async function getAllByKeyValue(chave, valor) {
-
-  console.log("getAllByKeyValue >>>>>>>>>>>>>>>>>>>> :: <<<<<<<<<<<<<<<<<<<<<<<   ", chave, valor)
-
   return await Colaborador.findAll({
     where: {
       [chave]: valor
