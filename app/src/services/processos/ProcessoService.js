@@ -184,8 +184,6 @@ class ProcessoServive {
         let equipas = await EquipaGetByKey(processo[0].id);
         let anexos = await getByProcessosId(processo[0].id)
 
-        console.log(`BROUGHT PROCESSES: `, processo[0].id);
-
         processoDTO.push({
           ...processo[0],
           tarefas: tarefas ?? [],
