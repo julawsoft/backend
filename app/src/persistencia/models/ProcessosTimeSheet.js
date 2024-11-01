@@ -110,9 +110,8 @@ ProcessosTimeSheet.init({
  * @returns {ProcessosTimeSheet}
 */
 async function create(data) {
-  console.log("here", data);
   return ProcessosTimeSheet.create(
-    {...data}
+    { ...data }
   )
 }
 
@@ -173,7 +172,7 @@ async function getAllOrByProcessoId(idProcesso) {
   FROM processos_timesheet p
     
   inner join processos pr 
-  on pr.id = p.id 
+  on pr.id = p.processo_id 
   left JOIN processo_facturacao p_facturacao
   ON p.modo_facturacao = p_facturacao.id
   INNER JOIN tipo_eventos_timesheet te

@@ -178,20 +178,22 @@ class ProcessoServive {
 
       let processoDTO = [];
 
-        if (processo[0].id) {
-          let tarefas = await TarefaGetByKey("processo_id", processo[0].id);
-          let precedentes = await PrecedenteGetByKey(processo[0].id);
-          let equipas = await EquipaGetByKey(processo[0].id);
-          let anexos = await getByProcessosId(processo[0].id)
+      if (processo[0].id) {
+        let tarefas = await TarefaGetByKey("processo_id", processo[0].id);
+        let precedentes = await PrecedenteGetByKey(processo[0].id);
+        let equipas = await EquipaGetByKey(processo[0].id);
+        let anexos = await getByProcessosId(processo[0].id)
 
-          processoDTO.push({
-            ...processo[0],
-            tarefas: tarefas ?? [],
-            precedentes: precedentes ?? [],
-            equipas: equipas ?? [],
-            anexos: anexos ?? [],
-          });
-        }
+        console.log(`BROUGHT PROCESSES: `, processo[0].id);
+
+        processoDTO.push({
+          ...processo[0],
+          tarefas: tarefas ?? [],
+          precedentes: precedentes ?? [],
+          equipas: equipas ?? [],
+          anexos: anexos ?? [],
+        });
+      }
 
       return {
         data: processoDTO,
@@ -270,21 +272,21 @@ class ProcessoServive {
       const uuid = uuidv4();
       const fileName = `${uuid}_processo_${processoId}`
 
-      if(anexos) {
+      if (anexos) {
         for (let anexo of anexos) {
-          let {data} = await saveBase64Image(fileName, anexo.anexo);
+          let { data } = await saveBase64Image(fileName, anexo.anexo);
           let path = `${data.path}@${data.fileName}`
           await createAnexo({
-              "processoId": processoId,
-              "colaboradorId": colaboradorId,
-              "descricao": anexo.descricao,
-              "path": path
+            "processoId": processoId,
+            "colaboradorId": colaboradorId,
+            "descricao": anexo.descricao,
+            "path": path
           })
         }
       }
 
       let response = await getByProcessosId(processoId)
-     
+
       return {
         data: response,
         message: "RESOUCES.PROCESS:ADDED",
@@ -323,7 +325,7 @@ class ProcessoServive {
     statusId
   }) {
     try {
-      
+
       await update({
         processoId,
         assunto,
@@ -345,7 +347,7 @@ class ProcessoServive {
         objectivos,
         dataImportantes,
         statusId,
-      });      
+      });
 
       const response = await this.getByIdProcesso(processoId);
 
@@ -363,44 +365,44 @@ class ProcessoServive {
     }
   }
 
-  static async viewAnexoProcesso({processoId}) {
+  static async viewAnexoProcesso({ processoId }) {
 
     try {
 
 
-        let data = await getAllByKeyValue("id", processoId);
+      let data = await getAllByKeyValue("id", processoId);
 
-        if(data) {
+      if (data) {
 
-            let pathResponse = data[0].path
-            let [pathFolfder, fileName] = pathResponse.split("@");
-            
-            let filePathComplete = `${STORAGE_PATH}/${fileName}`;
+        let pathResponse = data[0].path
+        let [pathFolfder, fileName] = pathResponse.split("@");
 
-            console.log(filePathComplete)
+        let filePathComplete = `${STORAGE_PATH}/${fileName}`;
 
-            if(fs.existsSync(filePathComplete)){
-              return {
-                data: {
-                    "path": filePathComplete,
-                    "fileName": fileName,
-                },
-                message: "ANEXO.PROCESSO",
-                status: StatusCodes.OK,
-              }
-            }else{
-                throw new Error("File not found")
-            }
+        console.log(filePathComplete)
 
-        }else {
+        if (fs.existsSync(filePathComplete)) {
           return {
-            data: data,
+            data: {
+              "path": filePathComplete,
+              "fileName": fileName,
+            },
             message: "ANEXO.PROCESSO",
             status: StatusCodes.OK,
-          };
+          }
+        } else {
+          throw new Error("File not found")
         }
-    
-    }catch(e) {
+
+      } else {
+        return {
+          data: data,
+          message: "ANEXO.PROCESSO",
+          status: StatusCodes.OK,
+        };
+      }
+
+    } catch (e) {
       return {
         data: __filename,
         message: e.message,
@@ -427,7 +429,7 @@ class ProcessoServive {
         await removeAnexoByProcesso(valueId);
       }
 
-      if(type === "precedente") {
+      if (type === "precedente") {
         await removePrecedenteByProcesso(valueId);
       }
 
@@ -449,14 +451,14 @@ class ProcessoServive {
   static async getTaregaById(id) {
     try {
 
-     let tarefa = await getTarefaById(id)
+      let tarefa = await getTarefaById(id)
 
       return {
         data: tarefa.length ? tarefa : null,
         message: "TAREFA:LIST.OK",
         status: StatusCodes.OK,
       };
-  
+
     } catch (e) {
       return {
         data: __filename,
@@ -474,14 +476,14 @@ class ProcessoServive {
   }) {
     try {
 
-     let tarefa = await updateTarefaByProcesso(id, descricao, status)
+      let tarefa = await updateTarefaByProcesso(id, descricao, status)
 
       return {
         data: tarefa,
         message: "TAREFA.UPDATED.OK",
         status: StatusCodes.OK,
       };
-  
+
     } catch (e) {
       return {
         data: __filename,
@@ -492,15 +494,15 @@ class ProcessoServive {
   }
 
 
-  
+
   static async getProcessoByColaborador(idColaborador) {
 
     try {
       const processos = await getByColaboradorId(idColaborador);
-      
+
       let processoDTO = [];
 
-      
+
       for (let processo of processos) {
         if (processo.id) {
           let tarefas = await TarefaGetByKey("processo_id", processo.id);
