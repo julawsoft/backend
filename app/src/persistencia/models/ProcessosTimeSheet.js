@@ -1,4 +1,4 @@
-const { Model, DataTypes, QueryTypes, and } = require('sequelize');
+const { Model, DataTypes, QueryTypes, and, where } = require('sequelize');
 const SequelizeConnection = require('../SequelizeConnection.js');
 
 const sequelize = SequelizeConnection.getConnection().instance
@@ -226,19 +226,26 @@ async function getAllOrByProcessoIdAndColaboradorId(idProcesso, idColaborador) {
   p.colaborador_id = ${idColaborador}`
   ;
 
-  console.log("queryString >>>>>>>>>>>>>>>>>>>> ", queryString)
-
   return sequelize.query(queryString, {
     type: QueryTypes.SELECT,
   });
 }
 
+async function updateProcessoTimeSheet(data, idProcessoTimeSheet) {
 
+  return ProcessosTimeSheet.update(
+    { ...data }, 
+    {
+      where: { "id": idProcessoTimeSheet}
+    }
+  )
+}
 
 module.exports = {
   ProcessosTimeSheet,
   create,
   getAllOrById,
   getAllOrByProcessoId,
-  getAllOrByProcessoIdAndColaboradorId
+  getAllOrByProcessoIdAndColaboradorId,
+  updateProcessoTimeSheet
 };

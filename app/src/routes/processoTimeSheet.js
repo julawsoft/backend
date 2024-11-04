@@ -12,5 +12,6 @@ const ROUTES_PATH = {
 processoTimeSheet.post(ROUTES_PATH.INDEX, validateProcessoTimeSheet, new ProcessoTimeSheetController().createProcessoTimeSheet)
 processoTimeSheet.get(`${ROUTES_PATH.INDEX}/:idProcesso`, new ProcessoTimeSheetController().getProcessoTimeSheetByProcessoId)
 processoTimeSheet.get(`${ROUTES_PATH.INDEX}/:idProcesso/:idColaborador`, new ProcessoTimeSheetController().getProcessoTimeSheetByColaboradorId)
+processoTimeSheet.put(`${ROUTES_PATH.INDEX}/:idProcessoTimeSheet/`, new ProcessoTimeSheetController().updateProcessoTimeSheet)
 
 module.exports = processoTimeSheet

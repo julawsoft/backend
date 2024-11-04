@@ -81,6 +81,37 @@ class ProcessoTimeSheetController {
                 
                 return responseHttp(res, response.status, response.message, response.data, [])
         }
+
+        async updateProcessoTimeSheet(req, res) {
+
+                const errors = validationResult(req);
+                if (!errors.isEmpty()) {
+                        return responseHttp(res, StatusCodes.BAD_REQUEST, errosConst.VALIDATION_ERROR, {}, errors.array())
+                }
+
+                const { idProcessoTimeSheet } = req.params
+                const dataBody = req.body
+
+                const response = await ProcessoTimeSheetService.updateProcessoTimeSheet(
+                        {
+                                "tipoEventoId": dataBody.tipoEventoId,
+                                "colaboradorId": dataBody.colaboradorId,
+                                "clienteId": dataBody.clienteId ?? null,
+                                "processoId": dataBody.processoId,
+                                "modoFacturacao": dataBody.modoFacturacao ?? null,
+                                "taxaProcesso": dataBody.taxaProcesso ?? null,
+                                "taxaColaborador": dataBody.taxaColaborador ?? null,
+                                "descricao": dataBody.descricao,
+                                "dadosImportantes": dataBody.dadosImportantes,
+                                "dataInicio": dataBody.dataInicio,
+                                "dataFim": dataBody.dataFim,
+                                "horas": dataBody.horas,
+                                "idProcessoTimeSheet": idProcessoTimeSheet
+                        }
+                )
+                
+                return responseHttp(res, response.status, response.message, response.data, [])
+        }
          
 }
 
