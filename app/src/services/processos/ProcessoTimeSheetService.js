@@ -1,5 +1,5 @@
 const { StatusCodes } = require("http-status-codes");
-const { create, getAllOrByProcessoId, getAllOrByProcessoIdAndColaboradorId, updateProcessoTimeSheet } = require("../../persistencia/models/ProcessosTimeSheet");
+const { create, getAllOrByProcessoId, getAllOrByProcessoIdAndColaboradorId, updateProcessoTimeSheet, removeProcessoTimeSheet } = require("../../persistencia/models/ProcessosTimeSheet");
 
 
 class ProcessoTimeSheetService {
@@ -133,6 +133,26 @@ class ProcessoTimeSheetService {
             return {
                 data: response,
                 message: "TIMESHHET.PROCESSO.UPDATED",
+                status: StatusCodes.OK,
+            };
+
+        } catch (e) {
+            return {
+                data: __filename,
+                message: e.message,
+                status: StatusCodes.BAD_REQUEST,
+            };
+        }
+    }
+
+    static async deleteProcessoTimeSheet(idProcessoTimeSheet) {
+        try {
+
+            let response = await removeProcessoTimeSheet(idProcessoTimeSheet)
+
+            return {
+                data: response,
+                message: "TIMESHHET.PROCESSO.DELETED",
                 status: StatusCodes.OK,
             };
 

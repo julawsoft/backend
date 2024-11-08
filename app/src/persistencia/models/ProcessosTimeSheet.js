@@ -241,11 +241,25 @@ async function updateProcessoTimeSheet(data, idProcessoTimeSheet) {
   )
 }
 
+async function removeProcessoTimeSheet(idProcessoTimeSheet) {
+
+  if(!idProcessoTimeSheet)
+    throw new Error('ID is required');
+
+  let queryString = `DELETE FROM processos_timesheet WHERE processos_timesheet.id = ${idProcessoTimeSheet}`;
+  
+  return  sequelize.query(queryString, {
+  type: QueryTypes.DELETE,
+  });
+  
+}
+
 module.exports = {
   ProcessosTimeSheet,
   create,
   getAllOrById,
   getAllOrByProcessoId,
   getAllOrByProcessoIdAndColaboradorId,
-  updateProcessoTimeSheet
+  updateProcessoTimeSheet,
+  removeProcessoTimeSheet
 };

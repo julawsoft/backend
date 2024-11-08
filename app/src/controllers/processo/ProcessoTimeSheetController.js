@@ -112,6 +112,16 @@ class ProcessoTimeSheetController {
                 
                 return responseHttp(res, response.status, response.message, response.data, [])
         }
+
+
+        async deleteProcessoTimeSheet(req, res) {
+
+                const { idProcessoTimeSheet } = req.params
+
+                const response = await ProcessoTimeSheetService.deleteProcessoTimeSheet(idProcessoTimeSheet)
+                
+                return responseHttp(res, response.status, response.message, response.data, [])
+        }
          
 }
 
