@@ -1,5 +1,5 @@
 const { StatusCodes } = require("http-status-codes");
-const { create, getAllOrByProcessoId, getAllOrByProcessoIdAndColaboradorId } = require("../../persistencia/models/ProcessosTimeSheet");
+const { create, getAllOrByProcessoId, getAllOrByProcessoIdAndColaboradorId, updateProcessoTimeSheet, removeProcessoTimeSheet } = require("../../persistencia/models/ProcessosTimeSheet");
 
 
 class ProcessoTimeSheetService {
@@ -95,6 +95,77 @@ class ProcessoTimeSheetService {
             };
         }
     }
+
+    static async updateProcessoTimeSheet({
+        tipoEventoId,
+        colaboradorId,
+        clienteId,
+        processoId,
+        modoFacturacao,
+        taxaProcesso,
+        taxaColaborador,
+        descricao,
+        dadosImportantes,
+        dataInicio,
+        dataFim,
+        horas,
+        idProcessoTimeSheet
+    }) {
+        try {
+
+            const dataDTO = {
+                "tipo_evento_id": tipoEventoId,
+                "colaborador_id": colaboradorId,
+                "cliente_id": clienteId,
+                "processo_id": processoId,
+                "modo_facturacao": modoFacturacao,
+                "taxa_processo": taxaProcesso,
+                "taxa_colaborador": taxaColaborador,
+                "descricao": descricao,
+                "dados_importantes": dadosImportantes,
+                "data_inicio": dataInicio,
+                "data_fim": dataFim,
+                "horas": horas,
+            }
+
+            let response = await updateProcessoTimeSheet(dataDTO, idProcessoTimeSheet)
+
+            return {
+                data: response,
+                message: "TIMESHHET.PROCESSO.UPDATED",
+                status: StatusCodes.OK,
+            };
+
+        } catch (e) {
+            return {
+                data: __filename,
+                message: e.message,
+                status: StatusCodes.BAD_REQUEST,
+            };
+        }
+    }
+
+    static async deleteProcessoTimeSheet(idProcessoTimeSheet) {
+        try {
+
+            let response = await removeProcessoTimeSheet(idProcessoTimeSheet)
+
+            return {
+                data: response,
+                message: "TIMESHHET.PROCESSO.DELETED",
+                status: StatusCodes.OK,
+            };
+
+        } catch (e) {
+            return {
+                data: __filename,
+                message: e.message,
+                status: StatusCodes.BAD_REQUEST,
+            };
+        }
+    }
+
+
 }
 
 module.exports = ProcessoTimeSheetService;

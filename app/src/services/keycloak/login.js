@@ -8,7 +8,6 @@ async function loginKeycloak({username, password }) {
 
     try {
         const returnUserKeycloak = await Keycloak.login(username, password)
-        // console.log("returnUserKeycloak", returnUserKeycloak)
         return returnUserKeycloak 
     }catch (e) {
         if(String(e).includes("Invalid user credentials"))
@@ -17,4 +16,5 @@ async function loginKeycloak({username, password }) {
         throw new Error(e.errorMessage)
     }
 }
+
 module.exports = loginKeycloak
