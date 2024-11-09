@@ -3,32 +3,6 @@ const { Issuer } = require('openid-client');
 
 const { realm, authServerURL, clientId, userAdmin, pwdAdmin, grantType, clientSecret, discover } = require('./config.json');
 
-/*
-const kcAdminClient = async () => {
-  const kcAdminClientIni = new KcAdminClient({
-    baseUrl: process.env.KEYCLOAK_BASE_URL,
-    realmName: process.env.KEYCLOAK_REALM,
-  });
-
-  async function auth() {
-    await kcAdminClientIni.auth({
-      username: `${process.env.KEYCLOAK_USER_NAME}`,
-      password: `${process.env.KEYCLOAK_USER_PASS}`,
-      grantType: 'password',
-      clientId: `${process.env.CLIENT_ID}`,
-      clientSecret: `${process.env.CLIENT_SECRET}`,
-    });
-  }
-
-  if (kcAdminClientIni.accessToken === undefined) await auth();
-
-  return kcAdminClientIni;
-};
-
-export { grantType, kcAdminClient, kcClient };
-
-*/
-
 /**
  * Gerenciador integracao keycloak.
  * @class
@@ -64,8 +38,6 @@ class Keycloak {
       ],
     }
 
-    console.log("userdata to save", userDataToSave)
-
     try {
 
       const keycloakResponse = await keycloakConnection.instance.users.create(realm, userDataToSave)
@@ -94,27 +66,43 @@ class Keycloak {
             client_id: `${clientId}`,
             client_secret: `${clientSecret}`,
         });
-
+        
         const tokenSet = await cliente.grant({
           grant_type: grantType,
           username,
           password,
           scope: 'openid profile email', 
         });  
-                
+        
         const userInfo = await cliente.userinfo(tokenSet.access_token)
-    
+
+        const groups = await keycloakConnection.instance.users.groups.find(realm, userInfo.sub);
+        const roles = await keycloakConnection.instance.users.roleMappings.find(realm, userInfo.sub);
+       
       return {
           tokenSet: tokenSet,
           userInfo: userInfo,
+          groups: groups ? groups.map(group => group.name) : [],
+          roles: roles ? roles.clientMappings : [],
       }
+
     } catch (e) {
+      console.log(e)
       throw e;
     }
 
   }
 
 
+  async getUserGroups(userId) {
+
+  }
+  async getUserRoles(userId) {
+
+  }
+  async getRolesByGroup(groupId) {
+
+  }
   async deleteUser(username) { }
   async updateUser(username, email, firstName, lastName) { }
   async getUsers() { }

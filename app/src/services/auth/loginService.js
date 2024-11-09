@@ -8,15 +8,12 @@ const listTipoColaboradorById = require("../tipoDeColaborador/listTipoColaborado
 */
 async function loginService({ username, password }) {
            
-    // const defaultPassword = "julaw"
     const returnLogin = await loginKeycloak({
         username,
         password,
     })
 
     const dataColaborador = await getAllByKeyValueColaborador("uuid", returnLogin.userInfo.sub)
-
-    console.log("dataColaborador" , dataColaborador[0])
 
     const tipoColadorador = await listTipoColaboradorById(dataColaborador[0].tipo_colaborador_id) 
     return await {
@@ -25,7 +22,9 @@ async function loginService({ username, password }) {
             auth: {
                 accessToken: returnLogin.tokenSet.access_token,
                 refreshToken: returnLogin.tokenSet.refresh_token,
-                userInfo: returnLogin.userInfo
+                userInfo: returnLogin.userInfo,
+                groups: returnLogin.groups,
+                roles: returnLogin.roles,
             }
     }
 
