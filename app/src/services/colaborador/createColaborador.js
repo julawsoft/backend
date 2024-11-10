@@ -15,37 +15,38 @@ const listTipoColaboradorById = require("../tipoDeColaborador/listTipoColaborado
 * @returns {Array} Colaborador
 */
 async function createColaborador({ username, nomeCompleto, nomeProfissional, dataNascimento, funcao, tipoColaboradorId }) {
-           
-        const defaultPassword = "julaw"
-        const role = switchRole(funcao)
-        const [firstName, lastName] = nomeCompleto.split(" ")
 
-        /**const keyCloakColaborador = await createKeycloakColaborador({
-            username,
-            password: defaultPassword,
-            firstName,
-            lastName, 
-            groups: role
-        })**/
-        
-        const dataToSave = {
-            "nomeCompleto": nomeCompleto,
-            "nomeProfissional": nomeProfissional,
-            "dataNascimento": dataNascimento,
-            "funcao": funcao,
-            "tipoColaboradorId": tipoColaboradorId,
-            "uuid": Math.random().toString().slice(2) + new Date().getTime().toString(),
-            /**keyCloakColaborador.uuid.toString()***/
-            "inicial":  makeInitialColaborador(nomeCompleto)
-        }     
+    const defaultPassword = "julaw"
+    const role = switchRole(funcao)
+    const [firstName, lastName] = nomeCompleto.split(" ")
 
-        const dataColaborador = await create({...dataToSave})
-        const tipoColadorador = await listTipoColaboradorById(dataColaborador.dataValues.tipo_colaborador_id) 
-        return await {...dataColaborador.dataValues, tipo: tipoColadorador }
+    const keyCloakColaborador = await createKeycloakColaborador({
+        username,
+        password: defaultPassword,
+        firstName,
+        lastName,
+        groups: role
+    })
 
- }
+    const dataToSave = {
+        "nomeCompleto": nomeCompleto,
+        "nomeProfissional": nomeProfissional,
+        "dataNascimento": dataNascimento,
+        "funcao": funcao,
+        "tipoColaboradorId": tipoColaboradorId,
+        //"uuid": Math.random().toString().slice(2) + new Date().getTime().toString(),
+        "uuid": keyCloakColaborador.uuid.toString(),
 
- function switchRole (role) {
+        "inicial": makeInitialColaborador(nomeCompleto)
+    }
+
+    const dataColaborador = await create({ ...dataToSave })
+    const tipoColadorador = await listTipoColaboradorById(dataColaborador.dataValues.tipo_colaborador_id)
+    return await { ...dataColaborador.dataValues, tipo: tipoColadorador }
+
+}
+
+function switchRole(role) {
     switch (role) {
         case ROLES.ROOT:
             return ROLES.ROOT;
@@ -58,6 +59,6 @@ async function createColaborador({ username, nomeCompleto, nomeProfissional, dat
         default:
             return ROLES.ADMIN;
     }
- }
+}
 
 module.exports = createColaborador

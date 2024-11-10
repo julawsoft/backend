@@ -229,7 +229,7 @@ class ProcessoServive {
         for (let equipa of equipas) {
           createEquipa({
             processo_id: processoId,
-            colaborador_id: equipa,
+            colaborador_id: 1/* equipa */,
           });
         }
       }

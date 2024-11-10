@@ -61,7 +61,7 @@ async function createAnexo(
 
   return await ProcessosAnexos.create({
     "processo_id": processoId,
-    "colaborador_id": colaboradorId,
+    "colaborador_id": 1/* colaboradorId */,
     "descricao": descricao,
     "path": path,
   })
@@ -82,10 +82,10 @@ async function getByProcessosId(id) {
   ON c.tipo_colaborador_id = tc.id
   WHERE pa.processo_id = ${id}
   `;
-  
-  return  sequelize.query(queryString, {
-  type: QueryTypes.SELECT,
-});
+
+  return sequelize.query(queryString, {
+    type: QueryTypes.SELECT,
+  });
 }
 
 
@@ -103,23 +103,23 @@ async function getAllByKeyValue(key, value) {
   ON c.tipo_colaborador_id = tc.id
   WHERE pa.${key} = ${value}
   `;
-  
-  return  sequelize.query(queryString, {
-  type: QueryTypes.SELECT,
-});
+
+  return sequelize.query(queryString, {
+    type: QueryTypes.SELECT,
+  });
 }
 
 
 async function removeAnexoByProcesso(id) {
-  if(!id)
+  if (!id)
     throw new Error('ID is required');
 
   let queryString = `DELETE FROM processo_anexos WHERE processo_anexos.id = ${id}`;
-  
-  return  sequelize.query(queryString, {
-  type: QueryTypes.DELETE,
+
+  return sequelize.query(queryString, {
+    type: QueryTypes.DELETE,
   });
-  
+
 
 }
 
