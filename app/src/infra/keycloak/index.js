@@ -1,5 +1,6 @@
 const keycloakConnection = require('./KeycloakConnection.js');
 const { Issuer } = require('openid-client');
+const { jwtDecode } = require("jwt-decode");
 
 const { realm, authServerURL, clientId, userAdmin, pwdAdmin, grantType, clientSecret, discover } = require('./config.json');
 
@@ -75,15 +76,18 @@ class Keycloak {
         });  
         
         const userInfo = await cliente.userinfo(tokenSet.access_token)
+        const decoded = jwtDecode(tokenSet.access_token);    
+        const roles = decoded.resource_access['julaw-client'].roles ?? [];
 
-        const groups = await keycloakConnection.instance.users.groups.find(realm, userInfo.sub);
-        const roles = await keycloakConnection.instance.users.roleMappings.find(realm, userInfo.sub);
+        //const groups = await keycloakConnection.instance.users.groups.find(realm, userInfo.sub);
+        // const roles = await keycloakConnection.instance.users.roleMappings.find(realm, userInfo.sub);
+       
        
       return {
           tokenSet: tokenSet,
           userInfo: userInfo,
-          groups: groups ? groups.map(group => group.name) : [],
-          roles: roles ? roles.clientMappings : [],
+          //groups: groups ? groups.map(group => group.name) : [],
+          roles: [...roles],
       }
 
     } catch (e) {

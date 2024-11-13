@@ -18,7 +18,6 @@ async function createColaboradorController(req, res) {
                 }
 
                 const dataBody = req.body
-                console.log('aqui', dataBody);
                 // verificar o tipo de colaborador Id
                 // verificar a funcao
 
@@ -34,7 +33,6 @@ async function createColaboradorController(req, res) {
                         }
                 )
 
-                console.log("dataReturned", dataReturned)
                 if (dataReturned.id) {
 
 
@@ -61,13 +59,6 @@ async function createColaboradorController(req, res) {
                                 }
                         }
 
-                        /* if (dataBody.custoFinanceiro) {
-                                createDadosCustoFinanceiro({
-                                        "taxaHoraria": dataBody.custoFinanceiro.taxa_horaria,
-                                        "colaboradorId": dataReturned.id
-
-                                })
-                        } */
                 }
 
                 return responseHttp(res, StatusCodes.CREATED, COLABORADOR.COLABORADOR_CREATED, dataReturned, [])

@@ -23,7 +23,7 @@ async function loginService({ username, password }) {
                 accessToken: returnLogin.tokenSet.access_token,
                 refreshToken: returnLogin.tokenSet.refresh_token,
                 userInfo: returnLogin.userInfo,
-                groups: returnLogin.groups,
+               // groups: returnLogin.groups,
                 roles: returnLogin.roles,
             }
     }
