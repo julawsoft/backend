@@ -61,7 +61,7 @@ async function createAnexo(
 
   return await ProcessosAnexos.create({
     "processo_id": processoId,
-    "colaborador_id": 1/* colaboradorId */,
+    "colaborador_id": colaboradorId,
     "descricao": descricao,
     "path": path,
   })
