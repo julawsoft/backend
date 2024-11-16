@@ -110,6 +110,18 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: true,
       },
+      hora_mes: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+      },
+      valor_total: {
+        type: Sequelize.FLOAT,
+        allowNull: false,
+      },
+      data_emissao_factura: {
+        type: Sequelize.FLOAT,
+        allowNull: false,
+      },
       status_id: {
         type: Sequelize.INTEGER,
         allowNull: false,

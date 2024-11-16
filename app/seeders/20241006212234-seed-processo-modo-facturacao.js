@@ -10,22 +10,17 @@ module.exports = {
         updated_at: new Date(),
       },
       {
-        descricao: 'Taxa horária',
+        descricao: 'Success Fee',
         created_at: new Date(),
         updated_at: new Date(),
       },
       {
-        descricao: 'Valor Fixo',
+        descricao: 'Fixo',
         created_at: new Date(),
         updated_at: new Date(),
       },
       {
-        descricao: 'Sucess fee',
-        created_at: new Date(),
-        updated_at: new Date(),
-      },
-      {
-        descricao: 'pro bono',
+        descricao: 'Probono',
         created_at: new Date(),
         updated_at: new Date(),
       },

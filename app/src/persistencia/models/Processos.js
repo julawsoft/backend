@@ -94,11 +94,22 @@ Processos.init({
     type: DataTypes.TEXT,
     allowNull: true,
   },
+  hora_mes: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  valor_total: {
+    type: DataTypes.FLOAT,
+    allowNull: false,
+  },
+  data_emissao_factura: {
+    type: DataTypes.FLOAT,
+    allowNull: false,
+  },
   status_id: {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
-
 }, {
   sequelize,
   modelName: 'Processos',
@@ -128,6 +139,9 @@ Processos.init({
  * @param {string} factos 
  * @param {string} objectivos 
  * @param {string} dataImportantes 
+ * @param {string} horasMes 
+ * @param {string} valorTotal 
+ * @param {string} dataEmissaoFactura 
  * @returns {Processos}
  */
 async function create(
@@ -150,7 +164,10 @@ async function create(
     factos,
     objectivos,
     dataImportantes,
-    statusId
+    statusId,
+    horasMes,
+    valorTotal,
+    dataEmissaoFactura
   }
 ) {
   
@@ -175,7 +192,10 @@ async function create(
       "factos": factos,
       "objectivos": objectivos,
       "dados_importantes": dataImportantes,
-      "status_id": statusId
+      "status_id": statusId,
+      "horas_mes": horasMes,
+      "valor_total": valorTotal,
+      "data_emissao_factura": dataEmissaoFactura
     }
   )
 }
@@ -334,6 +354,9 @@ async function getByColaboradorId(idColaborador) {
  * @param {string} factos 
  * @param {string} objectivos 
  * @param {string} dataImportantes 
+ * @param {string} horasMes 
+ * @param {string} valorTotal 
+ * @param {string} dataEmissaoFactura 
  * @returns {Processos}
  */
 async function update(
@@ -357,11 +380,13 @@ async function update(
     factos,
     objectivos,
     dataImportantes,
-    statusId
+    statusId,
+    horasMes,
+    valorTotal,
+    dataEmissaoFactura
   }
 ) {
   
-
   return Processos.update(
     {
       "assunto": assunto,
@@ -382,7 +407,10 @@ async function update(
       "factos": factos,
       "objectivos": objectivos,
       "dados_importantes": dataImportantes,
-      "status_id": statusId
+      "status_id": statusId,
+      "horas_mes": horasMes,
+      "valor_total": valorTotal,
+      "data_emissao_factura": dataEmissaoFactura
     },
     {
       where: {

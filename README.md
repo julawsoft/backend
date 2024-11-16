@@ -8,7 +8,7 @@
 - configure database settings in app/.env 
 - install the packages: npm install --save
 - to run api: cd app/ npm run dev
-- make sure you hava keycloak server is running
+- make sure you have keycloak server is running
 
 
 

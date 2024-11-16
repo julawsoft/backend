@@ -62,6 +62,34 @@ class ProcessoController {
                         return responseHttp(res, StatusCodes.BAD_REQUEST, errosConst.PROCESSO_NOT_FOUND, {}, [])
                 }
 
+                if(Number(dataBody.modoFacturacaoId) == 1 && dataBody.horasMes == "") {
+                        return responseHttp(
+                                res, 
+                                StatusCodes.BAD_REQUEST, 
+                                errosConst.VALIDATION_ERROR, 
+                                {}, 
+                                "Para modo de facturação Avença, as horas/meses deve ser preenchida!"
+                        )
+                    }
+                    if(Number(dataBody.modoFacturacaoId) == 2 && dataBody.valorTotal == "") {
+                        return responseHttp(
+                                res, 
+                                StatusCodes.BAD_REQUEST, 
+                                errosConst.VALIDATION_ERROR, 
+                                {}, 
+                                "Para modo de facturação Success Fee, a valor total deve ser preenchida"
+                        )
+                    }
+                    if(Number(dataBody.modoFacturacaoId) == 3 && dataBody.valorTotal == "") {
+                        return responseHttp(
+                                res, 
+                                StatusCodes.BAD_REQUEST, 
+                                errosConst.VALIDATION_ERROR, 
+                                {}, 
+                                "Para modo de facturação Fixo, a valor total deve ser preenchida"
+                        )
+                    }
+
                 const response = await ProcessoServive.updateProcesso(
                         {
                                 "processoId": id,
@@ -83,7 +111,10 @@ class ProcessoController {
                                 "factos": dataBody.factos,
                                 "objectivos": dataBody.objectivos,
                                 "dataImportantes": dataBody.dataImportantes,
-                                "statusId": dataBody.statusId
+                                "statusId": dataBody.statusId,
+                                "horasMes": dataBody.horasMes,
+                                "valorTotal": dataBody.valorTotal,
+                                "dataEmissaoFactura": dataBody.dataEmissaoFactura
                         }
                 )
               

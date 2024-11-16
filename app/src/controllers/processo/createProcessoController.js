@@ -8,11 +8,40 @@ const ProcessoServive = require('../../services/processos/ProcessoService');
 async function createProcessoController(req, res) {
 
                 const errors = validationResult(req);
+                
                 if (!errors.isEmpty()) {
                         return responseHttp(res, StatusCodes.BAD_REQUEST, errosConst.VALIDATION_ERROR, {}, errors.array())
                 }
                 const dataBody = req.body
 
+                if(Number(dataBody.modoFacturacaoId) == 1 && dataBody.horasMes == "") {
+                        return responseHttp(
+                                res, 
+                                StatusCodes.BAD_REQUEST, 
+                                errosConst.VALIDATION_ERROR, 
+                                {}, 
+                                "Para modo de facturação Avença, as horas/meses deve ser preenchida!"
+                        )
+                    }
+                    if(Number(dataBody.modoFacturacaoId) == 2 && dataBody.valorTotal == "") {
+                        return responseHttp(
+                                res, 
+                                StatusCodes.BAD_REQUEST, 
+                                errosConst.VALIDATION_ERROR, 
+                                {}, 
+                                "Para modo de facturação Success Fee, a valor total deve ser preenchida"
+                        )
+                    }
+                    if(Number(dataBody.modoFacturacaoId) == 3 && dataBody.valorTotal == "") {
+                        return responseHttp(
+                                res, 
+                                StatusCodes.BAD_REQUEST, 
+                                errosConst.VALIDATION_ERROR, 
+                                {}, 
+                                "Para modo de facturação Fixo, a valor total deve ser preenchida"
+                        )
+                    }
+                    
                 const response = await ProcessoServive.createProcesso(
                         {
                                 "assunto": dataBody.assunto,
@@ -37,7 +66,9 @@ async function createProcessoController(req, res) {
                                 "precedentes": dataBody.precedentes,
                                 "equipas": dataBody.equipas,
                                 "tarefas": dataBody.tarefas,
-
+                                "horasMes": dataBody.horasMes,
+                                "valorTotal": dataBody.valorTotal,
+                                "dataEmissaoFactura": dataBody.dataEmissaoFactura
                         }
                 )
             

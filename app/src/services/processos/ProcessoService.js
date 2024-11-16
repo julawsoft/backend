@@ -65,6 +65,9 @@ class ProcessoServive {
     precedentes,
     equipas,
     tarefas,
+    horasMes,
+    valorTotal,
+    dataEmissaoFactura
   }) {
     // Implementar logica para criacao do processo
     // Inserir dados no banco de dados
@@ -89,6 +92,9 @@ class ProcessoServive {
         objectivos,
         dataImportantes,
         statusId,
+        horasMes,
+        valorTotal,
+        dataEmissaoFactura
       });
 
       if (precedentes) {
@@ -320,7 +326,10 @@ class ProcessoServive {
     factos,
     objectivos,
     dataImportantes,
-    statusId
+    statusId,
+    horasMes,
+    valorTotal,
+    dataEmissaoFactura
   }) {
     try {
 
@@ -345,6 +354,10 @@ class ProcessoServive {
         objectivos,
         dataImportantes,
         statusId,
+        horasMes,
+        valorTotal,
+        dataEmissaoFactura,
+        
       });
 
       const response = await this.getByIdProcesso(processoId);
