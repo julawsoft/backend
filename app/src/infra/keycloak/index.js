@@ -76,12 +76,11 @@ class Keycloak {
         });  
         
         const userInfo = await cliente.userinfo(tokenSet.access_token)
-        const decoded = jwtDecode(tokenSet.access_token);    
-        const roles = decoded.resource_access['julaw-client'].roles ?? [];
-
-        //const groups = await keycloakConnection.instance.users.groups.find(realm, userInfo.sub);
-        // const roles = await keycloakConnection.instance.users.roleMappings.find(realm, userInfo.sub);
-       
+        const decoded = jwtDecode(tokenSet.access_token);   
+        
+        const roles = decoded.resource_access[clientId] && decoded.resource_access[clientId].roles 
+                      ? decoded.resource_access[clientId].roles 
+                      : [];
        
       return {
           tokenSet: tokenSet,
