@@ -28,6 +28,7 @@ processo.get(`${ROUTES_PATH.INDEX}/:id`, getByIdProcessoController)
 processo.put(`${ROUTES_PATH.INDEX}/:id`, new ProcessoController().updateProcesso)
 processo.get(`${ROUTES_PATH.ANEXOS_DOWN}/:id`, new ProcessoController().viewAnexoProcesso)
 processo.get(`${ROUTES_PATH.PROCESSO_COLABORADOR}/:id`, new ProcessoController().getProcessoByColaborador)
+processo.get(`${ROUTES_PATH.TASK_PROCESSO}/colaborador/:id`, new ProcessoController().getTarefaByColaboradorId)
 
 processo.delete(`${ROUTES_PATH.RECURSOS}`, validateRemoveResources, new ProcessoController().removeRecursosProcesso)
 processo.put(`${ROUTES_PATH.TASK_PROCESSO}/:id`, new ProcessoController().updateTarefaProcesso)

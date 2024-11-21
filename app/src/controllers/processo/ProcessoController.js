@@ -195,6 +195,12 @@ class ProcessoController {
                 return responseHttp(res, response.status, response.message, response.data, [])
         }
 
+        async getTarefaByColaboradorId(req, res) {
+                let id = req.params.id
+                let response = await ProcessoServive.getTarefaByColaboradorId(id)
+                return responseHttp(res, response.status, response.message, response.data, [])
+        }
+
 
 }
 

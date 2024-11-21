@@ -14,6 +14,7 @@ const {
   removeTarefaByProcesso,
   getTarefaById,
   updateTarefaByProcesso,
+  getTarefaByColaboradorId,
 } = require("../../persistencia/models/ProcessosTarefas");
 const {
   getByProcessoId: PrecedenteGetByKey,
@@ -464,6 +465,26 @@ class ProcessoServive {
     try {
 
       let tarefa = await getTarefaById(id)
+
+      return {
+        data: tarefa.length ? tarefa : null,
+        message: "TAREFA:LIST.OK",
+        status: StatusCodes.OK,
+      };
+
+    } catch (e) {
+      return {
+        data: __filename,
+        message: e.message,
+        status: StatusCodes.BAD_REQUEST,
+      };
+    }
+  }
+
+  static async getTarefaByColaboradorId(id) {
+    try {
+
+      let tarefa = await getTarefaByColaboradorId(id);
 
       return {
         data: tarefa.length ? tarefa : null,
