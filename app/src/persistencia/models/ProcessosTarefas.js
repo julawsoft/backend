@@ -26,6 +26,10 @@ ProcessosTarefas.init({
     type: DataTypes.INTEGER,
     allowNull: false,
   },
+  data_para_realizacao: {
+    type: DataTypes.DATE,
+    allowNull: false,
+  },
   status: {
     type: DataTypes.ENUM('0', '1'),
     allowNull: false,
@@ -83,13 +87,13 @@ async function getAllByKeyValue(chave, valor) {
 }
 
 async function removeTarefaByProcesso(id) {
-  if(!id)
+  if (!id)
     throw new Error('ID is required');
 
   let queryString = `DELETE FROM processo_tarefas WHERE processo_tarefas.id = ${id}`;
-  
-  return  sequelize.query(queryString, {
-  type: QueryTypes.DELETE,
+
+  return sequelize.query(queryString, {
+    type: QueryTypes.DELETE,
   });
 
 }
@@ -104,7 +108,7 @@ async function updateTarefaByProcesso(id, descricao, status) {
     WHERE id = ? 
   `, {
     replacements: [
-      descricao, 
+      descricao,
       `${status}`,
       id
     ]
@@ -118,8 +122,8 @@ async function getTarefaById(id) {
 
   let queryString = `SELECT * FROM processo_tarefas WHERE processo_tarefas.id = ${id} limit 1`;
 
-  return  sequelize.query(queryString, {
-  type: QueryTypes.SELECT,
+  return sequelize.query(queryString, {
+    type: QueryTypes.SELECT,
   });
 
 }
