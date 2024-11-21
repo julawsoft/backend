@@ -2,6 +2,7 @@ const { Sequelize } = require('sequelize');
 const config = require('./config.js');
 const logger = require('../utils/logger/logger.js');
 
+
 /**
  *
  * @class

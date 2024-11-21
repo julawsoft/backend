@@ -4,12 +4,17 @@
 # RUN WITHOUT DOCKER
 
 - running local database
-- configure database settings in app/config/config.json
-- configure database settings in app/.env 
+- create a database: julaw   - 
+    ```sh 
+        CREATE DATABASE 'julaw'
+    ```
+- configure database settings in: app/config/config.json
+- configure database settings in: app/.env 
 - install the packages: npm install --save
+- running a migration : npm run db:migrate
+- running a seeds : npm run db:seed
 - to run api: cd app/ npm run dev
 - make sure you have keycloak server is running
-
 
 
 

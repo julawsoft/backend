@@ -94,17 +94,17 @@ Processos.init({
     type: DataTypes.TEXT,
     allowNull: true,
   },
-  hora_mes: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
+  horas_mes: {
+    type: DataTypes.TEXT,
+    allowNull: true,
   },
   valor_total: {
     type: DataTypes.FLOAT,
-    allowNull: false,
+    allowNull: true,
   },
   data_emissao_factura: {
-    type: DataTypes.FLOAT,
-    allowNull: false,
+    type: DataTypes.DATE,
+    allowNull: true,
   },
   status_id: {
     type: DataTypes.INTEGER,
@@ -171,7 +171,6 @@ async function create(
   }
 ) {
   
-
   return Processos.create(
     {
       "assunto": assunto,
