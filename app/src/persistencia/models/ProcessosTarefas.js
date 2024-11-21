@@ -54,14 +54,13 @@ async function createTarefa(
   {
     descricao,
     processo_id,
-    status
+    status,
+    data_para_realizacao = new Date(),
   }
 ) {
 
   return await ProcessosTarefas.create({
-    "descricao": descricao,
-    "processo_id": processo_id,
-    "status": status
+    descricao, processo_id, status, data_para_realizacao
   })
 }
 
@@ -98,18 +97,20 @@ async function removeTarefaByProcesso(id) {
 
 }
 
-async function updateTarefaByProcesso(id, descricao, status) {
+async function updateTarefaByProcesso(id, descricao, status, data = new Date()) {
 
   const result = ProcessosTarefas.sequelize.query(`
     UPDATE processo_tarefas
     SET 
       descricao=?,
-      status=?
+      status=?,
+      data_para_realizacao=?
     WHERE id = ? 
   `, {
     replacements: [
       descricao,
       `${status}`,
+      data,
       id
     ]
   });

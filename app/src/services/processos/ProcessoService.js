@@ -235,7 +235,7 @@ class ProcessoServive {
         for (let equipa of equipas) {
           createEquipa({
             processo_id: processoId,
-            colaborador_id: 1/* equipa */,
+            colaborador_id: equipa,
           });
         }
       }
@@ -244,7 +244,8 @@ class ProcessoServive {
         for (let tarefa of tarefas) {
           createTarefa({
             processo_id: processoId,
-            descricao: tarefa,
+            descricao: tarefa.descricao,
+            data_para_realizacao: tarefa.data_para_realizacao,
           });
         }
       }
@@ -357,7 +358,7 @@ class ProcessoServive {
         horasMes,
         valorTotal,
         dataEmissaoFactura,
-        
+
       });
 
       const response = await this.getByIdProcesso(processoId);
@@ -484,10 +485,11 @@ class ProcessoServive {
     id,
     descricao,
     status,
+    data_para_realizacao
   }) {
     try {
 
-      let tarefa = await updateTarefaByProcesso(id, descricao, status)
+      let tarefa = await updateTarefaByProcesso(id, descricao, status, data_para_realizacao)
 
       return {
         data: tarefa,

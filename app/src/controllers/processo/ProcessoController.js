@@ -14,6 +14,7 @@ class ProcessoController {
                         return responseHttp(res, StatusCodes.BAD_REQUEST, errosConst.VALIDATION_ERROR, {}, errors.array())
                 }
 
+
                 const dataBody = req.body
                 const response = await ProcessoServive.addRecursosProcesso(
                         {
@@ -23,7 +24,7 @@ class ProcessoController {
                                 "tarefas": dataBody.tarefas ? dataBody.tarefas : null,
                         }
                 )
-                
+
                 return responseHttp(res, response.status, response.message, response.data, [])
         }
 
@@ -42,7 +43,7 @@ class ProcessoController {
                                 "anexos": dataBody.anexos,
                         }
                 )
-                
+
                 return responseHttp(res, response.status, response.message, response.data, [])
         }
 
@@ -53,42 +54,42 @@ class ProcessoController {
                         return responseHttp(res, StatusCodes.BAD_REQUEST, errosConst.VALIDATION_ERROR, {}, errors.array())
                 }
 
-                const {id} = req.params
+                const { id } = req.params
                 const dataBody = req.body
 
                 let processoFinded = await ProcessoServive.getByIdProcesso(id)
 
-                if(!processoFinded) {
+                if (!processoFinded) {
                         return responseHttp(res, StatusCodes.BAD_REQUEST, errosConst.PROCESSO_NOT_FOUND, {}, [])
                 }
 
-                if(Number(dataBody.modoFacturacaoId) == 1 && dataBody.horasMes == "") {
+                if (Number(dataBody.modoFacturacaoId) == 1 && dataBody.horasMes == "") {
                         return responseHttp(
-                                res, 
-                                StatusCodes.BAD_REQUEST, 
-                                errosConst.VALIDATION_ERROR, 
-                                {}, 
+                                res,
+                                StatusCodes.BAD_REQUEST,
+                                errosConst.VALIDATION_ERROR,
+                                {},
                                 "Para modo de facturação Avença, as horas/meses deve ser preenchida!"
                         )
-                    }
-                    if(Number(dataBody.modoFacturacaoId) == 2 && dataBody.valorTotal == "") {
+                }
+                if (Number(dataBody.modoFacturacaoId) == 2 && dataBody.valorTotal == "") {
                         return responseHttp(
-                                res, 
-                                StatusCodes.BAD_REQUEST, 
-                                errosConst.VALIDATION_ERROR, 
-                                {}, 
+                                res,
+                                StatusCodes.BAD_REQUEST,
+                                errosConst.VALIDATION_ERROR,
+                                {},
                                 "Para modo de facturação Success Fee, a valor total deve ser preenchida"
                         )
-                    }
-                    if(Number(dataBody.modoFacturacaoId) == 3 && dataBody.valorTotal == "") {
+                }
+                if (Number(dataBody.modoFacturacaoId) == 3 && dataBody.valorTotal == "") {
                         return responseHttp(
-                                res, 
-                                StatusCodes.BAD_REQUEST, 
-                                errosConst.VALIDATION_ERROR, 
-                                {}, 
+                                res,
+                                StatusCodes.BAD_REQUEST,
+                                errosConst.VALIDATION_ERROR,
+                                {},
                                 "Para modo de facturação Fixo, a valor total deve ser preenchida"
                         )
-                    }
+                }
 
                 const response = await ProcessoServive.updateProcesso(
                         {
@@ -117,14 +118,14 @@ class ProcessoController {
                                 "dataEmissaoFactura": dataBody.dataEmissaoFactura
                         }
                 )
-              
+
                 return responseHttp(res, response.status, response.message, response.data, [])
         }
 
-        
+
         async viewAnexoProcesso(req, res) {
 
-                const {id} = req.params
+                const { id } = req.params
                 const response = await ProcessoServive.viewAnexoProcesso(
                         {
                                 "processoId": id
@@ -136,7 +137,7 @@ class ProcessoController {
 
         async downloadAnexoProcesso(req, res) {
 
-                const {id} = req.params
+                const { id } = req.params
                 const response = await ProcessoServive.viewAnexoProcesso(
                         {
                                 "processoId": id
@@ -146,7 +147,7 @@ class ProcessoController {
                 console.log(response)
                 return res.download(response.data.path, response.data.fileName, (err) => {
                         if (err) {
-                          console.log('Erro ao enviar o arquivo:', err);
+                                console.log('Erro ao enviar o arquivo:', err);
                         }
                 })
         }
@@ -165,7 +166,7 @@ class ProcessoController {
                                 "valueId": dataBody.valueId
                         }
                 )
-                
+
                 return responseHttp(res, response.status, response.message, response.data, [])
         }
 
@@ -175,15 +176,16 @@ class ProcessoController {
                 const dataBody = req.body
 
                 let tarefaFinded = await ProcessoServive.getTaregaById(id)
-                if(!tarefaFinded.data)
+                if (!tarefaFinded.data)
                         return responseHttp(res, StatusCodes.NOT_FOUND, "Tarefa não encontrada", [], [])
-                
+
                 const response = await ProcessoServive.updateTarefaProcesso({
                         "id": id,
                         "descricao": dataBody.descricao ?? tarefaFinded.data[0].descricao,
-                        "status": dataBody.status ?? tarefaFinded.data[0].status
-                })                            
-                
+                        "status": dataBody.status ?? tarefaFinded.data[0].status,
+                        data_para_realizacao: dataBody.data_para_realizacao ?? tarefaFinded.data[0].data_para_realizacao,
+                })
+
                 return responseHttp(res, response.status, response.message, response.data, [])
         }
 
@@ -192,8 +194,8 @@ class ProcessoController {
                 let response = await ProcessoServive.getProcessoByColaborador(id)
                 return responseHttp(res, response.status, response.message, response.data, [])
         }
-        
-        
+
+
 }
 
 module.exports = ProcessoController;
