@@ -3,37 +3,29 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    await queryInterface.createTable('processo_facturas', {
+    await queryInterface.createTable('processo_factura_items', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },  
-      processo_id: {
+      processo_factura_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'processos',
+          model: 'processo_facturas',
           key: 'id',
         },
       },
-      cliente_id: {
+      processos_timesheet_id: {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        allowNull: true,
         references: {
-          model: 'clientes',
+          model: 'processos_timesheet',
           key: 'id',
         },
-      },
-      colaborador_id: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'colaboradores',
-          key: 'id',
-        },
-      },     
+      }, 
       horas: {
         allowNull: true,
         type: Sequelize.STRING
@@ -42,9 +34,9 @@ module.exports = {
         allowNull: false,
         type: Sequelize.FLOAT
       },
-      status: {
-        type: Sequelize.ENUM('pendente', 'pago'),
-        defaultValue: 'pendente'
+      dados_adicionais: {
+        allowNull: true,
+        type: Sequelize.STRING
       },
       created_at: {
         allowNull: false,
@@ -54,11 +46,11 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
-
     })
+
   },
 
   async down (queryInterface, Sequelize) {
-    await queryInterface.dropTable('processo_facturas')
+    await queryInterface.dropTable('processo_factura_items')
   }
 };

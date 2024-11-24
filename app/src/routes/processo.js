@@ -8,6 +8,7 @@ const validateEquipasProcesso = require('../middlewares/validateEquipasProcesso.
 const ProcessoController = require('../controllers/processo/ProcessoController.js');
 const validateAnexosProcesso = require('../middlewares/validateAnexosProcesso.js');
 const validateRemoveResources = require('../middlewares/validateRemoveResources.js');
+const validateCreateFacturaProcesso = require('../middlewares/validateFacturaProcesso.js');
 
 const processo = express.Router()
 

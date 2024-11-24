@@ -4,6 +4,7 @@ const { validationResult } = require('express-validator');
 const { StatusCodes } = require('http-status-codes');
 const { errosConst } = require('../../utils/http/erros.Const');
 const ProcessoServive = require('../../services/processos/ProcessoService');
+const ProcessoFacturasServive = require('../../services/processos/ProcessoFacturas');
 
 class ProcessoController {
 
@@ -190,6 +191,20 @@ class ProcessoController {
         async getProcessoByColaborador(req, res) {
                 let id = req.params.id
                 let response = await ProcessoServive.getProcessoByColaborador(id)
+                return responseHttp(res, response.status, response.message, response.data, [])
+        }
+
+        async createFacturaProcesso(req, res) {
+                const errors = validationResult(req);
+                if (!errors.isEmpty()) {
+                        return responseHttp(res, StatusCodes.BAD_REQUEST, errosConst.VALIDATION_ERROR, {}, errors.array())
+                }
+
+                const dataBody = req.body
+
+                let response = await ProcessoFacturasServive.createFacturaProcesso({
+                        "": ""
+                })
                 return responseHttp(res, response.status, response.message, response.data, [])
         }
         
