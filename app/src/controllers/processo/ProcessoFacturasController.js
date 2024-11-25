@@ -1,5 +1,4 @@
 const responseHttp = require('../../utils/http/response');
-const ProcessoEquipasService = require('../../services/processos/ProcessoEquipasService');
 const { validationResult } = require('express-validator');
 const { StatusCodes } = require('http-status-codes');
 const { errosConst } = require('../../utils/http/erros.Const');
@@ -15,7 +14,9 @@ class ProcessoFacturasController {
                 }
 
                 const dataBody = req.body
-                
+
+                console.log("facturasController ", dataBody)
+
                 let response = await ProcessoFacturasServive.createFacturaProcesso({
                         "processoId": dataBody.processo_id,
                         "clienteId": dataBody.cliente_id,

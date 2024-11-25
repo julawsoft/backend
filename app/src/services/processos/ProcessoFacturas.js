@@ -46,11 +46,13 @@ class ProcessoFacturasServive {
         status
       }).then(async (resp) => {
 
+          let itemSavedReturn = []
+
           if(resp.id && items.length) {
 
             for await (let item of items) {
               
-            await createProcessoFacturaItems({
+            let itemSaved = await createProcessoFacturaItems({
                 "processoFacturaId": resp.id,
                 "processoTimeSheetId": item.processos_timesheet_id,
                 "horas": item.horas,
@@ -58,10 +60,12 @@ class ProcessoFacturasServive {
                 "dadosAdicionais": item.custo,
                 "dadosAdicionais": item.dados_adicionais,
               })
+
+              itemSavedReturn.push(itemSaved)
             }
             
             return {
-              data: resp,
+              data: {...resp.dataValues, items: itemSavedReturn },
               message: 'PROCESSO:FACTURA:CREATED',
               status: StatusCodes.CREATED,
             }

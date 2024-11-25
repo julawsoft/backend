@@ -88,8 +88,6 @@ async function getProcessoFacturasByClienteId(idCliente) {
 	  c.nome_completo AS colaborador,
 	  cli.denominacao AS cliente,
     ps.descricao AS estado_processo,
-    pt.data_inicio,
-    pt.data_fim,
     pf.created_at AS data_registo
   FROM
     processo_facturas pf
@@ -97,7 +95,6 @@ async function getProcessoFacturasByClienteId(idCliente) {
     inner JOIN processo_estado ps ON p.status_id = ps.id
     INNER JOIN clientes cli ON pf.cliente_id = cli.id
 	  LEFT JOIN colaboradores c ON pf.colaborador_id = c.id
-	  LEFT JOIN processos_timesheet pt ON pf.processos_timesheet_id = pt.id     
   WHERE p.cliente_id = ${idCliente}
   order BY
   pf.created_at desc`;
