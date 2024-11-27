@@ -129,21 +129,23 @@ async function getTarefaById(id) {
 
 }
 
-async function getTarefaByColaboradorId(id) {
+async function getTarefaByColaboradorId(id, status = '0') {
 
   return ProcessosTarefas.sequelize.query(
     `
-      SELECT pt.descricao, pt.data_para_realizacao, pt.processo_id, p.assunto, p.gestor_id, cl.id
+      SELECT pt.descricao, pt.data_para_realizacao, pt.processo_id, p.assunto, p.gestor_id, cl.id, 
+      DATEDIFF(pt.data_para_realizacao, CURDATE()) as dias_em_falta
       FROM
-          processo_tarefas as pt
-          INNER JOIN processos as p ON pt.processo_id = p.id
-          INNER JOIN processo_equipa as pe ON p.id = pe.processo_id
-          INNER JOIN colaboradores as cl ON pe.colaborador_id = cl.id
+        processo_tarefas as pt
+        INNER JOIN processos as p ON pt.processo_id = p.id
+        INNER JOIN processo_equipa as pe ON p.id = pe.processo_id
+        INNER JOIN colaboradores as cl ON pe.colaborador_id = cl.id
       WHERE
-          cl.id = ?
+        pt.status = ? AND
+        cl.id = ?
     `,
     {
-      replacements: [id],
+      replacements: [status, id],
       type: QueryTypes.SELECT
     }
   );
