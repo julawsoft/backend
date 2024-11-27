@@ -59,35 +59,35 @@ class Keycloak {
 
     try {
 
-        const keycloakIssuer = await Issuer.discover(
-          `${discover}`,
-        );
+      const keycloakIssuer = await Issuer.discover(
+        `${discover}`,
+      );
 
-        const cliente =  new keycloakIssuer.Client({
-            client_id: `${clientId}`,
-            client_secret: `${clientSecret}`,
-        });
-        
-        const tokenSet = await cliente.grant({
-          grant_type: grantType,
-          username,
-          password,
-          scope: 'openid profile email', 
-        });  
-        
-        const userInfo = await cliente.userinfo(tokenSet.access_token)
-        const decoded = jwtDecode(tokenSet.access_token);    
-        const roles = decoded.resource_access['julaw-client'].roles ?? [];
+      const cliente = new keycloakIssuer.Client({
+        client_id: `${clientId}`,
+        client_secret: `${clientSecret}`,
+      });
 
-        //const groups = await keycloakConnection.instance.users.groups.find(realm, userInfo.sub);
-        // const roles = await keycloakConnection.instance.users.roleMappings.find(realm, userInfo.sub);
-       
-       
+      const tokenSet = await cliente.grant({
+        grant_type: grantType,
+        username,
+        password,
+        scope: 'openid profile email',
+      });
+
+      const userInfo = await cliente.userinfo(tokenSet.access_token)
+      const decoded = jwtDecode(tokenSet.access_token);
+      const roles = decoded.resource_access['julaw-client']?.roles ?? [];
+
+      //const groups = await keycloakConnection.instance.users.groups.find(realm, userInfo.sub);
+      // const roles = await keycloakConnection.instance.users.roleMappings.find(realm, userInfo.sub);
+
+
       return {
-          tokenSet: tokenSet,
-          userInfo: userInfo,
-          //groups: groups ? groups.map(group => group.name) : [],
-          roles: [...roles],
+        tokenSet: tokenSet,
+        userInfo: userInfo,
+        //groups: groups ? groups.map(group => group.name) : [],
+        roles: [...roles],
       }
 
     } catch (e) {
