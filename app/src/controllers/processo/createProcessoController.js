@@ -14,7 +14,11 @@ async function createProcessoController(req, res) {
                 }
                 const dataBody = req.body
 
-                if(Number(dataBody.modoFacturacaoId) == 1 && dataBody.horasMes == "") {
+                console.log(dataBody.modoFacturacaoId)
+                console.log(dataBody.horasMes)
+
+                if(Number(dataBody.modoFacturacaoId) == 1 
+                        && (dataBody.horasMes == "" || dataBody.horasMes == undefined)) {
                         return responseHttp(
                                 res, 
                                 StatusCodes.BAD_REQUEST, 
@@ -23,7 +27,8 @@ async function createProcessoController(req, res) {
                                 "Para modo de facturação Avença, as horas/meses deve ser preenchida!"
                         )
                     }
-                    if(Number(dataBody.modoFacturacaoId) == 2 && dataBody.valorTotal == "") {
+                    if(Number(dataBody.modoFacturacaoId) == 2 
+                        && (dataBody.valorTotal == "" || dataBody.valorTotal == undefined)) {
                         return responseHttp(
                                 res, 
                                 StatusCodes.BAD_REQUEST, 
@@ -32,7 +37,8 @@ async function createProcessoController(req, res) {
                                 "Para modo de facturação Success Fee, a valor total deve ser preenchida"
                         )
                     }
-                    if(Number(dataBody.modoFacturacaoId) == 3 && dataBody.valorTotal == "") {
+                    if(Number(dataBody.modoFacturacaoId) == 3 
+                        && (dataBody.valorTotal == "" || dataBody.valorTotal == undefined)) {
                         return responseHttp(
                                 res, 
                                 StatusCodes.BAD_REQUEST, 
@@ -41,6 +47,7 @@ async function createProcessoController(req, res) {
                                 "Para modo de facturação Fixo, a valor total deve ser preenchida"
                         )
                     }
+
                     
                 const response = await ProcessoServive.createProcesso(
                         {

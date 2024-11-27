@@ -76,7 +76,8 @@ async function getByProcessoId(id) {
 	SELECT 
 		(SELECT ref FROM processos WHERE processos.id = p_ante.precedente_id) AS precedente_refencia,
 		(SELECT assunto FROM processos WHERE processos.id = p_ante.precedente_id) AS precedente_assunto,
-    (SELECT id FROM processos WHERE processos.id = p_ante.precedente_id) AS precedente_id
+    (SELECT id FROM processos WHERE processos.id = p_ante.precedente_id) AS precedente_id,
+    p_ante.id As id
    FROM processo_precedentes p_ante
    WHERE p_ante.processo_id = ${id}
   `;
