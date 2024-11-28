@@ -4,6 +4,7 @@ const { validationResult } = require('express-validator');
 const { StatusCodes } = require('http-status-codes');
 const { errosConst } = require('../../utils/http/erros.Const');
 const ProcessoServive = require('../../services/processos/ProcessoService');
+const ProcessoFacturasServive = require('../../services/processos/ProcessoFacturas');
 
 class ProcessoController {
 
@@ -195,6 +196,7 @@ class ProcessoController {
                 return responseHttp(res, response.status, response.message, response.data, [])
         }
 
+<<<<<<< HEAD
         async getTarefaByColaboradorId(req, res) {
                 let id = req.params.id
                 let response = await ProcessoServive.getTarefaByColaboradorId(id)
@@ -202,6 +204,23 @@ class ProcessoController {
         }
 
 
+=======
+        async createFacturaProcesso(req, res) {
+                const errors = validationResult(req);
+                if (!errors.isEmpty()) {
+                        return responseHttp(res, StatusCodes.BAD_REQUEST, errosConst.VALIDATION_ERROR, {}, errors.array())
+                }
+
+                const dataBody = req.body
+
+                let response = await ProcessoFacturasServive.createFacturaProcesso({
+                        "": ""
+                })
+                return responseHttp(res, response.status, response.message, response.data, [])
+        }
+        
+        
+>>>>>>> SCRUM-47-DETALHES-CLIENTE
 }
 
 module.exports = ProcessoController;

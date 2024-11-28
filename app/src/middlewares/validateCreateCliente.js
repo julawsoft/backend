@@ -7,6 +7,7 @@ const validateCreateCliente = [
     body('endereco').isString().notEmpty().withMessage('O Endereço é obrigatório'),
     body('pessoa_contacto').isString().notEmpty().withMessage('O Pessoa de Contacto é obrigatório'),
     body('contacto_cobranca').isString().notEmpty().withMessage('O Contacto de Cobrança é obrigatório'),
+    body('e_mail').isString().notEmpty().withMessage('O E-mail é obrigatório'),
 ]
 
 module.exports = validateCreateCliente

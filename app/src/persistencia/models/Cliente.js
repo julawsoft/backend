@@ -45,6 +45,10 @@ Cliente.init({
     type: DataTypes.STRING,
     allowNull: false
   },
+  e_mail: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
   nota: {
     type: DataTypes.STRING,
     allowNull: true
@@ -82,6 +86,7 @@ async function create(
     endereco,
     pessoaContacto,
     contactoCobranca,
+    e_mail,
     nota,
     status
   }
@@ -94,6 +99,7 @@ async function create(
       "endereco": endereco,
       "pessoa_contacto": pessoaContacto,
       "contacto_cobranca": contactoCobranca,
+      "e_mail": e_mail,
       "nota": nota,
       "status": status
   })

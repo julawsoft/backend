@@ -8,6 +8,7 @@ const dadosIdentificacaoRouter = require("./dadoIdentificacao.js")
 const authRouter = require("./auth.js")
 const processo = require("./processo.js")
 const processoTimeSheet = require("./processoTimeSheet.js")
+const processoFacturas = require("./processoFacturas.js")
 
 const INDEX_ROUTE= "/"
 const routesRoot = Router()
@@ -20,6 +21,7 @@ routesRoot.use(dadosIdentificacaoRouter)
 routesRoot.use(authRouter)
 routesRoot.use(processo)
 routesRoot.use(processoTimeSheet)
+routesRoot.use(processoFacturas)
 
 routesRoot.get(INDEX_ROUTE, (req, res) => {
     return res.send({
