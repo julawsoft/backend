@@ -8,7 +8,12 @@ const sequelize = SequelizeConnection.getConnection().instance;
  * @class
  */
 class ProcessoFacturas extends Model {
-  static associate(models) {}
+  static associate(models) {
+    ProcessoFacturas.hasMany(models.PagamentoFactura, {
+      foreignKey: 'factura_id',
+      as: 'pagamentos'
+    })
+  }
 }
 
 ProcessoFacturas.init(
@@ -135,6 +140,7 @@ async function getProcessoFacturasById(idProcessoFactura) {
 }
 
 module.exports = {
+  ProcessoFacturas,
   createProcessoFactura,
   getProcessoFacturasByClienteId,
   getProcessoFacturasById

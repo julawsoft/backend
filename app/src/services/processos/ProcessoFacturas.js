@@ -1,6 +1,8 @@
 const { StatusCodes } = require("http-status-codes");
 const { getProcessoFacturasByClienteId, createProcessoFactura } = require("../../persistencia/models/ProcessoFacturas");
 const { createProcessoFacturaItems } = require("../../persistencia/models/ProcessoFacturasItems");
+const { createPagamentoFactura, getPagamentoFactura, getPagamentoByIdFactura } = require("../../persistencia/models/PagamentoFactura");
+const { getModoPagamentos } = require("../../persistencia/models/ModoPagamentojs");
 
 class ProcessoFacturasServive {
  
@@ -36,7 +38,6 @@ class ProcessoFacturasServive {
 
     try {
 
-      
       return createProcessoFactura({ 
         processoId,
         clienteId,
@@ -72,9 +73,9 @@ class ProcessoFacturasServive {
           }
 
           return {
-            data: resp,
-            message: 'Items facturas does not empty',
-            status: StatusCodes.BAD_REQUEST,
+            data: {...resp.dataValues, items: [] },
+            message: 'PROCESSO:FACTURA:CREATED',
+            status: StatusCodes.CREATED,
           }
           
         }).catch((e) => {
@@ -85,6 +86,109 @@ class ProcessoFacturasServive {
           };
         })
         
+      }catch(e) {      
+        return {
+          data: __filename,
+          message: e.message,
+          status: StatusCodes.INTERNAL_SERVER_ERROR,
+        };
+      }
+  }
+
+
+  static async createPagamentoFactura({
+    facturaId,
+    colaboradorId,
+    valorFactura,
+    valorPago,
+    valorRestante,
+    anexo,
+    modoPagamentoId,
+    desconto,
+    obs 
+   }) {
+
+    try {
+
+      let response = await createPagamentoFactura({ 
+        facturaId,
+        colaboradorId,
+        valorFactura,
+        valorPago,
+        valorRestante,
+        anexo,
+        modoPagamentoId,
+        desconto,
+        obs })
+     
+          return {
+            data: response,
+            message: 'PAGAMENTO:FACTURA:CREATED',
+            status: StatusCodes.CREATED,
+          }
+              
+      }catch(e) {      
+        return {
+          data: __filename,
+          message: e.message,
+          status: StatusCodes.INTERNAL_SERVER_ERROR,
+        };
+      }
+  }
+
+  static async getPagamentoFactura() {
+
+    try {
+
+      let response = await getPagamentoFactura()
+     
+          return {
+            data: response,
+            message: 'PAGAMENTO:FACTURA:LIST',
+            status: StatusCodes.OK,
+          }
+              
+      }catch(e) {      
+        return {
+          data: __filename,
+          message: e.message,
+          status: StatusCodes.INTERNAL_SERVER_ERROR,
+        };
+      }
+  }
+
+  static async getPagamentoByIdFactura(idFactura) {
+
+    try {
+
+      let response = await getPagamentoByIdFactura(idFactura)
+     
+          return {
+            data: response,
+            message: 'PAGAMENTO:FACTURA:BYID:LIST',
+            status: StatusCodes.OK,
+          }
+              
+      }catch(e) {      
+        return {
+          data: __filename,
+          message: e.message,
+          status: StatusCodes.INTERNAL_SERVER_ERROR,
+        };
+      }
+  }
+
+  static async getModoPagamentos() {
+    try {
+
+      let response = await getModoPagamentos()
+     
+          return {
+            data: response,
+            message: 'MODO:PAGAMENTO:LIST',
+            status: StatusCodes.OK,
+          }
+              
       }catch(e) {      
         return {
           data: __filename,
