@@ -8,6 +8,7 @@ const validateEquipasProcesso = require('../middlewares/validateEquipasProcesso.
 const ProcessoController = require('../controllers/processo/ProcessoController.js');
 const validateAnexosProcesso = require('../middlewares/validateAnexosProcesso.js');
 const validateRemoveResources = require('../middlewares/validateRemoveResources.js');
+const DespesaController = require('../controllers/processo/DespesasController.js');
 
 const processo = express.Router()
 
@@ -32,5 +33,6 @@ processo.get(`${ROUTES_PATH.TASK_PROCESSO}/colaborador/:id`, new ProcessoControl
 
 processo.delete(`${ROUTES_PATH.RECURSOS}`, validateRemoveResources, new ProcessoController().removeRecursosProcesso)
 processo.put(`${ROUTES_PATH.TASK_PROCESSO}/:id`, new ProcessoController().updateTarefaProcesso)
+processo.post(`${ROUTES_PATH.INDEX}/despesa`, new DespesaController().createDespesa)
 
 module.exports = processo
