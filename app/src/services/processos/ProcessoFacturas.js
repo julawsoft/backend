@@ -3,6 +3,7 @@ const { getProcessoFacturasByClienteId, createProcessoFactura } = require("../..
 const { createProcessoFacturaItems } = require("../../persistencia/models/ProcessoFacturasItems");
 const { createPagamentoFactura, getPagamentoFactura, getPagamentoByIdFactura } = require("../../persistencia/models/PagamentoFactura");
 const { getModoPagamentos } = require("../../persistencia/models/ModoPagamentojs");
+const saveBase64Image = require("../../utils/saveBase64Image");
 
 class ProcessoFacturasServive {
  
@@ -110,13 +111,19 @@ class ProcessoFacturasServive {
 
     try {
 
+
+      let fileName = `anexo_payment_${new Date().getTime()}_${facturaId}`
+
+      let { data } = await saveBase64Image(fileName, anexo);
+      let path = `${data.path}@${data.fileName}`
+
       let response = await createPagamentoFactura({ 
         facturaId,
         colaboradorId,
         valorFactura,
         valorPago,
         valorRestante,
-        anexo,
+        anexo: path,
         modoPagamentoId,
         desconto,
         obs })
