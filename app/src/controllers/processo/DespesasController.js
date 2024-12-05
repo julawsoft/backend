@@ -24,6 +24,11 @@ class DespesasController {
                         }
                 );
 
+                return responseHttp(res, response.status, response.message, response.data, []);
+        }
+
+        async getAll(req, res) {
+                const response = await DespesasService.findAll();
                 return responseHttp(res, response.status, response.message, response.data, [])
         }
 

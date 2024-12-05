@@ -152,6 +152,21 @@ async function getTarefaByColaboradorId(id, status = '0') {
 
 }
 
+async function getRefAndIDList() {
+
+  return ProcessosTarefas.sequelize.query(
+    `
+      SELECT id, ref as numero
+      FROM
+        processos
+    `,
+    {
+      type: QueryTypes.SELECT
+    }
+  );
+
+}
+
 
 
 module.exports = {
@@ -161,5 +176,6 @@ module.exports = {
   removeTarefaByProcesso,
   updateTarefaByProcesso,
   getTarefaById,
-  getTarefaByColaboradorId
+  getTarefaByColaboradorId,
+  getRefAndIDList
 };

@@ -1,5 +1,5 @@
 const { StatusCodes } = require("http-status-codes");
-const { create } = require("../../persistencia/models/Despesas.js");
+const { create, getAll } = require("../../persistencia/models/Despesas.js");
 
 
 
@@ -35,6 +35,15 @@ class DespesasService {
         status: StatusCodes.BAD_REQUEST,
       };
     }
+  }
+
+  static async findAll() {
+    const result = await getAll();
+    return {
+      data: result,
+      message: "PROCESSO.DESPESA:GET",
+      status: StatusCodes.OK,
+    };
   }
 
 }

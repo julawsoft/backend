@@ -201,6 +201,11 @@ class ProcessoController {
                 return responseHttp(res, response.status, response.message, response.data, [])
         }
 
+        async getListaProcessos(req, res) {
+                let response = await ProcessoServive.getProcessoList()
+                return responseHttp(res, response.status, response.message, response.data, [])
+        }
+
 
 }
 

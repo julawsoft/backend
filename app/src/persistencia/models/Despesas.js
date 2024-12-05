@@ -1,4 +1,4 @@
-const { Model, DataTypes } = require('sequelize');
+const { Model, DataTypes, QueryTypes } = require('sequelize');
 const SequelizeConnection = require('../SequelizeConnection.js');  // Importa a instância Singleton do Sequelize
 
 const sequelize = SequelizeConnection.getConnection().instance
@@ -73,7 +73,26 @@ async function create(
  * @returns {Despesas}
  */
 async function getAll() {
-  return await Despesas.findAll();
+
+  const queryString = `
+    SELECT
+    d.id,
+    d.idProcesso,
+    d.valor,
+    d.tipoMovimento,
+    d.dataMovimento,
+    d.colaboradorId,
+    p.ref as numeroProcesso,
+    c.denominacao as nomeCliente
+  FROM
+    despesas d
+    INNER JOIN processos p ON d.idProcesso = p.id
+    INNER JOIN clientes c ON p.cliente_id = c.id
+  `;
+
+  return sequelize.query(queryString, {
+    type: QueryTypes.SELECT,
+  });
 }
 
 /**
