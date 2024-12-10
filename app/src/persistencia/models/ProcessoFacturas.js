@@ -83,6 +83,7 @@ async function createProcessoFactura(data) {
 }
 
 async function getProcessoFacturasByClienteId(idCliente) {
+  
   // return await Processos.findAll()
   let queryString = `SELECT
 	  p.*,
@@ -93,7 +94,8 @@ async function getProcessoFacturasByClienteId(idCliente) {
 	  c.nome_completo AS colaborador,
 	  cli.denominacao AS cliente,
     ps.descricao AS estado_processo,
-    pf.created_at AS data_registo
+    pf.created_at AS data_registo,
+    pf.id as processo_factura_id
   FROM
     processo_facturas pf
     inner JOIN processos p ON pf.processo_id = p.id

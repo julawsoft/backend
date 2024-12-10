@@ -1,6 +1,6 @@
 const { StatusCodes } = require("http-status-codes");
 const { getProcessoFacturasByClienteId, createProcessoFactura } = require("../../persistencia/models/ProcessoFacturas");
-const { createProcessoFacturaItems } = require("../../persistencia/models/ProcessoFacturasItems");
+const { createProcessoFacturaItems, getFacturaItemsByFacturaId } = require("../../persistencia/models/ProcessoFacturasItems");
 const { createPagamentoFactura, getPagamentoFactura, getPagamentoByIdFactura } = require("../../persistencia/models/PagamentoFactura");
 const { getModoPagamentos } = require("../../persistencia/models/ModoPagamentojs");
 const saveBase64Image = require("../../utils/saveBase64Image");
@@ -13,8 +13,27 @@ class ProcessoFacturasServive {
 
       let listProcessoFacturasByCliente = await getProcessoFacturasByClienteId(idCliente)
 
+      let facturasDTO = []
+
+
+      console.log("listProcessoFacturasByCliente" , listProcessoFacturasByCliente)
+
+      if (listProcessoFacturasByCliente) {
+        for await (let facturaCliente of listProcessoFacturasByCliente) {
+
+              console.log("here .... ", facturaCliente)
+               let items =  await getFacturaItemsByFacturaId(facturaCliente.processo_factura_id)
+               let pagamentos =  await getPagamentoByIdFactura(facturaCliente.id)
+
+               facturasDTO.push({...facturaCliente, items, pagamentos})
+        
+        }
+      }
+
+  
+
       return {
-        data: listProcessoFacturasByCliente,
+        data: facturasDTO,
         message: "PROCESS:FACTURAS:LIST.OK",
         status: StatusCodes.OK,
       };

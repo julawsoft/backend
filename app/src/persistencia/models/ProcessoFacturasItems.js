@@ -67,7 +67,17 @@ async function createProcessoFacturaItems(data) {
   });
 }
 
+async function getFacturaItemsByFacturaId(idFactura) {
+  let queryString = `SELECT * FROM processo_factura_items pfi
+  WHERE pfi.processo_factura_id = ${idFactura}`;
+
+  return sequelize.query(queryString, {
+    type: QueryTypes.SELECT
+  });
+}
+
 
 module.exports = {
   createProcessoFacturaItems,
+  getFacturaItemsByFacturaId
 };
