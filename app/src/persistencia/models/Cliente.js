@@ -45,6 +45,14 @@ Cliente.init({
     type: DataTypes.STRING,
     allowNull: false
   },
+  e_mail: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  uuid: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
   nota: {
     type: DataTypes.STRING,
     allowNull: true
@@ -72,6 +80,7 @@ Cliente.init({
 * @param {string} contacto_cobranca
 * @param {string} nota
 * @param {string} status
+* @param {string} uuid
 * @returns {Array} Cliente
 */
 async function create(
@@ -82,8 +91,10 @@ async function create(
     endereco,
     pessoaContacto,
     contactoCobranca,
+    e_mail,
     nota,
-    status
+    status,
+    uuid
   }
 ) {
 
@@ -94,8 +105,10 @@ async function create(
       "endereco": endereco,
       "pessoa_contacto": pessoaContacto,
       "contacto_cobranca": contactoCobranca,
+      "e_mail": e_mail,
       "nota": nota,
-      "status": status
+      "status": status,
+      "uuid": uuid,
   })
 }
 

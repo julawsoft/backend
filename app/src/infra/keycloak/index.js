@@ -39,12 +39,15 @@ class Keycloak {
       ],
     }
 
+    console.log("create a user payload ", userDataToSave)
+
     try {
 
       const keycloakResponse = await keycloakConnection.instance.users.create(realm, userDataToSave)
 
       return keycloakResponse;
     } catch (e) {
+      console.log("create user keycloak ", e)
       throw e;
     }
 

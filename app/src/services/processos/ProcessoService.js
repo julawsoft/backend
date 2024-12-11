@@ -7,6 +7,7 @@ const {
   getById,
   update,
   getByColaboradorId,
+  getByClienteId,
 } = require("../../persistencia/models/Processos");
 const {
   getAllByKeyValue: TarefaGetByKey,
@@ -590,6 +591,24 @@ class ProcessoServive {
   }
 
 
+  static async getProcessoByCliente(idCliente) {
+    try {
+     
+      let processosCliente = await getByClienteId(idCliente);
+
+      return {
+        data: processosCliente,
+        message: "PROCESS:CLIENT.LIST.OK",
+        status: StatusCodes.OK,
+      };
+    } catch (e) {
+      return {
+        data: __filename,
+        message: e.message,
+        status: StatusCodes.INTERNAL_SERVER_ERROR,
+      };
+    }
+  }
 
 }
 

@@ -16,10 +16,13 @@ async function createClienteController(req, res) {
                         return responseHttp(res, StatusCodes.BAD_REQUEST, errosConst.VALIDATION_ERROR, {}, errors.array())
                 }
                 const dataBody = req.body
-
+                
                 const clienteData = await getAllByKeyValueCliente("nif", dataBody.nif)
-                if (clienteData.length) return responseHttp(res, StatusCodes.BAD_REQUEST, errosConst.CLIENT_ERROR_CREATE_NIF, {}, errors.array())
+                if (clienteData.length) return responseHttp(res, StatusCodes.BAD_REQUEST, errosConst.CLIENT_ERROR_CREATE_NIF, {}, ["Cliente already exists"])
 
+                const clienteDataEmail = await getAllByKeyValueCliente("e_mail", dataBody.e_mail)
+                if (clienteDataEmail.length) return responseHttp(res, StatusCodes.BAD_REQUEST, errosConst.CLIENT_ERROR_CREATE_NIF, {}, ["E-mail cliente already exists"])
+                        
                 const dataReturned = await createCliente(
                         {
                                 "denominacao": dataBody.denominacao,
@@ -28,6 +31,7 @@ async function createClienteController(req, res) {
                                 "endereco": dataBody.endereco,
                                 "pessoaContacto": dataBody.pessoa_contacto,
                                 "contactoCobranca": dataBody.contacto_cobranca,
+                                "e_mail": dataBody.e_mail,
                                 "nota": dataBody.nota,
                                 "status": dataBody.status ? dataBody.status : defaultStatus
                         }
@@ -36,6 +40,7 @@ async function createClienteController(req, res) {
                 return responseHttp(res, StatusCodes.CREATED, errosConst.CLIENT_CREATED, dataReturned, [])
 
         } catch (e) {
+                console.log("error save client ", e)
                 return responseHttp(res, StatusCodes.BAD_REQUEST, errosConst.CLIENT_ERROR_CREATE, {}, e.message)
         }
 }

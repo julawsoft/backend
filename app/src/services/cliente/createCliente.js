@@ -1,5 +1,7 @@
+const { StatusCodes } = require("http-status-codes");
 const { create, Cliente } = require("../../persistencia/models/Cliente.js")
-const listByIdTipoCliente = require("../tipoCliente /listByIdTipoCliente.js")
+const listByIdTipoCliente = require("../tipoCliente /listByIdTipoCliente.js");
+const createKeycloakColaborador = require("../keycloak/createColaborador.js");
 
 /**
 * @param {string} denominacao
@@ -21,22 +23,59 @@ async function createCliente (
         endereco,
         pessoaContacto,
         contactoCobranca,
+        e_mail,
         nota,
         status
     }
 ) {    
-        const newCliente = await create({
-            "denominacao": denominacao,
-            "tipoId": tipoId, 
-            "nif": nif,
-            "endereco": endereco,
-            "pessoaContacto": pessoaContacto,
-            "contactoCobranca": contactoCobranca,
-            "nota": nota,
-            "status": status
-        })
-        let tipoCliente = await  listByIdTipoCliente(newCliente.tipo_id)
-        return {...newCliente.dataValues, tipo: tipoCliente}   
+
+        try {
+
+          const defaultPassword = "julaw"
+          const role = "client_julaw"
+      
+          const keyCloakUser = await createKeycloakColaborador({
+              "username": e_mail,
+              "password": defaultPassword,
+              "email": e_mail,
+              "firstName": denominacao,
+              "lastName": pessoaContacto,
+              "groups": role
+          })
+
+          console.log("keyCloakUser keyCloakUser ", keyCloakUser)
+
+            const newCliente = await create({
+                "denominacao": denominacao,
+                "tipoId": tipoId, 
+                "nif": nif,
+                "endereco": endereco,
+                "pessoaContacto": pessoaContacto,
+                "contactoCobranca": contactoCobranca,
+                "e_mail": e_mail,
+                "nota": nota,
+                "status": status,
+                "uuid": keyCloakUser.uuid.toString()
+            })
+            
+            console.log("1")
+            let tipoCliente = await  listByIdTipoCliente(newCliente.tipo_id)
+            console.log("2")
+      
+            return {
+              data: {...newCliente.dataValues, tipo: tipoCliente},
+              message: "CLIENT:CREATE",
+              status: StatusCodes.CREATED,
+            };
+          } catch (e) {
+            console.log("here ", e)
+            return {
+              data: __filename,
+              message: e.message,
+              status: StatusCodes.INTERNAL_SERVER_ERROR,
+            };
+          }
+
 }
 
 module.exports = createCliente

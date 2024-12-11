@@ -9,6 +9,7 @@ const ProcessoController = require('../controllers/processo/ProcessoController.j
 const validateAnexosProcesso = require('../middlewares/validateAnexosProcesso.js');
 const validateRemoveResources = require('../middlewares/validateRemoveResources.js');
 const DespesaController = require('../controllers/processo/DespesasController.js');
+const validateCreateFacturaProcesso = require('../middlewares/validateFacturaProcesso.js');
 
 const processo = express.Router()
 
