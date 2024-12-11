@@ -10,8 +10,6 @@ const responseHttp = require('../../utils/http/response');
 
 async function createClienteController(req, res) {
 
-
-        
         try {
                 const errors = validationResult(req);
                 if (!errors.isEmpty()) {

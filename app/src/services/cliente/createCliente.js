@@ -1,6 +1,7 @@
 const { StatusCodes } = require("http-status-codes");
 const { create, Cliente } = require("../../persistencia/models/Cliente.js")
-const listByIdTipoCliente = require("../tipoCliente /listByIdTipoCliente.js")
+const listByIdTipoCliente = require("../tipoCliente /listByIdTipoCliente.js");
+const createKeycloakColaborador = require("../keycloak/createColaborador.js");
 
 /**
 * @param {string} denominacao
@@ -29,7 +30,21 @@ async function createCliente (
 ) {    
 
         try {
-            console.log("errrrr  try ")
+
+          const defaultPassword = "julaw"
+          const role = "client_julaw"
+      
+          const keyCloakUser = await createKeycloakColaborador({
+              "username": e_mail,
+              "password": defaultPassword,
+              "email": e_mail,
+              "firstName": denominacao,
+              "lastName": pessoaContacto,
+              "groups": role
+          })
+
+          console.log("keyCloakUser keyCloakUser ", keyCloakUser)
+
             const newCliente = await create({
                 "denominacao": denominacao,
                 "tipoId": tipoId, 
@@ -39,7 +54,8 @@ async function createCliente (
                 "contactoCobranca": contactoCobranca,
                 "e_mail": e_mail,
                 "nota": nota,
-                "status": status
+                "status": status,
+                "uuid": keyCloakUser.uuid.toString()
             })
             
             console.log("1")
