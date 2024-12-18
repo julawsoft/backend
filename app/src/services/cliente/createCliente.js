@@ -58,9 +58,7 @@ async function createCliente (
                 "uuid": keyCloakUser.uuid.toString()
             })
             
-            console.log("1")
             let tipoCliente = await  listByIdTipoCliente(newCliente.tipo_id)
-            console.log("2")
       
             return {
               data: {...newCliente.dataValues, tipo: tipoCliente},
@@ -68,10 +66,9 @@ async function createCliente (
               status: StatusCodes.CREATED,
             };
           } catch (e) {
-            console.log("here ", e)
             return {
               data: __filename,
-              message: e.message,
+              message: e.message ? e.message : e,
               status: StatusCodes.INTERNAL_SERVER_ERROR,
             };
           }

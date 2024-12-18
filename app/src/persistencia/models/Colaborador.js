@@ -51,6 +51,10 @@ Colaborador.init({
     allowNull: false,
     unique: true,
   },
+  taxa_horaria: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+  },
   status: {
     type: DataTypes.ENUM('active', 'inactive', 'pending'),
     allowNull: false,
@@ -86,6 +90,7 @@ async function create(
     uuid,
     status,
     inicial,
+    taxa_horaria
   }
 ) {
 
@@ -99,6 +104,7 @@ async function create(
       "funcao": funcao,
       "tipo_colaborador_id": tipoColaboradorId,
       "inicial": inicial,
+      "taxa_horaria": taxa_horaria,
     }
   )
 }
@@ -175,6 +181,7 @@ async function getAllQuery() {
     c.data_nascimento,
     c.funcao,
     c.tipo_colaborador_id,
+    c.taxa_horaria,
     GROUP_CONCAT(
         DISTINCT concat(dc.id, '|', dc.type)
         ORDER BY dc.id
