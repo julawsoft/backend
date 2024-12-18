@@ -59,6 +59,11 @@ async function createTarefa(
   }
 ) {
 
+  console.log("data realizacao tarefa ... ", descricao )
+  console.log("data realizacao tarefa ... processo_id ", processo_id )
+  console.log("data realizacao tarefa ... ", data_para_realizacao )
+  console.log("data realizacao tarefa ... ", data_para_realizacao )
+
   return await ProcessosTarefas.create({
     descricao, processo_id, status, data_para_realizacao
   })

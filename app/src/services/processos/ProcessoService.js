@@ -226,7 +226,7 @@ class ProcessoServive {
     try {
 
       if (precedentes) {
-        for (let precedente of precedentes) {
+        for await  (let precedente of precedentes) {
           createPrecedente({
             processo_id: processoId,
             precedente_id: precedente,
@@ -235,7 +235,7 @@ class ProcessoServive {
       }
 
       if (equipas) {
-        for (let equipa of equipas) {
+        for await (let equipa of equipas) {
           createEquipa({
             processo_id: processoId,
             colaborador_id: equipa,
@@ -244,11 +244,11 @@ class ProcessoServive {
       }
 
       if (tarefas) {
-        for (let tarefa of tarefas) {
+        for await (let tarefa of tarefas) {
           createTarefa({
-            processo_id: processoId,
-            descricao: tarefa.descricao,
-            data_para_realizacao: tarefa.data_para_realizacao,
+            "processo_id": processoId,
+            "descricao": tarefa.descricao,
+            "data_para_realizacao": tarefa.data_para_realizacao,
           });
         }
       }
@@ -487,6 +487,8 @@ class ProcessoServive {
     try {
 
       let tarefa = await getTarefaByColaboradorId(id);
+
+      console.log("tarefa do colaborador ", tarefa)
 
       return {
         data: tarefa.length ? tarefa : null,
