@@ -29,7 +29,8 @@ async function createColaboradorController(req, res) {
                                 "nomeProfissional": dataBody.nome_profissional,
                                 "dataNascimento": dataBody.data_nascimento,
                                 "funcao": dataBody.funcao,
-                                "tipoColaboradorId": dataBody.tipo_colaborador_id
+                                "tipoColaboradorId": dataBody.tipo_colaborador_id,
+                                "taxa_horaria": dataBody.taxa_horaria
                         }
                 )
 

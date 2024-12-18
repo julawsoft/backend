@@ -14,19 +14,21 @@ const listTipoColaboradorById = require("../tipoDeColaborador/listTipoColaborado
 *
 * @returns {Array} Colaborador
 */
-async function createColaborador({ username, nomeCompleto, nomeProfissional, dataNascimento, funcao, tipoColaboradorId }) {
+async function createColaborador({ username, nomeCompleto, nomeProfissional, dataNascimento, funcao, tipoColaboradorId, taxa_horaria }) {
 
     const defaultPassword = "julaw"
     const role = switchRole(funcao)
     const [firstName, lastName] = nomeCompleto.split(" ")
 
     const keyCloakColaborador = await createKeycloakColaborador({
-        username,
-        password: defaultPassword,
-        firstName,
-        lastName,
-        groups: role
+        "username": username,
+        "password": defaultPassword,
+        "email": "",
+        "firstName": firstName  ,
+        "lastName": username,
+        "groups": role
     })
+
 
     const dataToSave = {
         "nomeCompleto": nomeCompleto,
@@ -37,7 +39,8 @@ async function createColaborador({ username, nomeCompleto, nomeProfissional, dat
         //"uuid": Math.random().toString().slice(2) + new Date().getTime().toString(),
         "uuid": keyCloakColaborador.uuid.toString(),
 
-        "inicial": makeInitialColaborador(nomeCompleto)
+        "inicial": makeInitialColaborador(nomeCompleto),
+        "taxa_horaria": taxa_horaria
     }
 
     const dataColaborador = await create({ ...dataToSave })

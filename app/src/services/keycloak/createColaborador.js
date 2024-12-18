@@ -16,7 +16,7 @@ async function createKeycloakColaborador({username, password, email, firstName, 
         return { "uuid": returnUserKeycloak.id }
     }catch (e) { 
         console.log("error creating keycloak", e)
-        throw new Error(e.errorMessage)
+        throw new Error(e.error)
     }
 }
 module.exports = createKeycloakColaborador

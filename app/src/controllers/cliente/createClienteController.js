@@ -37,7 +37,7 @@ async function createClienteController(req, res) {
                         }
                 )
             
-                return responseHttp(res, StatusCodes.CREATED, errosConst.CLIENT_CREATED, dataReturned, [])
+                return responseHttp(res, dataReturned.status, dataReturned.message, dataReturned.data, [])
 
         } catch (e) {
                 console.log("error save client ", e)
