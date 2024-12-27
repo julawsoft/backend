@@ -1,5 +1,5 @@
 const { StatusCodes } = require("http-status-codes");
-const { create, getAllOrByProcessoId, getAllOrByProcessoIdAndColaboradorId, updateProcessoTimeSheet, removeProcessoTimeSheet } = require("../../persistencia/models/ProcessosTimeSheet");
+const { create, getAllOrByProcessoId, getAllOrByProcessoIdAndColaboradorId, updateProcessoTimeSheet, removeProcessoTimeSheet, getTimeSheetNaoFacturado } = require("../../persistencia/models/ProcessosTimeSheet");
 
 
 class ProcessoTimeSheetService {
@@ -57,7 +57,6 @@ class ProcessoTimeSheetService {
     static async getProcessoTimeSheetByProcessoId(idProcesso) {
         try {
 
-            console.log(">>>>>>>>>>>", idProcesso)
             let response = await getAllOrByProcessoId(idProcesso)
             return {
                 data: response,
@@ -164,6 +163,27 @@ class ProcessoTimeSheetService {
             };
         }
     }
+
+    static async getProcessoTimeSheetNaoFacturado(idProcesso) {
+        try {
+
+            let response = await getTimeSheetNaoFacturado(idProcesso)
+
+            return {
+                data: response,
+                message: "TIMESHHET.PROCESSO.NOT.FACTURADO.LIST",
+                status: StatusCodes.OK,
+            };
+
+        } catch (e) {
+            return {
+                data: __filename,
+                message: e.message,
+                status: StatusCodes.BAD_REQUEST,
+            };
+        }
+    }
+
 
 
 }

@@ -46,7 +46,6 @@ class ProcessoTimeSheetController {
                 }
                 const responseProcesso = await ProcessoServive.getByIdProcesso(idProcesso)
 
-                console.log(responseProcesso)
                 if(responseProcesso.status !== StatusCodes.OK)
                         return responseHttp(res, StatusCodes.BAD_REQUEST, errosConst.VALIDATION_ERROR, {}, ['Processo not found'])
 
@@ -78,6 +77,24 @@ class ProcessoTimeSheetController {
                         return responseHttp(res, StatusCodes.BAD_REQUEST, errosConst.VALIDATION_ERROR, {}, ['Colaborador not found'])
 
                 const response = await ProcessoTimeSheetService.getProcessoTimeSheetByProcessoIdAndColaboradorId(idProcesso, idColaborador)
+                
+                return responseHttp(res, response.status, response.message, response.data, [])
+        }
+
+        async processoTimeSheetNaoFacturado(req, res) {
+
+                const  {idProcesso}  = req.params
+
+                if(!idProcesso){
+                        return responseHttp(res, StatusCodes.BAD_REQUEST, errosConst.VALIDATION_ERROR, {}, ['Processo Id'])
+                }
+
+                const responseProcesso = await ProcessoServive.getByIdProcesso(idProcesso)
+                if(responseProcesso.status !== StatusCodes.OK)
+                        return responseHttp(res, StatusCodes.BAD_REQUEST, errosConst.VALIDATION_ERROR, {}, ['Processo not found'])
+                
+
+                const response = await ProcessoTimeSheetService.getProcessoTimeSheetNaoFacturado(idProcesso)
                 
                 return responseHttp(res, response.status, response.message, response.data, [])
         }
