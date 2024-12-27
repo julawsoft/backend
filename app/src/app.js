@@ -6,7 +6,10 @@ const routesRoot = require('./routes/index.js')
 const { API_VERSION, STORAGE_PATH }  = require('./const.js')
 const { corsOptions } = require('./cors.js')
 const SequelizeConnection = require('./persistencia/SequelizeConnection.js')
+const KeycloakConnection = require("./infra/keycloak/KeycloakConnection.js") 
 
+
+new KeycloakConnection()
 new SequelizeConnection().init()
 
 const app = express()

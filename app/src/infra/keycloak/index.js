@@ -1,4 +1,4 @@
-const keycloakConnection = require('./KeycloakConnection.js');
+const KeycloakConnection = require('./KeycloakConnection.js');
 const { Issuer } = require('openid-client');
 const { jwtDecode } = require("jwt-decode");
 
@@ -39,15 +39,13 @@ class Keycloak {
       ],
     }
 
-    console.log("create a user payload ", userDataToSave)
-
     try {
 
-      const keycloakResponse = await keycloakConnection.instance.users.create(realm, userDataToSave)
+      const keycloakConnection =  new KeycloakConnection()
 
+      const keycloakResponse = await keycloakConnection.users.create(realm, userDataToSave)
       return keycloakResponse;
     } catch (e) {
-      console.log("create user keycloak ", e)
       throw e;
     }
 

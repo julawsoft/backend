@@ -8,16 +8,20 @@ process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
 
 class KeycloakConnection {
 
-  static instance;
+  static instance = null;
 
   constructor() {
-    setTimeout(() => {
-      return this.init()
-    }, 2000)
+      if(KeycloakConnection.instance){
+        return KeycloakConnection.instance
+      }
+
+      this.init()
+
+      KeycloakConnection.instance = this
   }
 
   async init() {
-    if (!this.instance) {
+
       KcAdminClient({
         baseUrl: authServerURL,
         realmName: realm,
@@ -25,24 +29,20 @@ class KeycloakConnection {
         password: pwdAdmin,
         grant_type: grantType,
         client_id: clientId,
-        // client_secret: clientSecret,
+        client_secret: clientSecret,
       }).then((response) => {
-        console.log("response keycloak connection >>>>>> ", response)
-        this.instance = response;
+        KeycloakConnection.instance = response;
         logger.info(`keycloak server connected successfully`)
       }).catch((error) => {
-        console.log("error  keycloak connection : >>><<< ", error)
         logger.error(`${error.error ?? error}`)
       }).finally(() => {
         logger.http(`keycloak server`)
       })
-    }
+
+       return this
   }
 
-  static getInstance() {
-    return this.instance ? this.instance : new KeycloakConnection();
-  }
 
 }
 
-module.exports = KeycloakConnection.getInstance()
+module.exports = KeycloakConnection
