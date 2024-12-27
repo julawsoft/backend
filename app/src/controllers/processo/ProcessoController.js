@@ -180,6 +180,9 @@ class ProcessoController {
                 if (!tarefaFinded.data)
                         return responseHttp(res, StatusCodes.NOT_FOUND, "Tarefa não encontrada", [], [])
 
+
+                console.log("tarefa finded >>> ", tarefaFinded)
+
                 const response = await ProcessoServive.updateTarefaProcesso({
                         "id": id,
                         "descricao": dataBody.descricao ?? tarefaFinded.data[0].descricao,
