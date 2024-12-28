@@ -120,7 +120,7 @@ module.exports = {
       },
       data_emissao_factura: {
         type: Sequelize.DATE,
-        allowNull: trues,
+        allowNull: true,
       },
       status_id: {
         type: Sequelize.INTEGER,
