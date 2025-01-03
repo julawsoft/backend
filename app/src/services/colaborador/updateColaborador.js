@@ -1,3 +1,4 @@
+const { StatusCodes } = require("http-status-codes");
 const { ROLES } = require("../../const.js");
 const { update } = require("../../persistencia/models/Colaborador.js");
 const { makeInitialColaborador } = require("../../utils/string.js");
@@ -12,8 +13,10 @@ const { makeInitialColaborador } = require("../../utils/string.js");
 *
 * @returns {Array} Colaborador
 */
-async function updateColaborador({ id, nomeCompleto, nomeProfissional, dataNascimento, funcao, tipoColaboradorId }) {
+async function updateColaborador({ id, nomeCompleto, nomeProfissional, dataNascimento, funcao, tipoColaboradorId, taxa_horaria, status }) {
         
+    try {
+
         const dataToSave = {
             "nomeCompleto": nomeCompleto,
             "nomeProfissional": nomeProfissional,
@@ -21,11 +24,25 @@ async function updateColaborador({ id, nomeCompleto, nomeProfissional, dataNasci
             "funcao": funcao,
             "tipoColaboradorId": tipoColaboradorId,
             "inicial":  makeInitialColaborador(nomeCompleto),
-            id
+            taxa_horaria,
+            status,
+            id,
         }
-
-        const dataColaborador = await update({...dataToSave})
-        return await { dataColaborador };
+        
+        const dataColaborador = await update(dataToSave)
+                
+        return {
+            data: dataColaborador,
+            message: 'COLABORADOR.UPDATED',
+            status: StatusCodes.OK,
+          };
+    }catch(e) {
+        return {
+            data: __filename,
+            message: e.message,
+            status: StatusCodes.BAD_REQUEST,
+          };
+    }
 
 }
 

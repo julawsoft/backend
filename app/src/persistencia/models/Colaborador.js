@@ -105,6 +105,7 @@ async function create(
       "tipo_colaborador_id": tipoColaboradorId,
       "inicial": inicial,
       "taxa_horaria": taxa_horaria,
+      "status": status
     }
   )
 }
@@ -128,23 +129,24 @@ async function update(
     dataNascimento,
     funcao,
     tipoColaboradorId,
-    uuid,
     status,
     inicial,
+    taxa_horaria,
     id
   }
 ) {
+
 
   return Colaborador.update(
     {
       "nome_completo": nomeCompleto,
       "nome_profissional": nomeProfissional,
       "data_nascimento": dataNascimento,
-      "uuid": uuid,
       "status": status,
       "funcao": funcao,
       "tipo_colaborador_id": tipoColaboradorId,
       "inicial": inicial,
+      "taxa_horaria": taxa_horaria
     },
     {
       where: {

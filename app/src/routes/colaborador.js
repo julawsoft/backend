@@ -7,6 +7,7 @@ const updateColaboradorController = require('../controllers/colaborador/updateCo
 
 const validateCreateColaborador = require('../middlewares/validateCreateColaborador.js');
 const getListColaboradorController = require('../controllers/colaborador/getListColaboradorController.js');
+const validateEditColaborador = require('../middlewares/validateEditColaborador.js');
 
 const colaboradorRouter = express.Router()
 
@@ -18,7 +19,7 @@ const ROUTES_PATH = {
 colaboradorRouter.post(ROUTES_PATH.INDEX, validateCreateColaborador, createColaboradorController)
 colaboradorRouter.get(`${ROUTES_PATH.INDEX}/:id`, getByIdColaboradorController)
 colaboradorRouter.get(ROUTES_PATH.INDEX, getAllColaboradorController)
-colaboradorRouter.put(ROUTES_PATH.INDEX, validateCreateColaborador, updateColaboradorController)
+colaboradorRouter.put(`${ROUTES_PATH.INDEX}/:id`, validateEditColaborador, updateColaboradorController)
 colaboradorRouter.get(ROUTES_PATH.TIPO_COLABORADOR, getListColaboradorController)
 
 module.exports = colaboradorRouter

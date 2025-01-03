@@ -41,7 +41,8 @@ class Keycloak {
 
     try {
 
-      const keycloakConnection =  new KeycloakConnection()
+      const keycloak =  new KeycloakConnection()
+      const keycloakConnection = await keycloak.init()
 
       const keycloakResponse = await keycloakConnection.users.create(realm, userDataToSave)
       return keycloakResponse;

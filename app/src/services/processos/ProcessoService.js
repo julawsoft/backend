@@ -8,6 +8,7 @@ const {
   update,
   getByColaboradorId,
   getByClienteId,
+  getFacturas
 } = require("../../persistencia/models/Processos");
 const {
   getAllByKeyValue: TarefaGetByKey,
@@ -215,7 +216,6 @@ class ProcessoServive {
       };
     }
   }
-
 
   static async addRecursosProcesso({
     processoId,
@@ -611,6 +611,28 @@ class ProcessoServive {
       };
     }
   }
+
+
+
+  static async getFacturas(id) {
+    try {
+      const processo = await getFacturas(id);
+
+      return {
+        data: processo,
+        message: "PROCESS.INVOICE.LIST.OK",
+        status: StatusCodes.OK,
+      };
+    } catch (e) {
+      return {
+        data: __filename,
+        message: e.message,
+        status: StatusCodes.INTERNAL_SERVER_ERROR,
+      };
+    }
+  }
+
+
 
 }
 

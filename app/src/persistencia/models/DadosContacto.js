@@ -1,7 +1,7 @@
-const { Model, DataTypes } = require('sequelize');
-const SequelizeConnection = require('../SequelizeConnection.js');  // Importa a instância Singleton do Sequelize
+const { Model, DataTypes, col } = require("sequelize");
+const SequelizeConnection = require("../SequelizeConnection.js"); // Importa a instância Singleton do Sequelize
 
-const sequelize = SequelizeConnection.getConnection().instance
+const sequelize = SequelizeConnection.getConnection().instance;
 
 /**
  * Gerenciador integracao keycloak.
@@ -11,34 +11,37 @@ class DadosContacto extends Model {
   static associate(models) {}
 }
 
-DadosContacto.init({
-  type: {
-    type: DataTypes.ENUM('telefone', 'e-mail', 'endereco', 'outro'),
-    allowNull: false,
-    defaultValue: 'telefone',
+DadosContacto.init(
+  {
+    type: {
+      type: DataTypes.ENUM("telefone", "e-mail", "endereco", "outro"),
+      allowNull: false,
+      defaultValue: "telefone"
+    },
+    value: {
+      type: DataTypes.STRING
+    },
+    description: {
+      type: DataTypes.STRING
+    },
+    colaboradorId: {
+      type: DataTypes.NUMBER
+    }
   },
-  value: {
-    type: DataTypes.STRING
-  },
-  description: {
-    type: DataTypes.STRING
-  },
-  colaboradorId: {
-    type: DataTypes.NUMBER
-  },
-}, {
-  sequelize,
-  modelName: 'DadosContacto',
-  tableName: 'dados_contactos',
-  createdAt: 'created_at',
-  updatedAt: 'updated_at'
-});
+  {
+    sequelize,
+    modelName: "DadosContacto",
+    tableName: "dados_contactos",
+    createdAt: "created_at",
+    updatedAt: "updated_at"
+  }
+);
 
 /**
  * @returns {Object}
  */
 async function listAll() {
-  return DadosContacto.findAll()
+  return DadosContacto.findAll();
 }
 
 /**
@@ -47,9 +50,8 @@ async function listAll() {
  */
 
 async function listById(id) {
-  return await DadosContacto.findOne({where: {id}})
+  return await DadosContacto.findOne({ where: { id } });
 }
-
 
 /**
  * @returns {string} chave
@@ -60,41 +62,42 @@ async function getAllByKeyValue(chave, valor) {
     where: {
       [chave]: valor
     }
-  })
+  });
 }
-
 
 /**
-* @param {number} tipo
-* @param {string} valor
-* @param {string} descricao
-* @param {number} colaboradorId
-*
-* @returns {Array} DadosContacto
-*/
-async function create(
-  {
-    tipo,
-    valor,
-    descricao,
-    colaboradorId
-}
-) {
-
+ * @param {number} tipo
+ * @param {string} valor
+ * @param {string} descricao
+ * @param {number} colaboradorId
+ *
+ * @returns {Array} DadosContacto
+ */
+async function create({ tipo, valor, descricao, colaboradorId }) {
   return await DadosContacto.create({
-    "type": tipo,
-    "value": valor,
-    "description": descricao,
-    "colaboradorId": colaboradorId
-  })
+    type: tipo,
+    value: valor,
+    description: descricao,
+    colaboradorId: colaboradorId
+  });
 }
 
-
+async function update({ tipo, valor, colaboradorId }) {
+  let queryString = `UPDATE dados_contactos 
+                    SET type=${tipo}, value=${valor}
+                    WHERE 
+                    colaboradorId=${colaboradorId} AND value=${valor}
+                    `;
+  return sequelize.query(queryString, {
+    type: QueryTypes.SELECT
+  });
+}
 
 module.exports = {
-    listAll,
-    listById,
-    getAllByKeyValue,
-    create,
-    DadosContacto
+  listAll,
+  listById,
+  getAllByKeyValue,
+  create,
+  DadosContacto,
+  update
 };

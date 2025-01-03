@@ -210,6 +210,20 @@ class ProcessoController {
                 return responseHttp(res, response.status, response.message, response.data, [])
         }
 
+        async getFacturas(req, res) {
+               
+                const { id } = req.params
+                let processoFinded = await ProcessoServive.getByIdProcesso(id)
+
+                if (!processoFinded) {
+                        return responseHttp(res, StatusCodes.BAD_REQUEST, errosConst.PROCESSO_NOT_FOUND, {}, [])
+                }
+
+                const response = await ProcessoServive.getFacturas(id)
+
+                return responseHttp(res, response.status, response.message, response.data, [])
+        }
+
 
         
 }

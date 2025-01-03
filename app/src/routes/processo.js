@@ -20,6 +20,7 @@ const ROUTES_PATH = {
     ANEXOS_DOWN: '/view_anexo_processo',
     TASK_PROCESSO: '/tarefas_processo',
     PROCESSO_COLABORADOR: '/processo_colaborador',
+    PROCESSO_FACTURA: '/processo_factura',
 }
 
 processo.post(ROUTES_PATH.INDEX, validateCreateProcesso, createProcessoController)
@@ -37,5 +38,6 @@ processo.delete(`${ROUTES_PATH.RECURSOS}`, validateRemoveResources, new Processo
 processo.put(`${ROUTES_PATH.TASK_PROCESSO}/:id`, new ProcessoController().updateTarefaProcesso)
 processo.post(`${ROUTES_PATH.INDEX}/despesa`, new DespesaController().createDespesa)
 processo.get(`${ROUTES_PATH.INDEX}/despesa/all`, new DespesaController().getAll)
+processo.get(`${ROUTES_PATH.PROCESSO_FACTURA}/:id`, new ProcessoController().getFacturas)
 
 module.exports = processo

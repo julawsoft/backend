@@ -1,204 +1,199 @@
-const { Model, DataTypes, QueryTypes } = require('sequelize');
-const SequelizeConnection = require('../SequelizeConnection.js');
+const { Model, DataTypes, QueryTypes } = require("sequelize");
+const SequelizeConnection = require("../SequelizeConnection.js");
 
-const sequelize = SequelizeConnection.getConnection().instance
+const sequelize = SequelizeConnection.getConnection().instance;
 
 /**
  * Gerenciador integracao keycloak.
  * @class
  */
 class Processos extends Model {
-  static associate(models) { }
+  static associate(models) {}
 }
 
-Processos.init({
-  id: {
-    allowNull: false,
-    autoIncrement: true,
-    primaryKey: true,
-    type: DataTypes.INTEGER
+Processos.init(
+  {
+    id: {
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true,
+      type: DataTypes.INTEGER
+    },
+    assunto: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    ref: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    area: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    fase: {
+      type: DataTypes.ENUM("Extrajudicial", "Judicial"),
+      allowNull: false
+    },
+    instituicao_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    modo_facturacao_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    cliente_id: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    gestor_id: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    contra_parte: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    data_registo: {
+      type: DataTypes.DATE,
+      allowNull: false
+    },
+    data_suspensao: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
+    colaborador_id_suspendeu: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    data_encerramento: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
+    colaborador_id_encerrou: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    metodologia: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
+    estrategia: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
+    factos: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
+    objectivos: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
+    dados_importantes: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
+    horas_mes: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
+    valor_total: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    data_emissao_factura: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
+    status_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    }
   },
-  assunto: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  ref: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  area: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  fase: {
-    type: DataTypes.ENUM('Extrajudicial', 'Judicial'),
-    allowNull: false,
-  },
-  instituicao_id: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-  },
-  modo_facturacao_id: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-  },
-  cliente_id: {
-    type: DataTypes.INTEGER,
-    allowNull: true,
-  },
-  gestor_id: {
-    type: DataTypes.INTEGER,
-    allowNull: true,
-  },
-  contra_parte: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  data_registo: {
-    type: DataTypes.DATE,
-    allowNull: false,
-  },
-  data_suspensao: {
-    type: DataTypes.DATE,
-    allowNull: true,
-  },
-  colaborador_id_suspendeu: {
-    type: DataTypes.INTEGER,
-    allowNull: true,
-  },
-  data_encerramento: {
-    type: DataTypes.DATE,
-    allowNull: true,
-  },
-  colaborador_id_encerrou: {
-    type: DataTypes.INTEGER,
-    allowNull: true,
-  },
-  metodologia: {
-    type: DataTypes.TEXT,
-    allowNull: true,
-  },
-  estrategia: {
-    type: DataTypes.TEXT,
-    allowNull: true,
-  },
-  factos: {
-    type: DataTypes.TEXT,
-    allowNull: true,
-  },
-  objectivos: {
-    type: DataTypes.TEXT,
-    allowNull: true,
-  },
-  dados_importantes: {
-    type: DataTypes.TEXT,
-    allowNull: true,
-  },
-  horas_mes: {
-    type: DataTypes.TEXT,
-    allowNull: true,
-  },
-  valor_total: {
-    type: DataTypes.FLOAT,
-    allowNull: true,
-  },
-  data_emissao_factura: {
-    type: DataTypes.DATE,
-    allowNull: true,
-  },
-  status_id: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-  },
-}, {
-  sequelize,
-  modelName: 'Processos',
-  tableName: 'processos',
-  createdAt: 'created_at',
-  updatedAt: 'updated_at'
-});
-
-
+  {
+    sequelize,
+    modelName: "Processos",
+    tableName: "processos",
+    createdAt: "created_at",
+    updatedAt: "updated_at"
+  }
+);
 
 /**
- * @param {string} assunto 
- * @param {string} area 
- * @param {string} fase 
- * @param {number} instituicaoId 
- * @param {number} modoFacturacaoId 
+ * @param {string} assunto
+ * @param {string} area
+ * @param {string} fase
+ * @param {number} instituicaoId
+ * @param {number} modoFacturacaoId
  * @param {number} clienteId
- * @param {number} gestorId 
- * @param {string} contraParte 
- * @param {string} dataRegisto 
- * @param {string} dataSuspensao 
- * @param {string} colaboradorIdSuspendeu 
- * @param {string} dataEncerramento 
- * @param {string} colaboradorIdEnderrou 
- * @param {string} metodologia 
- * @param {string} estrategia 
- * @param {string} factos 
- * @param {string} objectivos 
- * @param {string} dataImportantes 
- * @param {string} horasMes 
- * @param {string} valorTotal 
- * @param {string} dataEmissaoFactura 
+ * @param {number} gestorId
+ * @param {string} contraParte
+ * @param {string} dataRegisto
+ * @param {string} dataSuspensao
+ * @param {string} colaboradorIdSuspendeu
+ * @param {string} dataEncerramento
+ * @param {string} colaboradorIdEnderrou
+ * @param {string} metodologia
+ * @param {string} estrategia
+ * @param {string} factos
+ * @param {string} objectivos
+ * @param {string} dataImportantes
+ * @param {string} horasMes
+ * @param {string} valorTotal
+ * @param {string} dataEmissaoFactura
  * @returns {Processos}
  */
-async function create(
-  {
-    assunto,
-    area,
-    fase,
-    instituicaoId,
-    modoFacturacaoId,
-    clienteId,
-    gestorId,
-    contraParte,
-    dataRegisto,
-    dataSuspensao,
-    colaboradorIdSuspendeu,
-    dataEncerramento,
-    colaboradorIdEnderrou,
-    metodologia,
-    estrategia,
-    factos,
-    objectivos,
-    dataImportantes,
-    statusId,
-    horasMes,
-    valorTotal,
-    dataEmissaoFactura
-  }
-) {
-  
-  return Processos.create(
-    {
-      "assunto": assunto,
-      "area": area,
-      "fase": fase,
-      "instituicao_id": instituicaoId,
-      "modo_facturacao_id": modoFacturacaoId,
-      "cliente_id": clienteId,
-      "gestor_id": gestorId,
-      "contra_parte": contraParte,
-      "data_registo": dataRegisto,
-      "data_suspensao": dataSuspensao,
-      "colaborador_id_suspendeu": colaboradorIdSuspendeu,
-      "data_encerramento": dataEncerramento,
-      "colaborador_id_encerrou": colaboradorIdEnderrou,
-      "metodologia": metodologia,
-      "estrategia": estrategia,
-      "factos": factos,
-      "objectivos": objectivos,
-      "dados_importantes": dataImportantes,
-      "status_id": statusId,
-      "horas_mes": horasMes,
-      "valor_total": valorTotal,
-      "data_emissao_factura": dataEmissaoFactura
-    }
-  )
+async function create({
+  assunto,
+  area,
+  fase,
+  instituicaoId,
+  modoFacturacaoId,
+  clienteId,
+  gestorId,
+  contraParte,
+  dataRegisto,
+  dataSuspensao,
+  colaboradorIdSuspendeu,
+  dataEncerramento,
+  colaboradorIdEnderrou,
+  metodologia,
+  estrategia,
+  factos,
+  objectivos,
+  dataImportantes,
+  statusId,
+  horasMes,
+  valorTotal,
+  dataEmissaoFactura
+}) {
+  return Processos.create({
+    assunto: assunto,
+    area: area,
+    fase: fase,
+    instituicao_id: instituicaoId,
+    modo_facturacao_id: modoFacturacaoId,
+    cliente_id: clienteId,
+    gestor_id: gestorId,
+    contra_parte: contraParte,
+    data_registo: dataRegisto,
+    data_suspensao: dataSuspensao,
+    colaborador_id_suspendeu: colaboradorIdSuspendeu,
+    data_encerramento: dataEncerramento,
+    colaborador_id_encerrou: colaboradorIdEnderrou,
+    metodologia: metodologia,
+    estrategia: estrategia,
+    factos: factos,
+    objectivos: objectivos,
+    dados_importantes: dataImportantes,
+    status_id: statusId,
+    horas_mes: horasMes,
+    valor_total: valorTotal,
+    data_emissao_factura: dataEmissaoFactura
+  });
 }
-
 
 /**
  * @returns {string} chave
@@ -209,12 +204,11 @@ async function getAllByKeyValue(chave, valor) {
     where: {
       [chave]: valor
     }
-  })
+  });
 }
 
-
 async function getAll() {
-  // return await Processos.findAll() 
+  // return await Processos.findAll()
   let queryString = `SELECT 
   p.*,
   p_status.descricao AS estado,
@@ -245,14 +239,13 @@ async function getAll() {
   LEFT JOIN tipo_cliente tcli
   ON cli.tipo_id = tcli.id`;
 
-  return  sequelize.query(queryString, {
-  type: QueryTypes.SELECT,
-});
+  return sequelize.query(queryString, {
+    type: QueryTypes.SELECT
+  });
 }
 
-
 async function getById(id) {
-  // return await Processos.findAll() 
+  // return await Processos.findAll()
   let queryString = `SELECT 
   p.*,
   p_status.descricao AS estado,
@@ -284,15 +277,14 @@ async function getById(id) {
   ON cli.tipo_id = tcli.id
   where p.id = ${id}
   `;
-  
-  return  sequelize.query(queryString, {
-  type: QueryTypes.SELECT,
-});
+
+  return sequelize.query(queryString, {
+    type: QueryTypes.SELECT
+  });
 }
 
-
 async function getByColaboradorId(idColaborador) {
-  // return await Processos.findAll() 
+  // return await Processos.findAll()
   let queryString = ` 
   SELECT 
   p.*,
@@ -325,102 +317,97 @@ async function getByColaboradorId(idColaborador) {
   ON cli.tipo_id = tcli.id
   WHERE p.id IN  (SELECT processo_equipa.processo_id FROM processo_equipa
    WHERE processo_equipa.colaborador_id = ${idColaborador})`;
-  
-  return  sequelize.query(queryString, {
-  type: QueryTypes.SELECT,
-});
+
+  return sequelize.query(queryString, {
+    type: QueryTypes.SELECT
+  });
 }
 
-
-
 /**
- * @param {number} processoId 
- * @param {string} assunto 
- * @param {string} area 
- * @param {string} fase 
- * @param {number} instituicaoId 
- * @param {number} modoFacturacaoId 
+ * @param {number} processoId
+ * @param {string} assunto
+ * @param {string} area
+ * @param {string} fase
+ * @param {number} instituicaoId
+ * @param {number} modoFacturacaoId
  * @param {number} clienteId
- * @param {number} gestorId 
- * @param {string} contraParte 
- * @param {string} dataRegisto 
- * @param {string} dataSuspensao 
- * @param {string} colaboradorIdSuspendeu 
- * @param {string} dataEncerramento 
- * @param {string} colaboradorIdEnderrou 
- * @param {string} metodologia 
- * @param {string} estrategia 
- * @param {string} factos 
- * @param {string} objectivos 
- * @param {string} dataImportantes 
- * @param {string} horasMes 
- * @param {string} valorTotal 
- * @param {string} dataEmissaoFactura 
+ * @param {number} gestorId
+ * @param {string} contraParte
+ * @param {string} dataRegisto
+ * @param {string} dataSuspensao
+ * @param {string} colaboradorIdSuspendeu
+ * @param {string} dataEncerramento
+ * @param {string} colaboradorIdEnderrou
+ * @param {string} metodologia
+ * @param {string} estrategia
+ * @param {string} factos
+ * @param {string} objectivos
+ * @param {string} dataImportantes
+ * @param {string} horasMes
+ * @param {string} valorTotal
+ * @param {string} dataEmissaoFactura
  * @returns {Processos}
  */
-async function update(
-  {
-    processoId,
-    assunto,
-    area,
-    fase,
-    instituicaoId,
-    modoFacturacaoId,
-    clienteId,
-    gestorId,
-    contraParte,
-    dataRegisto,
-    dataSuspensao,
-    colaboradorIdSuspendeu,
-    dataEncerramento,
-    colaboradorIdEnderrou,
-    metodologia,
-    estrategia,
-    factos,
-    objectivos,
-    dataImportantes,
-    statusId,
-    horasMes,
-    valorTotal,
-    dataEmissaoFactura
-  }
-) {
-  
+async function update({
+  processoId,
+  assunto,
+  area,
+  fase,
+  instituicaoId,
+  modoFacturacaoId,
+  clienteId,
+  gestorId,
+  contraParte,
+  dataRegisto,
+  dataSuspensao,
+  colaboradorIdSuspendeu,
+  dataEncerramento,
+  colaboradorIdEnderrou,
+  metodologia,
+  estrategia,
+  factos,
+  objectivos,
+  dataImportantes,
+  statusId,
+  horasMes,
+  valorTotal,
+  dataEmissaoFactura
+}) {
   return Processos.update(
     {
-      "assunto": assunto,
-      "area": area,
-      "fase": fase,
-      "instituicao_id": instituicaoId,
-      "modo_facturacao_id": modoFacturacaoId,
-      "cliente_id": clienteId,
-      "gestor_id": gestorId,
-      "contra_parte": contraParte,
-      "data_registo": dataRegisto,
-      "data_suspensao": dataSuspensao,
-      "colaborador_id_suspendeu": colaboradorIdSuspendeu,
-      "data_encerramento": dataEncerramento,
-      "colaborador_id_encerrou": colaboradorIdEnderrou,
-      "metodologia": metodologia,
-      "estrategia": estrategia,
-      "factos": factos,
-      "objectivos": objectivos,
-      "dados_importantes": dataImportantes,
-      "status_id": statusId,
-      "horas_mes": horasMes,
-      "valor_total": valorTotal,
-      "data_emissao_factura": dataEmissaoFactura
+      assunto: assunto,
+      area: area,
+      fase: fase,
+      instituicao_id: instituicaoId,
+      modo_facturacao_id: modoFacturacaoId,
+      cliente_id: clienteId,
+      gestor_id: gestorId,
+      contra_parte: contraParte,
+      data_registo: dataRegisto,
+      data_suspensao: dataSuspensao,
+      colaborador_id_suspendeu: colaboradorIdSuspendeu,
+      data_encerramento: dataEncerramento,
+      colaborador_id_encerrou: colaboradorIdEnderrou,
+      metodologia: metodologia,
+      estrategia: estrategia,
+      factos: factos,
+      objectivos: objectivos,
+      dados_importantes: dataImportantes,
+      status_id: statusId,
+      horas_mes: horasMes,
+      valor_total: valorTotal,
+      data_emissao_factura: dataEmissaoFactura
     },
     {
       where: {
-        id: processoId,
+        id: processoId
       }
     }
-  )
+  );
 }
 
 async function getByClienteId(idCliente) {
-  // return await Processos.findAll() 
+  // return await Processos.findAll()
   let queryString = ` 
   SELECT 
   p.*,
@@ -452,12 +439,42 @@ async function getByClienteId(idCliente) {
   LEFT JOIN tipo_cliente tcli
   ON cli.tipo_id = tcli.id
   WHERE p.cliente_id = ${idCliente}`;
-  
-  return  sequelize.query(queryString, {
-  type: QueryTypes.SELECT,
-});
+
+  return sequelize.query(queryString, {
+    type: QueryTypes.SELECT
+  });
 }
 
+async function getFacturas(id) {
+  let queryString = `SELECT 
+  p.*,
+  CONCAT('[', 
+    GROUP_CONCAT(
+        CONCAT(
+            '{"processo_time_sheet_id":"', pf.processos_timesheet_id, 
+            '","horas":', pf.horas, 
+            ',"custo":', pf.custo, 
+            '}'
+        ) SEPARATOR ','
+   
+    ),
+	 ']') 
+	 AS itens
+FROM 
+  processo_facturas p
+LEFT JOIN 
+  processo_factura_items pf 
+ON 
+  p.id = pf.processo_factura_id
+WHERE 
+  p.id = ${id}
+GROUP BY 
+  p.id`;
+
+  return sequelize.query(queryString, {
+    type: QueryTypes.SELECT
+  });
+}
 
 module.exports = {
   create,
@@ -466,5 +483,6 @@ module.exports = {
   getById,
   update,
   getByColaboradorId,
-  getByClienteId
+  getByClienteId,
+  getFacturas
 };

@@ -220,7 +220,7 @@ async function getTimeSheetNaoFacturado(idProcesso) {
   LEFT JOIN tipo_cliente tcli
   ON cli.tipo_id = tcli.id 
   where p.processo_id = ${idProcesso}
-  AND p.id NOT IN (SELECT id FROM processo_factura_items WHERE processo_factura_items.id = p.id)
+  AND p.id NOT IN (SELECT processos_timesheet_id FROM processo_factura_items WHERE processo_factura_items.processos_timesheet_id = p.id)
   `
 
   return sequelize.query(queryString, {
