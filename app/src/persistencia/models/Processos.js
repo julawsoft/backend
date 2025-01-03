@@ -467,7 +467,7 @@ LEFT JOIN
 ON 
   p.id = pf.processo_factura_id
 WHERE 
-  p.id = ${id}
+  p.processo_id = ${id}
 GROUP BY 
   p.id`;
 
