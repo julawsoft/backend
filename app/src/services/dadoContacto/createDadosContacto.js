@@ -1,4 +1,4 @@
-const { create } = require("../../persistencia/models/DadosContacto")
+const { create, deleteDadosContactoByColaborado } = require("../../persistencia/models/DadosContacto")
 const getAllByKeyValueColaborador = require("../colaborador/getAllByKeyValueColaborador")
 /**
 * @param {number} tipo
@@ -16,6 +16,7 @@ async function createDadosContacto (
         colaboradorId
     }
 ) { 
+
         const newDadosContacto = await create({
             "tipo": tipo,
             "valor": valor,

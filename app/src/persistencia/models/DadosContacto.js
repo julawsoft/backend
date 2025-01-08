@@ -1,4 +1,4 @@
-const { Model, DataTypes, col } = require("sequelize");
+const { Model, DataTypes, col, QueryTypes } = require("sequelize");
 const SequelizeConnection = require("../SequelizeConnection.js"); // Importa a instância Singleton do Sequelize
 
 const sequelize = SequelizeConnection.getConnection().instance;
@@ -93,11 +93,23 @@ async function update({ tipo, valor, colaboradorId }) {
   });
 }
 
+
+async function deleteDadosContactoByColaborado(colaboradorId) {
+
+  let queryString = `DELETE FROM dados_contactos
+                    WHERE 
+                    colaboradorId=${colaboradorId}`;
+  return sequelize.query(queryString, {
+    type: QueryTypes.DELETE
+  });
+}
+
 module.exports = {
   listAll,
   listById,
   getAllByKeyValue,
   create,
   DadosContacto,
-  update
+  update,
+  deleteDadosContactoByColaborado
 };

@@ -1,4 +1,4 @@
-const { create } = require("../../persistencia/models/DadosIdentificacao")
+const { create, removeDadosIdentificacaoByColaborador, deleteDadosIdentificacaoByColaborador } = require("../../persistencia/models/DadosIdentificacao")
 const getAllByKeyValueColaborador = require("../colaborador/getAllByKeyValueColaborador")
 const listByIdTipoIdentificacao = require("../tipoIdentificacao/listByIdTipoIdentificacao.js")
 
