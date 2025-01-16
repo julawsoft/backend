@@ -170,6 +170,7 @@ async function create({
   dataEmissaoFactura
 }) {
   return Processos.create({
+    ref: (await generateRefProcesso()).toString(),
     assunto: assunto,
     area: area,
     fase: fase,
@@ -321,6 +322,24 @@ async function getByColaboradorId(idColaborador) {
   return sequelize.query(queryString, {
     type: QueryTypes.SELECT
   });
+}
+
+async function generateRefProcesso() {
+      let queryString = "SELECT MAX(id) as id FROM processos";
+      let result = await sequelize.query(queryString, {
+        type: QueryTypes.SELECT
+      });
+
+      const {id} = result[0]
+      console.log("result to create a new Precess " , result)
+      console.log("result to create a new Precess " , id)
+
+      let year = new Date().getFullYear()
+      let month = new Date().getMonth() + 1;
+
+      return `0000${parseInt(id) + 1}/${month}-${year}`
+
+
 }
 
 /**

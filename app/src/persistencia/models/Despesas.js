@@ -96,6 +96,55 @@ async function getAll() {
 }
 
 /**
+ * @returns {Despesas}
+ */
+async function findAllFilter(
+  {
+    clienteId,
+    processoId
+  }
+) {
+
+  console.log("clienteId ", clienteId)
+  console.log("processoId ", processoId)
+  console.log("processoId null", typeof processoId) 
+
+  let where = "";
+
+  if((clienteId != 0) && (processoId == 0))
+      where = `where c.id = ${clienteId}`
+
+  if((clienteId  ==  0) && (processoId != 0))
+      where = `where d.idProcesso = ${processoId}`
+
+  if((clienteId != 0) && (processoId != 0))
+    where = `where c.id = ${clienteId} and d.idProcesso = ${processoId}`
+
+  console.log("O where ", where)
+
+  const queryString = `
+    SELECT
+    d.id,
+    d.idProcesso,
+    d.valor,
+    d.tipoMovimento,
+    d.dataMovimento,
+    d.colaboradorId,
+    p.ref as numeroProcesso,
+    c.denominacao as nomeCliente
+  FROM
+    despesas d
+    INNER JOIN processos p ON d.idProcesso = p.id
+    INNER JOIN clientes c ON p.cliente_id = c.id
+  ${where}
+  `;
+
+  return sequelize.query(queryString, {
+    type: QueryTypes.SELECT,
+  });
+}
+
+/**
  * @returns {string} chave
  * @returns {string} valor
  * @returns {Despesas}
@@ -112,4 +161,5 @@ module.exports = {
   create,
   getAll,
   getAllByKeyValue,
+  findAllFilter
 };

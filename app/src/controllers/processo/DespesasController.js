@@ -32,6 +32,16 @@ class DespesasController {
                 return responseHttp(res, response.status, response.message, response.data, [])
         }
 
+        async getFilter(req, res) {
+                const {clienteId, processoId} = req.params
+
+                const response = await DespesasService.findFilter({
+                        clienteId,
+                        processoId
+                });
+                return responseHttp(res, response.status, response.message, response.data, [])
+        }
+
 }
 
 module.exports = DespesasController;

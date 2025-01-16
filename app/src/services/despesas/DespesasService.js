@@ -1,5 +1,5 @@
 const { StatusCodes } = require("http-status-codes");
-const { create, getAll } = require("../../persistencia/models/Despesas.js");
+const { create, getAll, findFilter, findAllFilter } = require("../../persistencia/models/Despesas.js");
 
 
 
@@ -42,6 +42,18 @@ class DespesasService {
     return {
       data: result,
       message: "PROCESSO.DESPESA:GET",
+      status: StatusCodes.OK,
+    };
+  }
+
+  static async findFilter({
+    clienteId,
+    processoId
+  }) {
+    const result = await findAllFilter({clienteId, processoId});
+    return {
+      data: result,
+      message: "PROCESSO.DESPESA.FILTEER:GET",
       status: StatusCodes.OK,
     };
   }

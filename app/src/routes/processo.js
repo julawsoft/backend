@@ -38,6 +38,7 @@ processo.delete(`${ROUTES_PATH.RECURSOS}`, validateRemoveResources, new Processo
 processo.put(`${ROUTES_PATH.TASK_PROCESSO}/:id`, new ProcessoController().updateTarefaProcesso)
 processo.post(`${ROUTES_PATH.INDEX}/despesa`, new DespesaController().createDespesa)
 processo.get(`${ROUTES_PATH.INDEX}/despesa/all`, new DespesaController().getAll)
+processo.get(`/despesas_filtro/:clienteId/:processoId`, new DespesaController().getFilter)
 processo.get(`${ROUTES_PATH.PROCESSO_FACTURA}/:id`, new ProcessoController().getFacturas)
 
 module.exports = processo
