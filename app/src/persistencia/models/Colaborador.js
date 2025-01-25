@@ -93,6 +93,7 @@ async function create({
   inicial,
   taxa_horaria
 }) {
+  console.log("taxa_horaria", taxa_horaria);
   return Colaborador.create({
     nome_completo: nomeCompleto,
     nome_profissional: nomeProfissional,
@@ -102,7 +103,7 @@ async function create({
     funcao: funcao,
     tipo_colaborador_id: tipoColaboradorId,
     inicial: inicial,
-    taxa_horaria: taxa_horaria,
+    taxa_horaria: taxa_horaria == "" ? undefined : taxa_horaria,
     status: status
   });
 }

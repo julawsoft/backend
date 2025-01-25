@@ -18,6 +18,7 @@ async function createColaboradorController(req, res) {
                 }
 
                 const dataBody = req.body
+                console.log("dataBody", dataBody)
                 // verificar o tipo de colaborador Id
                 // verificar a funcao
 
@@ -30,12 +31,14 @@ async function createColaboradorController(req, res) {
                                 "dataNascimento": dataBody.data_nascimento,
                                 "funcao": dataBody.funcao,
                                 "tipoColaboradorId": dataBody.tipo_colaborador_id,
-                                "taxa_horaria": dataBody.taxa_horaria,
+                                "taxa_horaria": dataBody.taxa_horaria ?? null,
                                 "status": dataBody.status
                         }
                 )
 
-                if (dataReturned.id) {
+                console.log("dataReturned >>> ", dataReturned)
+
+                if (dataReturned.status === StatusCodes.CREATED) {
 
 
                         if (dataBody.contactos && dataBody.contactos.length) {
@@ -44,7 +47,7 @@ async function createColaboradorController(req, res) {
                                                 "tipo": contactos.tipo,
                                                 "valor": contactos.valor,
                                                 "descricao": contactos.descricao,
-                                                "colaboradorId": dataReturned.id
+                                                "colaboradorId": dataReturned.data.id
                                         })
                                 }
                         }
@@ -56,19 +59,22 @@ async function createColaboradorController(req, res) {
                                                 "valor": identificacoes.valor,
                                                 "dataEmissao": identificacoes.data_emissao,
                                                 "dataValidade": identificacoes.data_validade,
-                                                "colaboradorId": dataReturned.id
+                                                "colaboradorId": dataReturned.data.id
                                         })
                                 }
                         }
 
+                        return responseHttp(res, dataReturned.status, dataReturned.message, dataReturned, [])
+                }else{
+                        return responseHttp(res, dataReturned.status, dataReturned.message, dataReturned, dataReturned.message)
                 }
 
-                return responseHttp(res, StatusCodes.CREATED, COLABORADOR.COLABORADOR_CREATED, dataReturned, [])
         } catch (e) {
+                console.log("error >>> here... ", e)
                 logger.error({
                         label: "error", message: `${COLABORADOR.COLABORADOR_ERROR_CREATED} : ${e.message}`
                 })
-                return responseHttp(res, StatusCodes.BAD_REQUEST, COLABORADOR.COLABORADOR_ERROR_CREATED, {}, e.message)
+                return responseHttp(res, StatusCodes.BAD_REQUEST, e, {}, e.message ?? e)
         }
 }
 

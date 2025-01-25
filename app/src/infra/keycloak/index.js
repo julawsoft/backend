@@ -53,6 +53,24 @@ class Keycloak {
   }
 
 
+  static async removeUser(userId) {
+
+    if (userId == null || userId == undefined) return new Error("userId cannot be null or undefined");
+
+    try {
+
+      const keycloak =  new KeycloakConnection()
+      const keycloakConnection = await keycloak.init()
+
+      const keycloakResponse = await keycloakConnection.users.remove(realm, userId)
+      return keycloakResponse;
+    } catch (e) {
+      throw e;
+    }
+
+  }
+
+
   /**
   *  @param {string} username 
   *  @param {string} password 
