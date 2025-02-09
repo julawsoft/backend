@@ -21,6 +21,7 @@ const {
   getAllTarefaByColaboradorId,
   getAllTarefaByProcessoId,
   concluirTarefa,
+  realizarTarefa,
 } = require("../../persistencia/models/ProcessosTarefas");
 const {
   getByProcessoId: PrecedenteGetByKey,
@@ -189,6 +190,26 @@ class ProcessoServive {
     try {
 
       let response = await concluirTarefa(id, gestorId, status, dataAprovada)
+     
+      return {
+        data: response,
+        message: "PROCESS:TAREFA:UPDATED",
+        status: StatusCodes.OK,
+      };
+   
+    } catch (e) {
+      return {
+        data: __filename,
+        message: e.message,
+        status: StatusCodes.INTERNAL_SERVER_ERROR,
+      };
+    }
+  }
+
+  static async realizarTarefaProcesso(id, colaboradorId, status, dataRealizada) {
+    try {
+
+      let response = await realizarTarefa(id, colaboradorId, status, dataRealizada)
      
       return {
         data: response,
@@ -573,13 +594,23 @@ class ProcessoServive {
 
   static async updateTarefaProcesso({
     id,
+    processo_id,
     descricao,
-    status,
     data_para_realizacao
   }) {
     try {
 
-      let tarefa = await updateTarefaByProcesso(id, descricao, status, data_para_realizacao)
+
+      console.log("aqu... ")
+      console.log("aqu... ", {
+        id,
+        processo_id,
+        descricao,
+        data_para_realizacao
+      })
+
+
+      let tarefa = await updateTarefaByProcesso(id, processo_id, descricao, data_para_realizacao)
 
       return {
         data: tarefa,

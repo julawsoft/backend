@@ -182,9 +182,9 @@ class ProcessoController {
 
                 const response = await ProcessoServive.updateTarefaProcesso({
                         "id": id,
+                        "processo_id": dataBody.processoId,
                         "descricao": dataBody.descricao ?? tarefaFinded.data[0].descricao,
-                        "status": dataBody.status ?? tarefaFinded.data[0].status,
-                        data_para_realizacao: dataBody.data_para_realizacao ?? tarefaFinded.data[0].data_para_realizacao,
+                        "data_para_realizacao": dataBody.dataParaRealizacao ?? tarefaFinded.data[0].data_para_realizacao,
                 })
 
                 return responseHttp(res, response.status, response.message, response.data, [])
@@ -199,8 +199,8 @@ class ProcessoController {
                 if (!tarefaFinded.data)
                         return responseHttp(res, StatusCodes.NOT_FOUND, "Tarefa não encontrada", [], [])
 
-                if(!dataBody.status || dataBody.status < 2)
-                        return responseHttp(res, StatusCodes.NOT_FOUND, "Tarefa precisa ser realizada, para concluir", [], [])
+                if(!dataBody.status || dataBody.status < 3)
+                        return responseHttp(res, StatusCodes.NOT_FOUND, "Tarefa precisa ser realizada, para conclui-lá", [], [])
 
                 if(!dataBody.gestorId)
                         return responseHttp(res, StatusCodes.NOT_FOUND, "Gestor ID não informado", [], [])
@@ -208,6 +208,32 @@ class ProcessoController {
                 const response = await ProcessoServive.concluirTarefaProcesso(
                         id,
                         dataBody.gestorId,
+                        dataBody.status,
+                        new Date()
+                )
+                let tarefaFindedReturned = await ProcessoServive.getTaregaById(id)
+
+                return responseHttp(res, response.status, response.message, tarefaFindedReturned.data, [])
+        }
+
+        async realizarTarefaProcesso(req, res) {
+
+                let id = req.params.id
+                const dataBody = req.body
+
+                let tarefaFinded = await ProcessoServive.getTaregaById(id)
+                if (!tarefaFinded.data)
+                        return responseHttp(res, StatusCodes.NOT_FOUND, "Tarefa não encontrada", [], [])
+
+                if(!dataBody.status || dataBody.status == 3)
+                        return responseHttp(res, StatusCodes.NOT_FOUND, "Tarefa aprovada não pode ser alterada", [], [])
+
+                if(!dataBody.colaboradorId)
+                        return responseHttp(res, StatusCodes.NOT_FOUND, "Colaborador ID não informado", [], [])
+
+                const response = await ProcessoServive.realizarTarefaProcesso(
+                        id,
+                        dataBody.colaboradorId,
                         dataBody.status,
                         new Date()
                 )

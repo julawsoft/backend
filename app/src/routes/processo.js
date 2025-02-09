@@ -45,6 +45,7 @@ processo.get(`${ROUTES_PATH.PROCESSO_FACTURA}/:id`, new ProcessoController().get
 // Tarefas
 processo.put(`${ROUTES_PATH.TASK_PROCESSO}/:id`, new ProcessoController().updateTarefaProcesso)
 processo.put(`${ROUTES_PATH.TASK_PROCESSO}/gestor/:id`, new ProcessoController().concluirTarefaProcesso)
+processo.put(`${ROUTES_PATH.TASK_PROCESSO}/colaborador/:id`, new ProcessoController().realizarTarefaProcesso)
 processo.post('/tarefas', validateCreateTarefa, new ProcessoController().createTarefa)
 processo.get('/tarefas_colaborador/:id', validateCreateTarefa, new ProcessoController().getAllTarefaByColaboradorId)
 

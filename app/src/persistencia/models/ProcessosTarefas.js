@@ -120,19 +120,19 @@ async function removeTarefaByProcesso(id) {
 
 }
 
-async function updateTarefaByProcesso(id, descricao, status, data = new Date()) {
+async function updateTarefaByProcesso(id, processo_id, descricao, data = new Date()) {
 
   const result = ProcessosTarefas.sequelize.query(`
     UPDATE processo_tarefas
     SET 
       descricao=?,
-      status=?,
+      processo_id=?,
       data_para_realizacao=?
     WHERE id = ? 
   `, {
     replacements: [
       descricao,
-      `${status}`,
+      processo_id,
       data,
       id
     ]
@@ -208,12 +208,12 @@ async function getAllTarefaByColaboradorId(id) {
 
   return ProcessosTarefas.sequelize.query(
     `SELECT 
+     pt.id,
  		p.ref,
  		pt.descricao,
 		pt.processo_id, 
 		p.assunto, 
-		p.gestor_id, 
-		cl.id, 
+		p.gestor_id,  
 		cl.nome_completo,
       DATEDIFF(pt.data_para_realizacao, CURDATE()) as dias_em_falta,
      	CASE 
@@ -321,6 +321,30 @@ async function concluirTarefa(id, gestorId, status, dataAprovada) {
 
 }
 
+async function realizarTarefa(id, colaboradorId, status, dataRealizada) {
+
+  console.log(id, colaboradorId, status, dataRealizada)
+
+  const result = ProcessosTarefas.sequelize.query(`
+    UPDATE processo_tarefas
+    SET 
+      colaborador_id=?,
+      status=?,
+      data_realizada=?
+    WHERE id = ? 
+  `, {
+    replacements: [
+      colaboradorId,
+      `${status}`,
+      dataRealizada,
+      id
+    ]
+  });
+
+  return (await result);
+
+}
+
 
 
 module.exports = {
@@ -334,5 +358,6 @@ module.exports = {
   getRefAndIDList,
   getAllTarefaByColaboradorId,
   getAllTarefaByProcessoId,
-  concluirTarefa
+  concluirTarefa,
+  realizarTarefa
 };
