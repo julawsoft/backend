@@ -180,9 +180,6 @@ class ProcessoController {
                 if (!tarefaFinded.data)
                         return responseHttp(res, StatusCodes.NOT_FOUND, "Tarefa não encontrada", [], [])
 
-
-                console.log("tarefa finded >>> ", tarefaFinded)
-
                 const response = await ProcessoServive.updateTarefaProcesso({
                         "id": id,
                         "descricao": dataBody.descricao ?? tarefaFinded.data[0].descricao,
@@ -192,6 +189,33 @@ class ProcessoController {
 
                 return responseHttp(res, response.status, response.message, response.data, [])
         }
+
+        async concluirTarefaProcesso(req, res) {
+
+                let id = req.params.id
+                const dataBody = req.body
+
+                let tarefaFinded = await ProcessoServive.getTaregaById(id)
+                if (!tarefaFinded.data)
+                        return responseHttp(res, StatusCodes.NOT_FOUND, "Tarefa não encontrada", [], [])
+
+                if(!dataBody.status || dataBody.status < 2)
+                        return responseHttp(res, StatusCodes.NOT_FOUND, "Tarefa precisa ser realizada, para concluir", [], [])
+
+                if(!dataBody.gestorId)
+                        return responseHttp(res, StatusCodes.NOT_FOUND, "Gestor ID não informado", [], [])
+
+                const response = await ProcessoServive.concluirTarefaProcesso(
+                        id,
+                        dataBody.gestorId,
+                        dataBody.status,
+                        new Date()
+                )
+                let tarefaFindedReturned = await ProcessoServive.getTaregaById(id)
+
+                return responseHttp(res, response.status, response.message, tarefaFindedReturned.data, [])
+        }
+
 
         async getProcessoByColaborador(req, res) {
                 let id = req.params.id
@@ -204,6 +228,13 @@ class ProcessoController {
                 let response = await ProcessoServive.getTarefaByColaboradorId(id)
                 return responseHttp(res, response.status, response.message, response.data, [])
         }
+
+        async getAllTarefaByColaboradorId(req, res) {
+                let id = req.params.id
+                let response = await ProcessoServive.getAllTarefaByColaboradorId(id)
+                return responseHttp(res, response.status, response.message, response.data, [])
+        }
+
 
         async getListaProcessos(req, res) {
                 let response = await ProcessoServive.getProcessoList()
@@ -220,6 +251,26 @@ class ProcessoController {
                 }
 
                 const response = await ProcessoServive.getFacturas(id)
+
+                return responseHttp(res, response.status, response.message, response.data, [])
+        }
+
+        async createTarefa(req, res) {
+
+                const errors = validationResult(req);
+                if (!errors.isEmpty()) {
+                        return responseHttp(res, StatusCodes.BAD_REQUEST, errosConst.VALIDATION_ERROR, {}, errors.array())
+                }
+
+                const dataBody = req.body
+                const response = await ProcessoServive.createTarefa(
+                        {
+                                "descricao": dataBody.descricao,
+                                "processo_id": dataBody.processoId,
+                                "colaborador_id": dataBody.colaboradorId,
+                                "data_para_realizacao": dataBody.dataParaRealizacao,
+                        }
+                )
 
                 return responseHttp(res, response.status, response.message, response.data, [])
         }

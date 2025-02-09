@@ -18,6 +18,9 @@ const {
   updateTarefaByProcesso,
   getTarefaByColaboradorId,
   getRefAndIDList,
+  getAllTarefaByColaboradorId,
+  getAllTarefaByProcessoId,
+  concluirTarefa,
 } = require("../../persistencia/models/ProcessosTarefas");
 const {
   getByProcessoId: PrecedenteGetByKey,
@@ -182,6 +185,26 @@ class ProcessoServive {
     }
   }
 
+  static async concluirTarefaProcesso(id, gestorId, status, dataAprovada) {
+    try {
+
+      let response = await concluirTarefa(id, gestorId, status, dataAprovada)
+     
+      return {
+        data: response,
+        message: "PROCESS:TAREFA:UPDATED",
+        status: StatusCodes.OK,
+      };
+   
+    } catch (e) {
+      return {
+        data: __filename,
+        message: e.message,
+        status: StatusCodes.INTERNAL_SERVER_ERROR,
+      };
+    }
+  }
+
   static async getByIdProcesso(id) {
     try {
       const processo = await getById(id);
@@ -189,7 +212,7 @@ class ProcessoServive {
       let processoDTO = [];
 
       if (processo[0].id) {
-        let tarefas = await TarefaGetByKey("processo_id", processo[0].id);
+        let tarefas = await getAllTarefaByProcessoId(processo[0].id);
         let precedentes = await PrecedenteGetByKey(processo[0].id);
         let equipas = await EquipaGetByKey(processo[0].id);
         let anexos = await getByProcessosId(processo[0].id)
@@ -505,6 +528,28 @@ class ProcessoServive {
     }
   }
 
+  static async getAllTarefaByColaboradorId(id) {
+    try {
+
+      let tarefa = await getAllTarefaByColaboradorId(id);
+
+      console.log("tarefa do colaborador ", tarefa)
+
+      return {
+        data: tarefa.length ? tarefa : null,
+        message: "TAREFA:LIST.OK",
+        status: StatusCodes.OK,
+      };
+
+    } catch (e) {
+      return {
+        data: __filename,
+        message: e.message,
+        status: StatusCodes.BAD_REQUEST,
+      };
+    }
+  }
+
   static async getProcessoList() {
     try {
 
@@ -622,6 +667,32 @@ class ProcessoServive {
         data: processo,
         message: "PROCESS.INVOICE.LIST.OK",
         status: StatusCodes.OK,
+      };
+    } catch (e) {
+      return {
+        data: __filename,
+        message: e.message,
+        status: StatusCodes.INTERNAL_SERVER_ERROR,
+      };
+    }
+  }
+
+  static async createTarefa(data) {
+    try {
+
+      const tarefa = await createTarefa({
+        "descricao": data.descricao,
+        "processo_id": data.processo_id,
+        "data_para_realizacao": data.data_para_realizacao,
+        "colaborador_id": data.colaborador_id,
+      });
+
+      console.log("tarefa" , tarefa)
+
+      return {
+        data: tarefa,
+        message: "TAREFA:ADDED.OK",
+        status: StatusCodes.CREATED,
       };
     } catch (e) {
       return {

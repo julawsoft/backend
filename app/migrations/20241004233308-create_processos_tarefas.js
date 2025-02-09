@@ -23,7 +23,7 @@ module.exports = {
         allowNull: true
       },
       status: {
-        type: Sequelize.ENUM('0', '1'),
+        type: Sequelize.ENUM('0', '1', '2'),
         allowNull: false,
         defaultValue: '0',
       },

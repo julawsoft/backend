@@ -14,9 +14,6 @@ async function createProcessoController(req, res) {
                 }
                 const dataBody = req.body
 
-                console.log(dataBody.modoFacturacaoId)
-                console.log(dataBody.horasMes)
-
                 if(Number(dataBody.modoFacturacaoId) == 1 
                         && (dataBody.horasMes == "" || dataBody.horasMes == undefined)) {
                         return responseHttp(

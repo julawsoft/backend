@@ -35,6 +35,22 @@ ProcessosTarefas.init({
     allowNull: false,
     defaultValue: '0',
   },
+  colaborador_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  gestor_id: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+  },
+  data_realizada: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  data_aprovada: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
 }, {
   sequelize,
   modelName: 'ProcessosTarefas',
@@ -54,18 +70,19 @@ async function createTarefa(
   {
     descricao,
     processo_id,
-    status,
-    data_para_realizacao = new Date(),
+    status = '0',
+    data_para_realizacao,
+    colaborador_id
   }
 ) {
 
   console.log("data realizacao tarefa ... ", descricao )
   console.log("data realizacao tarefa ... processo_id ", processo_id )
   console.log("data realizacao tarefa ... ", data_para_realizacao )
-  console.log("data realizacao tarefa ... ", data_para_realizacao )
+  console.log("data realizacao tarefa ... ", colaborador_id )
 
   return await ProcessosTarefas.create({
-    descricao, processo_id, status, data_para_realizacao
+    descricao, processo_id, status, data_para_realizacao, colaborador_id
   })
 }
 
@@ -77,6 +94,7 @@ async function getAll() {
   return await ProcessosTarefas.findAll()
 }
 
+// here ...
 /**
  * @returns {string} chave
  * @returns {string} valor
@@ -125,12 +143,40 @@ async function updateTarefaByProcesso(id, descricao, status, data = new Date()) 
 }
 
 async function getTarefaById(id) {
-
-  let queryString = `SELECT * FROM processo_tarefas WHERE processo_tarefas.id = ${id} limit 1`;
-
-  return sequelize.query(queryString, {
-    type: QueryTypes.SELECT,
-  });
+   
+  return ProcessosTarefas.sequelize.query(
+  `SELECT 
+  pt.id, 
+   p.ref,
+   pt.descricao,
+  pt.processo_id, 
+  p.assunto, 
+  p.gestor_id, 
+  cl.nome_completo,
+    DATEDIFF(pt.data_para_realizacao, CURDATE()) as dias_em_falta,
+     CASE 
+      WHEN pt.status = '0' THEN 'Criada'
+      WHEN pt.status = '1' THEN 'Realizada'
+      ELSE 'Aprovada'
+    END AS estado,
+    ges.nome_completo AS gestor,
+    DATE_FORMAT(pt.created_at, '%d/%m/%Y') AS data_criada,
+    DATE_FORMAT(pt.data_para_realizacao, '%d/%m/%Y') AS data_para_realizacao,
+    DATE_FORMAT(pt.data_realizada, '%d/%m/%Y') AS data_realizada,
+    DATE_FORMAT(pt.data_aprovada, '%d/%m/%Y') AS data_aprovada
+    FROM
+      processo_tarefas as pt
+      INNER JOIN processos as p ON pt.processo_id = p.id
+      INNER JOIN processo_equipa as pe ON p.id = pe.processo_id
+      INNER JOIN colaboradores as cl ON pe.colaborador_id = cl.id
+      LEFT JOIN colaboradores AS ges ON pt.gestor_id = ges.id
+    WHERE
+      pt.id = ?
+  `,
+  {
+    replacements: [id],
+    type: QueryTypes.SELECT
+  })
 
 }
 
@@ -157,6 +203,85 @@ async function getTarefaByColaboradorId(id, status = '0') {
 
 }
 
+
+async function getAllTarefaByColaboradorId(id) {
+
+  return ProcessosTarefas.sequelize.query(
+    `SELECT 
+ 		p.ref,
+ 		pt.descricao,
+		pt.processo_id, 
+		p.assunto, 
+		p.gestor_id, 
+		cl.id, 
+		cl.nome_completo,
+      DATEDIFF(pt.data_para_realizacao, CURDATE()) as dias_em_falta,
+     	CASE 
+        WHEN pt.status = '0' THEN 'Criada'
+        WHEN pt.status = '1' THEN 'Realizada'
+        ELSE 'Aprovada'
+    	END AS estado,
+    	ges.nome_completo AS gestor,
+    	DATE_FORMAT(pt.created_at, '%d/%m/%Y') AS data_criada,
+    	DATE_FORMAT(pt.data_para_realizacao, '%d/%m/%Y') AS data_para_realizacao,
+    	DATE_FORMAT(pt.data_realizada, '%d/%m/%Y') AS data_realizada,
+    	DATE_FORMAT(pt.data_aprovada, '%d/%m/%Y') AS data_aprovada
+      FROM
+        processo_tarefas as pt
+        INNER JOIN processos as p ON pt.processo_id = p.id
+        INNER JOIN processo_equipa as pe ON p.id = pe.processo_id
+        INNER JOIN colaboradores as cl ON pe.colaborador_id = cl.id
+        LEFT JOIN colaboradores AS ges ON pt.gestor_id = ges.id
+      WHERE
+        cl.id = ?
+    `,
+    {
+      replacements: [id],
+      type: QueryTypes.SELECT
+    }
+  );
+
+}
+
+async function getAllTarefaByProcessoId(id) {
+
+  return ProcessosTarefas.sequelize.query(
+    `SELECT 
+    pt.id, 
+ 		p.ref,
+ 		pt.descricao,
+		pt.processo_id, 
+		p.assunto, 
+		p.gestor_id, 
+		cl.nome_completo,
+      DATEDIFF(pt.data_para_realizacao, CURDATE()) as dias_em_falta,
+     	CASE 
+        WHEN pt.status = '0' THEN 'Criada'
+        WHEN pt.status = '1' THEN 'Realizada'
+        ELSE 'Aprovada'
+    	END AS estado,
+    	ges.nome_completo AS gestor,
+    	DATE_FORMAT(pt.created_at, '%d/%m/%Y') AS data_criada,
+    	DATE_FORMAT(pt.data_para_realizacao, '%d/%m/%Y') AS data_para_realizacao,
+    	DATE_FORMAT(pt.data_realizada, '%d/%m/%Y') AS data_realizada,
+    	DATE_FORMAT(pt.data_aprovada, '%d/%m/%Y') AS data_aprovada
+      FROM
+        processo_tarefas as pt
+        INNER JOIN processos as p ON pt.processo_id = p.id
+        INNER JOIN processo_equipa as pe ON p.id = pe.processo_id
+        INNER JOIN colaboradores as cl ON pe.colaborador_id = cl.id
+        LEFT JOIN colaboradores AS ges ON pt.gestor_id = ges.id
+      WHERE
+        p.id = ?
+    `,
+    {
+      replacements: [id],
+      type: QueryTypes.SELECT
+    }
+  );
+
+}
+
 async function getRefAndIDList() {
 
   return ProcessosTarefas.sequelize.query(
@@ -174,6 +299,30 @@ async function getRefAndIDList() {
 
 
 
+async function concluirTarefa(id, gestorId, status, dataAprovada) {
+
+  const result = ProcessosTarefas.sequelize.query(`
+    UPDATE processo_tarefas
+    SET 
+      gestor_id=?,
+      status=?,
+      data_aprovada=?
+    WHERE id = ? 
+  `, {
+    replacements: [
+      gestorId,
+      `${status}`,
+      dataAprovada,
+      id
+    ]
+  });
+
+  return (await result);
+
+}
+
+
+
 module.exports = {
   createTarefa,
   getAll,
@@ -182,5 +331,8 @@ module.exports = {
   updateTarefaByProcesso,
   getTarefaById,
   getTarefaByColaboradorId,
-  getRefAndIDList
+  getRefAndIDList,
+  getAllTarefaByColaboradorId,
+  getAllTarefaByProcessoId,
+  concluirTarefa
 };

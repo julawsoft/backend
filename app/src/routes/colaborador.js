@@ -26,5 +26,6 @@ colaboradorRouter.get(ROUTES_PATH.TIPO_COLABORADOR, getListColaboradorController
 
 // colaboradorRouter.get(ROUTES_PATH.COLABORADOR_TIMESHEET_FACTURA, getListColaboradorController)
 colaboradorRouter.get(`${ROUTES_PATH.COLABORADOR_TIMESHEET_FACTURA}/:id`, new ColaboradorController().getTimesheetFacturaByColaboradorId)
+colaboradorRouter.get(`/colaborador_timesheet/:id`, new ColaboradorController().getTimesheetByColaboradorId)
 
 module.exports = colaboradorRouter

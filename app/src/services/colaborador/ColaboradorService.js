@@ -1,6 +1,6 @@
 const { StatusCodes } = require("http-status-codes");
 const { listAll } = require("../../persistencia/models/TipoColaborador");
-const { getTimesheetFacturaByColaboradorId } = require("../../persistencia/models/Colaborador");
+const { getTimesheetFacturaByColaboradorId, getTimesheetByColaboradorId } = require("../../persistencia/models/Colaborador");
 
 class ColaboradorService {
 
@@ -27,6 +27,25 @@ class ColaboradorService {
       try {
      
         let response = await getTimesheetFacturaByColaboradorId(idColaborador);
+  
+        return {
+          data: response,
+          message: "TIPO:COLABORADOR.TIMISHEET.FACTURA.OK",
+          status: StatusCodes.OK,
+        };
+      } catch (e) {
+        return {
+          data: __filename,
+          message: e.message,
+          status: StatusCodes.INTERNAL_SERVER_ERROR,
+        };
+      }
+    }
+
+    static async getTimesheetColaboradorId(idColaborador) {
+      try {
+     
+        let response = await getTimesheetByColaboradorId(idColaborador);
   
         return {
           data: response,

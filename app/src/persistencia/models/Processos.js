@@ -317,7 +317,8 @@ async function getByColaboradorId(idColaborador) {
   LEFT JOIN tipo_cliente tcli
   ON cli.tipo_id = tcli.id
   WHERE p.id IN  (SELECT processo_equipa.processo_id FROM processo_equipa
-   WHERE processo_equipa.colaborador_id = ${idColaborador})`;
+   WHERE processo_equipa.colaborador_id = ${idColaborador})
+   OR p.gestor_id=${idColaborador}`;
 
   return sequelize.query(queryString, {
     type: QueryTypes.SELECT
@@ -329,17 +330,15 @@ async function generateRefProcesso() {
       let result = await sequelize.query(queryString, {
         type: QueryTypes.SELECT
       });
-
+      
       const {id} = result[0]
-      console.log("result to create a new Precess " , result)
-      console.log("result to create a new Precess " , id)
 
       let year = new Date().getFullYear()
       let month = new Date().getMonth() + 1;
 
-      return `0000${parseInt(id) + 1}/${month}-${year}`
+      let idEnd = id ? id : 1;
 
-
+      return `0000${parseInt(idEnd) + 1}/${month}-${year}`
 }
 
 /**

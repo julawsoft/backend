@@ -242,11 +242,39 @@ async function getTimesheetFacturaByColaboradorId(idColaborador) {
   return result[0];
 }
 
+async function getTimesheetByColaboradorId(idColaborador) {
+  const result = await Colaborador.sequelize.query(`
+   SELECT 
+    pt.id AS timeSheetId,
+    pt.data_inicio, 
+    pt.data_fim,
+    pt.horas,
+    pt.created_at AS dataRegistoTimesheet,
+    p.id AS processoId,
+    c.id AS colaboradorId,
+    c.nome_completo AS colaborador,
+    c.funcao AS colaboradorFuncao,
+    p.ref, 
+    p.assunto
+ 
+    FROM processos_timesheet pt
+    INNER JOIN processos p
+    ON pt.processo_id = p.id
+    INNER JOIN colaboradores c
+    ON pt.colaborador_id = c.id
+
+    WHERE pt.colaborador_id = ${idColaborador}
+  `);
+
+  return result[0];
+}
+
 module.exports = {
   create,
   getAllByKeyValue,
   getAll,
   update,
   getAllQuery,
-  getTimesheetFacturaByColaboradorId
+  getTimesheetFacturaByColaboradorId,
+  getTimesheetByColaboradorId
 };

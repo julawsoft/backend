@@ -10,6 +10,7 @@ const validateAnexosProcesso = require('../middlewares/validateAnexosProcesso.js
 const validateRemoveResources = require('../middlewares/validateRemoveResources.js');
 const DespesaController = require('../controllers/processo/DespesasController.js');
 const validateCreateFacturaProcesso = require('../middlewares/validateFacturaProcesso.js');
+const validateCreateTarefa = require('../middlewares/validateCreateTarefa.js');
 
 const processo = express.Router()
 
@@ -35,10 +36,16 @@ processo.get(`${ROUTES_PATH.TASK_PROCESSO}/colaborador/:id`, new ProcessoControl
 processo.get(`${ROUTES_PATH.INDEX}/processos/list`, new ProcessoController().getListaProcessos)
 
 processo.delete(`${ROUTES_PATH.RECURSOS}`, validateRemoveResources, new ProcessoController().removeRecursosProcesso)
-processo.put(`${ROUTES_PATH.TASK_PROCESSO}/:id`, new ProcessoController().updateTarefaProcesso)
+
 processo.post(`${ROUTES_PATH.INDEX}/despesa`, new DespesaController().createDespesa)
 processo.get(`${ROUTES_PATH.INDEX}/despesa/all`, new DespesaController().getAll)
 processo.get(`/despesas_filtro/:clienteId/:processoId`, new DespesaController().getFilter)
 processo.get(`${ROUTES_PATH.PROCESSO_FACTURA}/:id`, new ProcessoController().getFacturas)
+
+// Tarefas
+processo.put(`${ROUTES_PATH.TASK_PROCESSO}/:id`, new ProcessoController().updateTarefaProcesso)
+processo.put(`${ROUTES_PATH.TASK_PROCESSO}/gestor/:id`, new ProcessoController().concluirTarefaProcesso)
+processo.post('/tarefas', validateCreateTarefa, new ProcessoController().createTarefa)
+processo.get('/tarefas_colaborador/:id', validateCreateTarefa, new ProcessoController().getAllTarefaByColaboradorId)
 
 module.exports = processo
