@@ -14,8 +14,6 @@ async function loginService({ username, password }) {
         password,
     })
 
-    console.log("keyaloak >>> ", returnLogin)
-
     const dataColaborador = await getAllByKeyValueColaborador("uuid", returnLogin.userInfo.sub)
     if(dataColaborador.length) {
         const tipoColadorador = await listTipoColaboradorById(dataColaborador[0].tipo_colaborador_id) 

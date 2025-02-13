@@ -117,6 +117,32 @@ class Keycloak {
   }
 
 
+  static async updatePassword(password, userId) {
+    try {
+      const keycloak =  new KeycloakConnection()
+      const keycloakConnection = await keycloak.init()
+
+      console.log(">>>>>>>>>><<<<<<<<<<<<<<<<<< ", password, userId)
+
+     // console.log(">>>>>>>>>><<<<<<<<<<<<<<<<<<", await keycloakConnection.users.resetPassword(realm, {userId}))
+
+        const result =  await keycloakConnection.users.resetPassword(
+          realm,
+          userId,
+          {
+            type: 'password',
+            value: password,
+            temporary: false, // Define se o usuário precisará trocar a senha no próximo login
+          },
+      );
+
+      return result;
+    } catch (error) {
+      console.log("erro", error)
+      return { status: false, data: [], message: error };
+    }
+  }
+
   async getUserGroups(userId) {
 
   }
