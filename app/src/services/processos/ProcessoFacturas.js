@@ -15,9 +15,6 @@ class ProcessoFacturasServive {
 
       let facturasDTO = []
 
-
-      console.log("listProcessoFacturasByCliente" , listProcessoFacturasByCliente)
-
       if (listProcessoFacturasByCliente) {
         for await (let facturaCliente of listProcessoFacturasByCliente) {
 
