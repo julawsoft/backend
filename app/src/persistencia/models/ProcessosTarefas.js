@@ -189,8 +189,7 @@ async function getTarefaByColaboradorId(id, status = '0') {
       FROM
         processo_tarefas as pt
         INNER JOIN processos as p ON pt.processo_id = p.id
-        INNER JOIN processo_equipa as pe ON p.id = pe.processo_id
-        INNER JOIN colaboradores as cl ON pe.colaborador_id = cl.id
+        INNER JOIN colaboradores as cl ON pt.colaborador_id = cl.id
       WHERE
         pt.status = ? AND
         cl.id = ?
@@ -211,8 +210,7 @@ async function getTarefaByColaboradorGestorId(id, status = '1') {
       FROM
         processo_tarefas as pt
         INNER JOIN processos as p ON pt.processo_id = p.id
-        INNER JOIN processo_equipa as pe ON p.id = pe.processo_id
-        INNER JOIN colaboradores as cl ON pe.colaborador_id = cl.id
+        INNER JOIN colaboradores as cl ON pt.colaborador_id = cl.id
       WHERE
         pt.status = ? AND
         p.gestor_id = ?
@@ -251,11 +249,10 @@ async function getAllTarefaByColaboradorId(id) {
       FROM
         processo_tarefas as pt
         INNER JOIN processos as p ON pt.processo_id = p.id
-        INNER JOIN processo_equipa as pe ON p.id = pe.processo_id
-        INNER JOIN colaboradores as cl ON pe.colaborador_id = cl.id
+        INNER JOIN colaboradores as cl ON pt.colaborador_id = cl.id
         LEFT JOIN colaboradores AS ges ON pt.gestor_id = ges.id
       WHERE
-        cl.id = ?
+        pt.colaborador_id = ?
     `,
     {
       replacements: [id],
@@ -290,8 +287,7 @@ async function getAllTarefaByProcessoId(id) {
       FROM
         processo_tarefas as pt
         INNER JOIN processos as p ON pt.processo_id = p.id
-        INNER JOIN processo_equipa as pe ON p.id = pe.processo_id
-        INNER JOIN colaboradores as cl ON pe.colaborador_id = cl.id
+        INNER JOIN colaboradores as cl ON pt.colaborador_id = cl.id
         LEFT JOIN colaboradores AS ges ON pt.gestor_id = ges.id
       WHERE
         p.id = ?
