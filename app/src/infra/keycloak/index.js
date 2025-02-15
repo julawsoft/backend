@@ -136,7 +136,7 @@ class Keycloak {
           },
       );
 
-      return result;
+      return {status: true};
     } catch (error) {
       console.log("erro", error)
       return { status: false, data: [], message: error };

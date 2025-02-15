@@ -9,17 +9,19 @@ const updatePasswordKeycloak = require('../../services/keycloak/updataPassword')
 async function updatePasswordController(req, res) {
 
         try {
-               
-
-               
+                              
                 const dataBody = req.body
                 if (!dataBody.password || !dataBody.userId) {
                         return responseHttp(res, StatusCodes.BAD_REQUEST, 'Password ou UserId, são obrigatórios', {}, '')
                 }
                 
                 const dataReturned = await updatePasswordKeycloak(dataBody.password, dataBody.userId)
+
+                if(dataReturned.status) 
+                        return responseHttp(res, StatusCodes.OK, 'Password actualizada com sucesso!', [], [])
+                else
+                        return responseHttp(res, StatusCodes.BAD_REQUEST, dataReturned.message.error, dataReturned, [])
             
-                return responseHttp(res, StatusCodes.OK, errosConst.CLIENT_CREATED, dataReturned, [])
 
         } catch (e) {
                 return responseHttp(res, StatusCodes.BAD_REQUEST, errosConst.CLIENT_ERROR_CREATE, {}, e.message)

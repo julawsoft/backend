@@ -208,9 +208,14 @@ class ProcessoController {
                 let tarefaFinded = await ProcessoServive.getTaregaById(id)
                 if (!tarefaFinded.data)
                         return responseHttp(res, StatusCodes.NOT_FOUND, "Tarefa não encontrada", [], [])
+                if(!dataBody.status)
+                        return responseHttp(res, StatusCodes.NOT_FOUND, "O status do processo é necessário", [], [])
 
-                if(!dataBody.status || dataBody.status < 3)
+                if(dataBody.status == 1)
                         return responseHttp(res, StatusCodes.NOT_FOUND, "Tarefa precisa ser realizada, para conclui-lá", [], [])
+
+                if(dataBody.status == 3)
+                        return responseHttp(res, StatusCodes.NOT_FOUND, "Tarefa já foi aprovada", [], [])
 
                 if(!dataBody.gestorId)
                         return responseHttp(res, StatusCodes.NOT_FOUND, "Gestor ID não informado", [], [])

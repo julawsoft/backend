@@ -22,6 +22,7 @@ const {
   getAllTarefaByProcessoId,
   concluirTarefa,
   realizarTarefa,
+  getTarefaByColaboradorGestorId,
 } = require("../../persistencia/models/ProcessosTarefas");
 const {
   getByProcessoId: PrecedenteGetByKey,
@@ -529,13 +530,11 @@ class ProcessoServive {
 
   static async getTarefaByColaboradorId(id) {
     try {
-
       let tarefa = await getTarefaByColaboradorId(id);
-
-      console.log("tarefa do colaborador ", tarefa)
+      let tarefaGestor = await getTarefaByColaboradorGestorId(id);
 
       return {
-        data: tarefa.length ? tarefa : null,
+        data: tarefa.length || tarefaGestor.length ? [...tarefa,...tarefaGestor] : null,
         message: "TAREFA:LIST.OK",
         status: StatusCodes.OK,
       };

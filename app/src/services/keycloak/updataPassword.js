@@ -7,7 +7,7 @@ const Keycloak = require("../../infra/keycloak")
 async function updatePasswordKeycloak(password, userId) {
     try {
         const returnUserKeycloak = await Keycloak.updatePassword(password, userId)
-        console.log("erro >>< ", returnUserKeycloak)
+        console.log("erro >><< aqui .... ", returnUserKeycloak)
         return returnUserKeycloak 
     }catch (e) {
         throw new Error(e.errorMessage)

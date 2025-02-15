@@ -11,7 +11,18 @@ async function saveBase64Image(fileName, base64String){
 
     let extention = getExtensionFromBase64(base64String)
 
-    const base64Data = base64String.replace(/^data:image\/\w+;base64,/, '');
+    let base64Data;
+    if(base64String.includes("data:image")) {
+        base64Data = base64String.replace(/^data:image\/\w+;base64,/, '');
+    }
+
+    if(base64String.includes("data:application")) {
+        base64Data = base64String.replace(/^data:application\/\w+;base64,/, '');
+     }
+
+     console.log("base64Data >>>>>   ", base64Data)
+
+    // const base64Data = base64String.replace(/^data:image\/\w+;base64,/, '');
     const buffer = Buffer.from(base64Data, 'base64');
 
     if(!fs.existsSync(STORAGE_PATH))
