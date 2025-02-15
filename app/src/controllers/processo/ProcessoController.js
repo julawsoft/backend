@@ -55,8 +55,13 @@ class ProcessoController {
                         return responseHttp(res, StatusCodes.BAD_REQUEST, errosConst.VALIDATION_ERROR, {}, errors.array())
                 }
 
+                console.log("here ... ", req.body)
+
                 const { id } = req.params
                 const dataBody = req.body
+
+                console.log("here... id do processo", id)
+
 
                 let processoFinded = await ProcessoServive.getByIdProcesso(id)
 
