@@ -21,6 +21,24 @@ class ClienteController {
       
       }
 
+      async filterByType(req, res) {
+
+        const {id} = req.params
+
+        
+        const clienteData = await getAllByKeyValueCliente("tipo_id", id)
+        
+        console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  ", clienteData)
+
+        // if (!clienteDataEmail.length) return responseHttp(res, StatusCodes.BAD_REQUEST, errosConst.CLIENT_ERROR_CREATE_NIF, {}, ["ID Cliente not exists"])
+
+        let response = await ProcessoServive.getProcessoByCliente(id);
+
+        return responseHttp(res, 200, '', clienteData, [])
+      
+
+      }
+
       async getProcessoFacturasByCliente(req, res) {
 
         const {id} = req.params

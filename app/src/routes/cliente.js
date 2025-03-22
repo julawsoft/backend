@@ -22,5 +22,6 @@ clienteRouter.get(`${ROUTES_PATH.CLIENTE_PROCESSOS}/:id`, new ClienteController(
 clienteRouter.get(`${ROUTES_PATH.CLIENTE_PROCESSOS_FACTURAS}/:id`, new ClienteController().getProcessoFacturasByCliente)
 clienteRouter.post(ROUTES_PATH.INDEX, validateCreateCliente, createClienteController)
 clienteRouter.put(ROUTES_PATH.INDEX, validateCreateCliente, updateClienteController)
+clienteRouter.get('/cliente_type/:id', new ClienteController().filterByType)
 
 module.exports = clienteRouter

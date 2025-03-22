@@ -10,17 +10,12 @@ module.exports = {
         updated_at: new Date(),
       },
       {
-        description: 'Advogado - Júnior',
+        description: 'Advogado',
         created_at: new Date(),
         updated_at: new Date(),
       },
       {
-        description: 'Advogado - Sénior',
-        created_at: new Date(),
-        updated_at: new Date(),
-      },
-      {
-        description: 'Advogado - Estagiário',
+        description: 'Consultor',
         created_at: new Date(),
         updated_at: new Date(),
       },
