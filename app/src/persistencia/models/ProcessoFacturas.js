@@ -141,9 +141,68 @@ async function getProcessoFacturasById(idProcessoFactura) {
   });
 }
 
+
+
+async function getAllFacturas() {
+  // return await Processos.findAll()
+  let queryString = `SELECT
+  p.*,
+  pf.horas,
+  pf.custo,
+  pf.status,
+  pf.created_at as data_registo_factura,
+  c.nome_completo AS colaborador,
+  cli.denominacao AS cliente,
+  ps.descricao AS estado_processo
+  
+FROM
+  processo_facturas pf
+  inner JOIN processos p ON pf.processo_id = p.id
+  inner JOIN processo_estado ps ON p.status_id = ps.id
+  INNER JOIN clientes cli ON pf.cliente_id = cli.id
+  LEFT JOIN colaboradores c ON pf.colaborador_id = c.id
+order BY
+pf.created_at desc`;
+
+  return sequelize.query(queryString, {
+    type: QueryTypes.SELECT
+  });
+}
+
+
+async function getFacturasByColaborador(id) {
+  // return await Processos.findAll()
+  let queryString = `SELECT
+  p.*,
+  pf.horas,
+  pf.custo,
+  pf.status,
+  pf.created_at as data_registo_factura,
+  c.nome_completo AS colaborador,
+  cli.denominacao AS cliente,
+  ps.descricao AS estado_processo
+  
+FROM
+  processo_facturas pf
+  inner JOIN processos p ON pf.processo_id = p.id
+  inner JOIN processo_estado ps ON p.status_id = ps.id
+  INNER JOIN clientes cli ON pf.cliente_id = cli.id
+  INNER JOIN colaboradores c ON pf.colaborador_id = c.id
+  where c.id = ${id}
+order BY
+pf.created_at desc`;
+
+  return sequelize.query(queryString, {
+    type: QueryTypes.SELECT
+  });
+}
+
+
 module.exports = {
   ProcessoFacturas,
   createProcessoFactura,
   getProcessoFacturasByClienteId,
-  getProcessoFacturasById
+  getProcessoFacturasById,
+  getAllFacturas,
+  getFacturasByColaborador
 };

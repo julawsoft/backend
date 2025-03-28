@@ -1,5 +1,5 @@
 const { StatusCodes } = require("http-status-codes");
-const { getProcessoFacturasByClienteId, createProcessoFactura } = require("../../persistencia/models/ProcessoFacturas");
+const { getProcessoFacturasByClienteId, createProcessoFactura, getAllFacturas, getFacturasByColaborador } = require("../../persistencia/models/ProcessoFacturas");
 const { createProcessoFacturaItems, getFacturaItemsByFacturaId } = require("../../persistencia/models/ProcessoFacturasItems");
 const { createPagamentoFactura, getPagamentoFactura, getPagamentoByIdFactura } = require("../../persistencia/models/PagamentoFactura");
 const { getModoPagamentos } = require("../../persistencia/models/ModoPagamentojs");
@@ -221,6 +221,46 @@ class ProcessoFacturasServive {
       }
   }
 
+  static async getFacturas() {
+
+    try {
+
+      let response = await getAllFacturas()
+     
+          return {
+            data: response,
+            message: 'FACTURA:LIST',
+            status: StatusCodes.OK,
+          }
+              
+      }catch(e) {      
+        return {
+          data: __filename,
+          message: e.message,
+          status: StatusCodes.INTERNAL_SERVER_ERROR,
+        };
+      }
+  }
+  static async getFacturasByColaborador(id) {
+
+    try {
+
+      let response = await getFacturasByColaborador(id)
+     
+          return {
+            data: response,
+            message: 'FACTURA:COLABORADOR:LIST',
+            status: StatusCodes.OK,
+          }
+              
+      }catch(e) {      
+        return {
+          data: __filename,
+          message: e.message,
+          status: StatusCodes.INTERNAL_SERVER_ERROR,
+        };
+      }
+  }
  
 }
 

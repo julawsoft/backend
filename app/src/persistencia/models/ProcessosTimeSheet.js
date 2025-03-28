@@ -294,6 +294,45 @@ async function removeProcessoTimeSheet(idProcessoTimeSheet) {
   
 }
 
+async function getAllTimeSheets() {
+
+  let queryString = `SELECT 
+  pr.ref as referencia_processo,
+  pr.assunto as assunto_processo,
+  p.id,
+  p.dados_importantes,
+  p.data_inicio,
+  p.data_fim,
+  p.horas,
+  p.descricao,
+  p.colaborador_id,
+  te.label AS tipo_evento,
+  p_facturacao.descricao AS modo_facturacao,
+  cli.denominacao AS cliente,
+  tcli.description AS tipo_cliente,
+  c.nome_completo AS colaborador
+  
+  FROM processos_timesheet p
+    
+  inner join processos pr 
+  on pr.id = p.processo_id 
+  left JOIN processo_facturacao p_facturacao
+  ON p.modo_facturacao = p_facturacao.id
+  INNER JOIN tipo_eventos_timesheet te
+  ON p.tipo_evento_id = te.id
+  LEFT JOIN colaboradores c
+  ON p.colaborador_id = c.id
+  LEFT JOIN clientes cli
+  ON p.cliente_id = cli.id
+  LEFT JOIN tipo_cliente tcli
+  ON cli.tipo_id = tcli.id `;
+
+  return sequelize.query(queryString, {
+    type: QueryTypes.SELECT,
+  });
+}
+
+
 module.exports = {
   ProcessosTimeSheet,
   create,
@@ -302,5 +341,6 @@ module.exports = {
   getAllOrByProcessoIdAndColaboradorId,
   updateProcessoTimeSheet,
   removeProcessoTimeSheet,
-  getTimeSheetNaoFacturado
+  getTimeSheetNaoFacturado,
+  getAllTimeSheets
 };

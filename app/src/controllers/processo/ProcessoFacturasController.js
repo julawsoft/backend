@@ -68,6 +68,16 @@ class ProcessoFacturasController {
                 return responseHttp(res, response.status, response.message, response.data, [])
         }  
 
+        async getFacturas(req, res) {
+                let response = await ProcessoFacturasServive.getFacturas()
+                return responseHttp(res, response.status, response.message, response.data, [])
+        }  
+        async getFacturasByColaborador(req, res) {
+                let { id } = req.params;
+                let response = await ProcessoFacturasServive.getFacturasByColaborador(id)
+                return responseHttp(res, response.status, response.message, response.data, [])
+        }  
+
         async getModoPagamentos(req, res) {
                 let response = await ProcessoFacturasServive.getModoPagamentos()
                 return responseHttp(res, response.status, response.message, response.data, [])
