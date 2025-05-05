@@ -38,7 +38,8 @@ class ProcessoTimeSheetController {
         }
 
         async getProcessoAllTimeSheet(req, res) {
-                const response = await ProcessoTimeSheetService.getProcessoTimeSheets()
+                const { colaboradorId } = req.query     
+                const response = await ProcessoTimeSheetService.getProcessoTimeSheets(colaboradorId)
                 return responseHttp(res, response.status, response.message, response.data, [])
         }
 

@@ -294,7 +294,9 @@ async function removeProcessoTimeSheet(idProcessoTimeSheet) {
   
 }
 
-async function getAllTimeSheets() {
+async function getAllTimeSheets(colaboradorId) {
+
+  let where = colaboradorId == null ? '' : 'where p.colaborador_id = ' + colaboradorId;
 
   let queryString = `SELECT 
   pr.ref as referencia_processo,
@@ -325,7 +327,9 @@ async function getAllTimeSheets() {
   LEFT JOIN clientes cli
   ON p.cliente_id = cli.id
   LEFT JOIN tipo_cliente tcli
-  ON cli.tipo_id = tcli.id `;
+  ON cli.tipo_id = tcli.id 
+  ${where}
+  `;
 
   return sequelize.query(queryString, {
     type: QueryTypes.SELECT,

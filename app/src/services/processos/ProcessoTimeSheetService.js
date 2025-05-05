@@ -73,10 +73,10 @@ class ProcessoTimeSheetService {
         }
     }
 
-    static async getProcessoTimeSheets() {
+    static async getProcessoTimeSheets(colaboradorId) {
         try {
 
-            let response = await getAllTimeSheets()
+            let response = await getAllTimeSheets(colaboradorId)
             return {
                 data: response,
                 message: "TIMESHEET.LIST",
