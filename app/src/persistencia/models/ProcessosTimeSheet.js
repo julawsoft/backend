@@ -188,7 +188,9 @@ async function getAllOrByProcessoId(idProcesso) {
   });
 }
 
-async function getTimeSheetNaoFacturado(idProcesso) {
+async function getTimeSheetNaoFacturado(idProcesso = null) {
+  andWhere = idProcesso ? `and p.processo_id = ${idProcesso}` : '';
+  
   let queryString = `
   SELECT 
   pr.ref as referencia_processo,
@@ -219,8 +221,8 @@ async function getTimeSheetNaoFacturado(idProcesso) {
   ON p.cliente_id = cli.id
   LEFT JOIN tipo_cliente tcli
   ON cli.tipo_id = tcli.id 
-  where p.processo_id = ${idProcesso}
-  AND p.id NOT IN (SELECT processos_timesheet_id FROM processo_factura_items WHERE processo_factura_items.processos_timesheet_id = p.id)
+  where p.id NOT IN (SELECT processos_timesheet_id FROM processo_factura_items WHERE processo_factura_items.processos_timesheet_id = p.id)
+  ${andWhere }
   `
 
   return sequelize.query(queryString, {
@@ -312,7 +314,8 @@ async function getAllTimeSheets(colaboradorId) {
   p_facturacao.descricao AS modo_facturacao,
   cli.denominacao AS cliente,
   tcli.description AS tipo_cliente,
-  c.nome_completo AS colaborador
+  c.nome_completo AS colaborador,
+  p.created_at AS data_registo
   
   FROM processos_timesheet p
     

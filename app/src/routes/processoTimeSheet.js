@@ -17,6 +17,6 @@ processoTimeSheet.get(`${ROUTES_PATH.INDEX}/:idProcesso`, new ProcessoTimeSheetC
 processoTimeSheet.get(`${ROUTES_PATH.INDEX}/:idProcesso/:idColaborador`, new ProcessoTimeSheetController().getProcessoTimeSheetByColaboradorId)
 processoTimeSheet.put(`${ROUTES_PATH.INDEX}/:idProcessoTimeSheet/`, new ProcessoTimeSheetController().updateProcessoTimeSheet)
 processoTimeSheet.delete(`${ROUTES_PATH.INDEX}/:idProcessoTimeSheet/`, new ProcessoTimeSheetController().deleteProcessoTimeSheet)
-processoTimeSheet.get(`${ROUTES_PATH.TIMESHEET_NAO_FACTURADO}/:idProcesso/`, new ProcessoTimeSheetController().processoTimeSheetNaoFacturado)
+processoTimeSheet.get(`${ROUTES_PATH.TIMESHEET_NAO_FACTURADO}`, new ProcessoTimeSheetController().processoTimeSheetNaoFacturado)
 
 module.exports = processoTimeSheet
