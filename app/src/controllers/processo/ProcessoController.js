@@ -69,15 +69,20 @@ class ProcessoController {
                         return responseHttp(res, StatusCodes.BAD_REQUEST, errosConst.PROCESSO_NOT_FOUND, {}, [])
                 }
 
+                console.log("processoFinded.data[0].modo_facturacao_id ", processoFinded.data[0].modo_facturacao_id)
+                console.log("dataBody.modoFacturacaoId ", dataBody.modoFacturacaoId)
+
                 const facturaFinded = await ProcessoServive.getFacturas(id)
-                if(facturaFinded.data.length > 0 && processoFinded.data[0].modo_facturacao_id != dataBody.modoFacturacaoId)
-                        return responseHttp(
-                                res,
-                                StatusCodes.BAD_REQUEST,
-                                errosConst.PROCESSO_CANNOT_CHANGE_MODE,
-                                {},
-                                "Não é possível mudar o modo de facturação enquanto há facturas associadas!"
-                        )
+                if (dataBody.modoFacturacaoId !== '' && dataBody.modoFacturacaoId) {
+                        if(facturaFinded.data.length > 0 && processoFinded.data[0].modo_facturacao_id != dataBody.modoFacturacaoId)
+                                return responseHttp(
+                                        res,
+                                        StatusCodes.BAD_REQUEST,
+                                        errosConst.PROCESSO_CANNOT_CHANGE_MODE,
+                                        {},
+                                        "Não é possível mudar o modo de facturação enquanto há facturas associadas!"
+                                )
+                }
 
                 if (Number(dataBody.modoFacturacaoId) == 1 && dataBody.horasMes == "") {
                         return responseHttp(
