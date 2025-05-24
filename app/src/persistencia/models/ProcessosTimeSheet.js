@@ -188,14 +188,27 @@ async function getAllOrByProcessoId(idProcesso) {
   });
 }
 
-async function getTimeSheetNaoFacturado(idProcesso = null) {
-  andWhere = idProcesso ? `and p.processo_id = ${idProcesso}` : '';
+async function getTimeSheetNaoFacturado(idProcesso = undefined, idUser = undefined) {
+
+  console.log("veredito " , typeof idUser)
+  console.log("veredito " , idUser != undefined)
+  console.log("veredito " , idUser !== undefined)
+  console.log("veredito " , idUser == undefined)
+  console.log("veredito " , idUser === undefined)
+
+  let andWhere = '';
+  if (idUser != "") 
+    andWhere += ` and p.colaborador_id = ${idUser}`;
+  if (idProcesso != "") 
+    andWhere += ` and p.processo_id = ${idProcesso}`;
+
+  console.log("andWhere >> here >><<  ", andWhere);
   
   let queryString = `
   SELECT 
   pr.ref as referencia_processo,
   pr.assunto as assunto_processo,
-  p.id,
+  p.id as processoId,
   p.dados_importantes,
   p.data_inicio,
   p.data_fim,
@@ -203,6 +216,7 @@ async function getTimeSheetNaoFacturado(idProcesso = null) {
   p.descricao,
   te.label AS tipo_evento,
   p_facturacao.descricao AS modo_facturacao,
+  cli.id AS clienteId,
   cli.denominacao AS cliente,
   tcli.description AS tipo_cliente,
   c.nome_completo AS colaborador
@@ -224,6 +238,8 @@ async function getTimeSheetNaoFacturado(idProcesso = null) {
   where p.id NOT IN (SELECT processos_timesheet_id FROM processo_factura_items WHERE processo_factura_items.processos_timesheet_id = p.id)
   ${andWhere }
   `
+
+  console.log("queryString >> ", queryString);
 
   return sequelize.query(queryString, {
     type: QueryTypes.SELECT,

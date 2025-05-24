@@ -15,6 +15,7 @@ const ROUTES_PATH = {
 }
 
 processoFacturas.post(ROUTES_PATH.PROCESSO_FACTURA, validateCreateFacturaProcesso, new ProcessoFacturasController().createFacturaProcesso)
+processoFacturas.post('processo_factura_honorario', validateCreateFacturaProcesso, new ProcessoFacturasController().createFacturaProcessoHonorario)
 processoFacturas.post(ROUTES_PATH.PROCESSO_FACTURA_PAGAMENTO, validateCreatePagamentoFactura, new ProcessoFacturasController().createPagamentoFactura)
 processoFacturas.get(ROUTES_PATH.PROCESSO_FACTURA_PAGAMENTO, new ProcessoFacturasController().getPagamentoFactura)
 processoFacturas.get(`${ROUTES_PATH.PAGAMENTOS_FACTURA}/:id`, new ProcessoFacturasController().getPagamentoByIdFactura)

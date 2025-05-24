@@ -88,8 +88,8 @@ class ProcessoTimeSheetController {
         }
 
         async processoTimeSheetNaoFacturado(req, res) {
-                const  {idProcesso}  = req.query
-                const response = await ProcessoTimeSheetService.getProcessoTimeSheetNaoFacturado(idProcesso)
+                const  {idProcesso, idUser}  = req.query
+                const response = await ProcessoTimeSheetService.getProcessoTimeSheetNaoFacturado(idProcesso, idUser)
                 return responseHttp(res, response.status, response.message, response.data, [])
         }
 

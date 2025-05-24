@@ -183,10 +183,10 @@ class ProcessoTimeSheetService {
         }
     }
 
-    static async getProcessoTimeSheetNaoFacturado(idProcesso) {
+    static async getProcessoTimeSheetNaoFacturado(idProcesso, idUser) {
         try {
 
-            let response = await getTimeSheetNaoFacturado(idProcesso)
+            let response = await getTimeSheetNaoFacturado(idProcesso, idUser)
 
             return {
                 data: response,
