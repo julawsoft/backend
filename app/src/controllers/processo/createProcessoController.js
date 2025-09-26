@@ -72,7 +72,8 @@ async function createProcessoController(req, res) {
                                 "tarefas": dataBody.tarefas,
                                 "horasMes": dataBody.horasMes,
                                 "valorTotal": dataBody.valorTotal,
-                                "dataEmissaoFactura": dataBody.dataEmissaoFactura
+                                "dataEmissaoFactura": dataBody.dataEmissaoFactura,
+                                "nProcessoJudicial": dataBody.nProcessoJudicial
                         }
                 )
             

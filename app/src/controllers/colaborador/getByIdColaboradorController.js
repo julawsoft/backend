@@ -10,7 +10,6 @@ async function getByIdColaboradorController(req, res) {
         try {
                 let {id} = req.params;
                 const responseColabData =  await getAllByKeyValueColaborador("id", id)
-
                 return responseHttp(res, StatusCodes.OK, COLABORADOR.COLABORADOR_LIST_ALL, responseColabData, [])
         } catch (e) {
                 logger.error(e.message)

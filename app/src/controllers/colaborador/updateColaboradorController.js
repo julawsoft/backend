@@ -26,48 +26,28 @@ async function updateColaboradorController(req, res) {
       return res.status(404).json({ errors: "Colaborador não existe" });
 
     const dataReturned = await updateColaborador({
-      nomeCompleto: dataBody.nome_completo,
-      nomeProfissional: dataBody.nome_profissional,
-      dataNascimento: dataBody.data_nascimento,
+      username: dataBody.userName,
+      nomeCompleto: dataBody.nomeCompleto,
+      nomeProfissional: dataBody.nomeProfissional,
+      inicial: dataBody.inicial,
       funcao: dataBody.funcao,
-      tipoColaboradorId: dataBody.tipo_colaborador_id,
-      taxa_horaria: dataBody.taxa_horaria,
+      tipoColaboradorId: dataBody.tipoColaboradorId,
+      dataNascimento: dataBody.dataNascimento,
+      tokenReset: dataBody.tokenReset,
       status: dataBody.status,
+      taxaHoraria: dataBody.taxaHoraria || null,
+      contactoPessoal: dataBody.contactoPessoal,
+      contactoEmergencia: dataBody.contactoEmergencia || null,
+      nIdentificacao: dataBody.nIdentificacao,
+      nCedulaOrdem: dataBody.nCedulaOrdem || null,
+      emailPessoal: dataBody.emailPessoal || null,
+      emailCorporativo: dataBody.emailCorporativo || null,
+      categoriaId: dataBody.categoriaId,
       id: id
     });
 
-    if (dataReturned.status === StatusCodes.OK) {
-        if (dataBody.contactos && dataBody.contactos.length) {
-              await removeDadosContactoByColaborador(id)
 
-          for await (let contactos of dataBody.contactos) {
-            await createDadosContacto({
-              tipo: contactos.tipo,
-              valor: contactos.valor,
-              descricao: contactos.descricao,
-              colaboradorId: id
-            });
-          }
-        }
-
-        if (dataBody.identificacoes && dataBody.identificacoes.length) {
-
-                await removeDadosIdentificacaoByColaborador(id)
-                
-          for await (let identificacoes of dataBody.identificacoes) {
-            await createDadosIdentificacao({
-              tipoDocumentoId: identificacoes.tipo,
-              valor: identificacoes.valor,
-              dataEmissao: identificacoes.data_emissao,
-              dataValidade: identificacoes.data_validade,
-              colaboradorId: id
-            });
-          }
-        }
-
-    } 
-
-    return responseHttp(res, StatusCodes.OK, 'COLABORADOR.UPDATED', dataReturned, [])
+  return responseHttp(res, StatusCodes.OK, 'COLABORADOR.UPDATED', dataReturned.data, [])
 
   } catch (e) {
         return responseHttp(

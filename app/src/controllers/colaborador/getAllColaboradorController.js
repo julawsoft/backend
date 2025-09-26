@@ -8,7 +8,6 @@ async function getAllColaboradorController(req, res) {
 
         try {
                 const responseColabData = await service.getAll();
-
                 return responseHttp(res, StatusCodes.OK, COLABORADOR.COLABORADOR_LIST_ALL, responseColabData, [])
         } catch (e) {
                 logger.error(e.message)

@@ -76,11 +76,15 @@ class ProcessoServive {
     tarefas,
     horasMes,
     valorTotal,
-    dataEmissaoFactura
+    dataEmissaoFactura,
+    nProcessoJudicial
   }) {
     // Implementar logica para criacao do processo
     // Inserir dados no banco de dados
     try {
+
+      console.log("data para criar o processo:: ", nProcessoJudicial )
+
       const processoCreated = await create({
         assunto,
         area,
@@ -103,7 +107,8 @@ class ProcessoServive {
         statusId,
         horasMes,
         valorTotal,
-        dataEmissaoFactura
+        dataEmissaoFactura,
+        nProcessoJudicial
       });
 
       if (precedentes) {
@@ -378,7 +383,8 @@ class ProcessoServive {
     statusId,
     horasMes,
     valorTotal,
-    dataEmissaoFactura
+    dataEmissaoFactura,
+    nProcessoJudicial
   }) {
     try {
 
@@ -406,6 +412,7 @@ class ProcessoServive {
         horasMes,
         valorTotal,
         dataEmissaoFactura,
+        nProcessoJudicial
 
       });
 

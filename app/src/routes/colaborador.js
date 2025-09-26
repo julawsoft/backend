@@ -21,7 +21,7 @@ const ROUTES_PATH = {
 colaboradorRouter.post(ROUTES_PATH.INDEX, validateCreateColaborador, createColaboradorController)
 colaboradorRouter.get(`${ROUTES_PATH.INDEX}/:id`, getByIdColaboradorController)
 colaboradorRouter.get(ROUTES_PATH.INDEX, getAllColaboradorController)
-colaboradorRouter.put(`${ROUTES_PATH.INDEX}/:id`, validateEditColaborador, updateColaboradorController)
+colaboradorRouter.put(`${ROUTES_PATH.INDEX}/:id`, validateCreateColaborador, updateColaboradorController)
 colaboradorRouter.get(ROUTES_PATH.TIPO_COLABORADOR, getListColaboradorController)
 
 // colaboradorRouter.get(ROUTES_PATH.COLABORADOR_TIMESHEET_FACTURA, getListColaboradorController)

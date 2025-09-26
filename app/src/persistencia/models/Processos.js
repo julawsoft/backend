@@ -110,6 +110,10 @@ Processos.init(
     status_id: {
       type: DataTypes.INTEGER,
       allowNull: false
+    },
+    n_processo_judicial: {
+      type: DataTypes.STRING,
+      allowNull: true
     }
   },
   {
@@ -143,6 +147,7 @@ Processos.init(
  * @param {string} horasMes
  * @param {string} valorTotal
  * @param {string} dataEmissaoFactura
+ * @param {string} nProcessoJudicial
  * @returns {Processos}
  */
 async function create({
@@ -167,7 +172,8 @@ async function create({
   statusId,
   horasMes,
   valorTotal,
-  dataEmissaoFactura
+  dataEmissaoFactura,
+  nProcessoJudicial
 }) {
   return Processos.create({
     ref: (await generateRefProcesso()).toString(),
@@ -192,7 +198,8 @@ async function create({
     status_id: statusId,
     horas_mes: horasMes,
     valor_total: valorTotal,
-    data_emissao_factura: dataEmissaoFactura
+    data_emissao_factura: dataEmissaoFactura,
+    n_processo_judicial: nProcessoJudicial
   });
 }
 
@@ -364,6 +371,7 @@ async function generateRefProcesso() {
  * @param {string} horasMes
  * @param {string} valorTotal
  * @param {string} dataEmissaoFactura
+ * @param {string} nProcessoJudicial
  * @returns {Processos}
  */
 async function update({
@@ -389,7 +397,8 @@ async function update({
   statusId,
   horasMes,
   valorTotal,
-  dataEmissaoFactura
+  dataEmissaoFactura,
+  nProcessoJudicial
 }) {
   return Processos.update(
     {
@@ -414,7 +423,8 @@ async function update({
       status_id: statusId,
       horas_mes: horasMes,
       valor_total: valorTotal,
-      data_emissao_factura: dataEmissaoFactura
+      data_emissao_factura: dataEmissaoFactura,
+      n_processo_judicial: nProcessoJudicial
     },
     {
       where: {

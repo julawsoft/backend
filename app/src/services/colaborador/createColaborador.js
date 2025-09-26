@@ -20,16 +20,29 @@ async function createColaborador({
   username,
   nomeCompleto,
   nomeProfissional,
-  dataNascimento,
+  inicial,
   funcao,
   tipoColaboradorId,
-  taxa_horaria,
-  status
+  dataNascimento,
+  tokenReset,
+  status,
+  taxaHoraria,
+  contactoPessoal,
+  contactoEmergencia,
+  nIdentificacao,
+  nCedulaOrdem,
+  emailPessoal,
+  emailCorporativo,
+  categoriaId
+  
 }) {
     let keyCloakColaborador;
   try {
+
+    /*
+
     const defaultPassword = "julaw";
-    const role = switchRole(funcao);
+    const role = funcao;
     const [firstName, lastName] = nomeCompleto.split(" ");
 
     keyCloakColaborador = await createKeycloakColaborador({
@@ -37,36 +50,43 @@ async function createColaborador({
       password: defaultPassword,
       email: "",
       firstName: firstName,
-      lastName: username,
+      lastName: lastName ?? username,
       groups: role
     });
+    
+    */
 
-    console.log("keyCloakColaborador ", keyCloakColaborador)
-    console.log("keyCloakColaborador here ...  ", keyCloakColaborador.uuid)
-
+    // console.log("keyCloakColaborador ", keyCloakColaborador)
+    // console.log("keyCloakColaborador here ...  ", keyCloakColaborador.uuid)
 
     const dataToSave = {
-      nomeCompleto: nomeCompleto,
-      nomeProfissional: nomeProfissional,
-      dataNascimento: dataNascimento,
-      funcao: funcao,
-      tipoColaboradorId: tipoColaboradorId,
-      //"uuid": Math.random().toString().slice(2) + new Date().getTime().toString(),
-      uuid: keyCloakColaborador.uuid.toString(),
-      inicial: makeInitialColaborador(nomeCompleto),
-      taxa_horaria: taxa_horaria,
-      status: status
+      username,
+      nomeCompleto,
+      nomeProfissional,
+      funcao,
+      tipoColaboradorId,
+      dataNascimento,
+      tokenReset,
+      status,
+      taxaHoraria: taxaHoraria == "" ? undefined : taxaHoraria,
+      contactoPessoal,
+      contactoEmergencia,
+      nIdentificacao,
+      nCedulaOrdem,
+      emailPessoal,
+      emailCorporativo,
+      "uuid": Math.random().toString().slice(2) + new Date().getTime().toString(),
+      // uuid: keyCloakColaborador.uuid.toString(),
+      inicial: inicial?? makeInitialColaborador(nomeCompleto),
+      categoriaId
     };
 
-    console.log("o vou salvar ", dataToSave);
+    console.log("dataToSave ::", dataToSave.uuid)
 
     const dataColaborador = await create({ ...dataToSave });
-    const tipoColadorador = await listTipoColaboradorById(
-      dataColaborador.dataValues.tipo_colaborador_id
-    );
-
+   
     return {
-      data: { ...dataColaborador.dataValues, tipo: tipoColadorador },
+      data: { ...dataColaborador.dataValues },
       message: "COLABORADOR:CREATE",
       status: StatusCodes.CREATED
     };

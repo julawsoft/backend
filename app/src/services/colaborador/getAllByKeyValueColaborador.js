@@ -9,42 +9,8 @@ const listTipoColaboradorById = require("../tipoDeColaborador/listTipoColaborado
  * @returns {string} valor
  */
 async function getAllByKeyValueColaborador(chave, valor) {
-
   const listColaborador = await getAllByKeyValue(chave, valor);
-
-  if (listColaborador.length) {
-
-    let oneColab = listColaborador[0].dataValues;
-    let colaboradorDTO = [];
-
-    if (oneColab) {
-      let tipoColaborador = await listTipoColaboradorById(oneColab.id);
-      let dadosIdentificacao = await getAllByKeyValueDadosIdentificacao(
-        "colaborador_id",
-        oneColab.id
-      );
-      let dadosContactos = await getAllByKeyValueDadosContacto(
-        "colaboradorId",
-        oneColab.id
-      );
-
-      let dadosCustoFinanceiro = await getAllByKeyValueDadosCustoFinanceiro(
-        "colaboradorId",
-        oneColab.id
-      );
-
-      colaboradorDTO.push({
-        ...oneColab,
-        tipo: tipoColaborador ?? {},
-        identificacoes: dadosIdentificacao ?? [],
-        contactos: dadosContactos ?? [],
-        custoFinanceiro: dadosCustoFinanceiro ?? {},
-      });
-    }
-    return colaboradorDTO;
-  } else {
-    return [];
-  }
+  return listColaborador.length ? listColaborador[0] : {};
 }
 
 module.exports = getAllByKeyValueColaborador;

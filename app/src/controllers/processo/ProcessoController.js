@@ -60,21 +60,15 @@ class ProcessoController {
                 const { id } = req.params
                 const dataBody = req.body
 
-                console.log("here... id do processo", id)
-
-
                 let processoFinded = await ProcessoServive.getByIdProcesso(id)
 
                 if (!processoFinded) {
                         return responseHttp(res, StatusCodes.BAD_REQUEST, errosConst.PROCESSO_NOT_FOUND, {}, [])
                 }
 
-                console.log("processoFinded.data[0].modo_facturacao_id ", processoFinded.data[0].modo_facturacao_id)
-                console.log("dataBody.modoFacturacaoId ", dataBody.modoFacturacaoId)
-
                 const facturaFinded = await ProcessoServive.getFacturas(id)
                 if (dataBody.modoFacturacaoId !== '' && dataBody.modoFacturacaoId) {
-                        if(facturaFinded.data.length > 0 && processoFinded.data[0].modo_facturacao_id != dataBody.modoFacturacaoId)
+                        if (facturaFinded.data.length > 0 && processoFinded.data[0].modo_facturacao_id != dataBody.modoFacturacaoId)
                                 return responseHttp(
                                         res,
                                         StatusCodes.BAD_REQUEST,
@@ -136,7 +130,8 @@ class ProcessoController {
                                 "statusId": dataBody.statusId,
                                 "horasMes": dataBody.horasMes,
                                 "valorTotal": dataBody.valorTotal,
-                                "dataEmissaoFactura": dataBody.dataEmissaoFactura
+                                "dataEmissaoFactura": dataBody.dataEmissaoFactura,
+                                "nProcessoJudicial": dataBody.nProcessoJudicial
                         }
                 )
 
@@ -218,16 +213,16 @@ class ProcessoController {
                 let tarefaFinded = await ProcessoServive.getTaregaById(id)
                 if (!tarefaFinded.data)
                         return responseHttp(res, StatusCodes.NOT_FOUND, "Tarefa não encontrada", [], [])
-                if(!dataBody.status)
+                if (!dataBody.status)
                         return responseHttp(res, StatusCodes.NOT_FOUND, "O status do processo é necessário", [], [])
 
-                if(dataBody.status == 1)
+                if (dataBody.status == 1)
                         return responseHttp(res, StatusCodes.NOT_FOUND, "Tarefa precisa ser realizada, para conclui-lá", [], [])
 
-                if(dataBody.status == 3)
+                if (dataBody.status == 3)
                         return responseHttp(res, StatusCodes.NOT_FOUND, "Tarefa já foi aprovada", [], [])
 
-                if(!dataBody.gestorId)
+                if (!dataBody.gestorId)
                         return responseHttp(res, StatusCodes.NOT_FOUND, "Gestor ID não informado", [], [])
 
                 const response = await ProcessoServive.concluirTarefaProcesso(
@@ -250,10 +245,10 @@ class ProcessoController {
                 if (!tarefaFinded.data)
                         return responseHttp(res, StatusCodes.NOT_FOUND, "Tarefa não encontrada", [], [])
 
-                if(!dataBody.status || dataBody.status == 3)
+                if (!dataBody.status || dataBody.status == 3)
                         return responseHttp(res, StatusCodes.NOT_FOUND, "Tarefa aprovada não pode ser alterada", [], [])
 
-                if(!dataBody.colaboradorId)
+                if (!dataBody.colaboradorId)
                         return responseHttp(res, StatusCodes.NOT_FOUND, "Colaborador ID não informado", [], [])
 
                 const response = await ProcessoServive.realizarTarefaProcesso(
@@ -293,7 +288,7 @@ class ProcessoController {
         }
 
         async getFacturas(req, res) {
-               
+
                 const { id } = req.params
                 let processoFinded = await ProcessoServive.getByIdProcesso(id)
 
@@ -327,7 +322,7 @@ class ProcessoController {
         }
 
 
-        
+
 }
 
 module.exports = ProcessoController;
