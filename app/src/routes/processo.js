@@ -37,11 +37,6 @@ processo.get(`${ROUTES_PATH.INDEX}/processos/list`, new ProcessoController().get
 
 processo.delete(`${ROUTES_PATH.RECURSOS}`, validateRemoveResources, new ProcessoController().removeRecursosProcesso)
 
-processo.post(`${ROUTES_PATH.INDEX}/despesa`, new DespesaController().createDespesa)
-processo.get(`${ROUTES_PATH.INDEX}/despesa/all`, new DespesaController().getAll)
-processo.get(`/despesas_filtro/:clienteId/:processoId`, new DespesaController().getFilter)
-processo.get(`${ROUTES_PATH.PROCESSO_FACTURA}/:id`, new ProcessoController().getFacturas)
-
 // Tarefas
 processo.put(`${ROUTES_PATH.TASK_PROCESSO}/:id`, new ProcessoController().updateTarefaProcesso)
 processo.put(`${ROUTES_PATH.TASK_PROCESSO}/gestor/:id`, new ProcessoController().concluirTarefaProcesso)

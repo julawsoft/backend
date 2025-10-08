@@ -14,12 +14,12 @@ async function loginService({ username, password }) {
         password,
     })
 
+    
     const dataColaborador = await getAllByKeyValueColaborador("uuid", returnLogin.userInfo.sub)
-    if(dataColaborador.length) {
-        const tipoColadorador = await listTipoColaboradorById(dataColaborador[0].tipo_colaborador_id) 
-        return await {
-                ...dataColaborador[0], 
-                tipo: tipoColadorador,
+    console.log("O login ", dataColaborador)
+    if(dataColaborador) {
+        return {
+                ...dataColaborador.dataValues, 
                 auth: {
                     accessToken: returnLogin.tokenSet.access_token,
                     refreshToken: returnLogin.tokenSet.refresh_token,

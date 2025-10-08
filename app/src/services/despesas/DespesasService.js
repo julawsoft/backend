@@ -1,5 +1,6 @@
 const { StatusCodes } = require("http-status-codes");
 const { create, getAll, findFilter, findAllFilter } = require("../../persistencia/models/Despesas.js");
+const { getAllTiposDespesas } = require("../../persistencia/models/TiposDespesas.js");
 
 
 
@@ -11,16 +12,17 @@ class DespesasService {
    * @returns 
    */
   static async createDespesa({
-    idProcesso,
-    valor,
-    tipoMovimento,
-    dataMovimento,
-    colaboradorId
+    colaboradorId, 
+    dataMovimento, 
+    valor, 
+    clienteId, 
+    tipoDespesaId,
+    processoId
   }) {
     try {
 
       await create({
-        idProcesso, valor, tipoMovimento, dataMovimento, colaboradorId
+        colaboradorId, dataMovimento, valor, clienteId, tipoDespesaId,processoId
       });
 
       return {
@@ -56,6 +58,28 @@ class DespesasService {
       message: "PROCESSO.DESPESA.FILTEER:GET",
       status: StatusCodes.OK,
     };
+  }
+
+  static async getTiposDespesas(){
+    try {
+
+      const resultTipoDespesas = await getAllTiposDespesas();
+
+      return {
+        data: resultTipoDespesas,
+        message: "TIPODESPESAS:GET",
+        status: StatusCodes.OK,
+      };
+      
+    }catch(e){
+      return {
+        data: null,
+        message: `${e.message()}`,
+        status: StatusCodes.BAD_REQUEST,
+      };
+
+    }
+   
   }
 
 }

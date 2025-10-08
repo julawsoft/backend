@@ -13,14 +13,13 @@ class DespesasController {
                         return responseHttp(res, StatusCodes.BAD_REQUEST, errosConst.VALIDATION_ERROR, {}, errors.array())
                 }
 
-
                 const dataBody = req.body
                 const {
-                        colaboradorId, dataMovimento, idProcesso, tipoMovimento, valor
+                        colaboradorId, dataMovimento, valor, clienteId, tipoDespesaId, processoId
                 } = dataBody;
                 const response = await DespesasService.createDespesa(
                         {
-                                colaboradorId, dataMovimento, idProcesso, tipoMovimento, valor
+                             colaboradorId, dataMovimento, valor, clienteId, tipoDespesaId,processoId
                         }
                 );
 
@@ -40,6 +39,16 @@ class DespesasController {
                         processoId
                 });
                 return responseHttp(res, response.status, response.message, response.data, [])
+        }
+
+        async getTiposDespesas(req, res) {
+                try{
+                        const response = await DespesasService.getTiposDespesas();
+                        return responseHttp(res, response.status, response.message, response.data, [])
+                }catch(e){
+                        return responseHttp(res, StatusCodes.INTERNAL_SERVER_ERROR, e.message(), response.data, [])
+                }
+             
         }
 
 }

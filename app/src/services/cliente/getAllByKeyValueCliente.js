@@ -15,7 +15,6 @@ async function getAllByKeyValueCliente(chave, valor) {
             clienteDTO.push({...cliente.dataValues, tipo: tipoCliente})
         }
         return clienteDTO
-
     } catch (e) {
         return e
     }

@@ -9,6 +9,7 @@ const authRouter = require("./auth.js")
 const processo = require("./processo.js")
 const processoTimeSheet = require("./processoTimeSheet.js")
 const processoFacturas = require("./processoFacturas.js")
+const despesasRouter = require("./despesas.js")
 
 const INDEX_ROUTE= "/"
 const routesRoot = Router()
@@ -22,11 +23,12 @@ routesRoot.use(authRouter)
 routesRoot.use(processo)
 routesRoot.use(processoTimeSheet)
 routesRoot.use(processoFacturas)
+routesRoot.use(despesasRouter)
 
 routesRoot.get(INDEX_ROUTE, (req, res) => {
     return res.send({
         app: "API JULAW",
-        version: "1.0.0"
+        version: "1.2.0"
     })
 })
 

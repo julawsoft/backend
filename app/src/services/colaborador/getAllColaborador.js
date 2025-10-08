@@ -6,30 +6,8 @@ const listTipoColaboradorById = require("../tipoDeColaborador/listTipoColaborado
 
 async function getAllColaboradorService() {
 
-        const listColaboradores = await getAll();
-        let colaboradorDTO = []
-
-        for (colaborador of listColaboradores) {
-
-                if (colaborador.id) {
-
-                        let tipoColaborador = await listTipoColaboradorById(colaborador.id)
-                        let dadosIdentificacao = await getAllByKeyValueDadosIdentificacao("colaborador_id", colaborador.id)
-                        let dadosContactos = await getAllByKeyValueDadosContacto("colaboradorId", colaborador.id)
-                        let dadosCustoFinanceiro = await getAllByKeyValueDadosCustoFinanceiro("colaboradorId", colaborador.id)
-
-                        colaboradorDTO.push({
-                                ...colaborador.dataValues,
-                                tipo: tipoColaborador ?? {},
-                                identificacoes: dadosIdentificacao ?? [],
-                                contactos: dadosContactos ?? [],
-                                custoFinanceiro: dadosCustoFinanceiro ?? {}
-
-                        })
-                }
-        }
-
-        return colaboradorDTO
+        const listColaboradores = await getAll()
+        return listColaboradores
 
 }
 
