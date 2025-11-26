@@ -27,10 +27,11 @@ class ProcessoTimeSheetController {
                                 "taxaProcesso": dataBody.taxaProcesso ?? null,
                                 "taxaColaborador": dataBody.taxaColaborador ?? null,
                                 "descricao": dataBody.descricao,
-                                "dadosImportantes": dataBody.dadosImportantes,
+                                "dadosImportantes": dataBody.dadosImportantes ?? '',
                                 "dataInicio": dataBody.dataInicio,
                                 "dataFim": dataBody.dataFim,
                                 "horas": dataBody.horas,
+                                "tarefaId": dataBody.tarefaId,
                         }
                 )
                 

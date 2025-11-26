@@ -8,7 +8,7 @@ const sequelize = SequelizeConnection.getConnection().instance;
  * @class
  */
 class Processos extends Model {
-  static associate(models) {}
+  static associate(models) { }
 }
 
 Processos.init(
@@ -215,42 +215,86 @@ async function getAllByKeyValue(chave, valor) {
   });
 }
 
-async function getAll() {
-  // return await Processos.findAll()
-  let queryString = `SELECT 
-  p.*,
-  p_status.descricao AS estado,
-  p_instituicoes.descricao AS instituicao,
-  p_facturacao.descricao AS modo_facturacao,
-  c.nome_completo AS gestor,
-  c_suspendeu.nome_completo AS colaborador_suspendeu,
-  c_enderrou.nome_completo AS colaborador_encerrou,
-  cli.denominacao AS cliente,
-  tcli.description AS tipo_cliente
-  
-  FROM processos p
-  
-  INNER JOIN processo_estado p_status
-  ON p.status_id = p_status.id
-  INNER JOIN processo_instituicoes p_instituicoes
-  ON p.instituicao_id = p_instituicoes.id
-  INNER JOIN processo_facturacao p_facturacao
-  ON p.modo_facturacao_id = p_facturacao.id
-  LEFT JOIN colaboradores c
-  ON p.gestor_id = c.id
-  LEFT JOIN colaboradores c_suspendeu
-  ON p.colaborador_id_suspendeu = c_suspendeu.id
-  LEFT JOIN colaboradores c_enderrou
-  ON p.colaborador_id_encerrou = c_enderrou.id
-  LEFT JOIN clientes cli
-  ON p.cliente_id = cli.id
-  LEFT JOIN tipo_cliente tcli
-  ON cli.tipo_id = tcli.id`;
+async function getAll({
+  clientId,
+  instituicaoId,
+  fase,
+  estadoId,
+  gestorId,
+  colaboradorId,
+  mFacturacaoId,
+  dataInicio,
+  dataFim,
+}) {
+  let query = `
+    SELECT 
+      p.*,
+      p_status.descricao AS estado,
+      p_instituicoes.descricao AS instituicao,
+      p_facturacao.descricao AS modo_facturacao,
+      c.nome_completo AS gestor,
+      c_suspendeu.nome_completo AS colaborador_suspendeu,
+      c_enderrou.nome_completo AS colaborador_encerrou,
+      cli.denominacao AS cliente,
+      tcli.description AS tipo_cliente
+    FROM processos p
+    INNER JOIN processo_estado p_status
+      ON p.status_id = p_status.id
+    INNER JOIN processo_instituicoes p_instituicoes
+      ON p.instituicao_id = p_instituicoes.id
+    INNER JOIN processo_facturacao p_facturacao
+      ON p.modo_facturacao_id = p_facturacao.id
+    LEFT JOIN colaboradores c
+      ON p.gestor_id = c.id
+    LEFT JOIN colaboradores c_suspendeu
+      ON p.colaborador_id_suspendeu = c_suspendeu.id
+    LEFT JOIN colaboradores c_enderrou
+      ON p.colaborador_id_encerrou = c_enderrou.id
+    LEFT JOIN clientes cli
+      ON p.cliente_id = cli.id
+    LEFT JOIN tipo_cliente tcli
+      ON cli.tipo_id = tcli.id
+    WHERE 1=1
+  `;
 
-  return sequelize.query(queryString, {
-    type: QueryTypes.SELECT
+  const replacements = [];
+
+  // 🔥 função utilitária para evitar repetir código
+  let addFilter = (field, value) => {
+    if (
+      value !== undefined &&
+      value !== null &&
+      value !== '' &&
+      value !== 0 &&
+      value !== 'undefined'
+    ) {
+      query += ` AND ${field} = ? `;
+      replacements.push(value);
+    }
+  };
+
+  addFilter("p.cliente_id", clientId);
+  addFilter("p.instituicao_id", instituicaoId);
+  addFilter("p.fase", fase);
+  addFilter("p.status_id", estadoId);
+  addFilter("p.gestor_id", gestorId);
+  addFilter("p.colaborador_id_suspendeu", colaboradorId);
+  addFilter("p.modo_facturacao_id", mFacturacaoId);
+
+  // filtro por intervalo de datas
+  if (dataInicio && dataFim) {
+    query += " AND left(p.created_at,10) BETWEEN ? AND ? ";
+    replacements.push(dataInicio, dataFim);
+  }
+
+  query += " ORDER BY p.created_at DESC ";
+
+  return sequelize.query(query, {
+    replacements,
+    type: QueryTypes.SELECT,
   });
 }
+
 
 async function getById(id) {
   // return await Processos.findAll()
@@ -333,19 +377,19 @@ async function getByColaboradorId(idColaborador) {
 }
 
 async function generateRefProcesso() {
-      let queryString = "SELECT MAX(id) as id FROM processos";
-      let result = await sequelize.query(queryString, {
-        type: QueryTypes.SELECT
-      });
-      
-      const {id} = result[0]
+  let queryString = "SELECT MAX(id) as id FROM processos";
+  let result = await sequelize.query(queryString, {
+    type: QueryTypes.SELECT
+  });
 
-      let year = new Date().getFullYear()
-      let month = new Date().getMonth() + 1;
+  const { id } = result[0]
 
-      let idEnd = id ? id : 1;
+  let year = new Date().getFullYear()
+  let month = new Date().getMonth() + 1;
 
-      return `0000${parseInt(idEnd) + 1}/${month}-${year}`
+  let idEnd = id ? id : 1;
+
+  return `0000${parseInt(idEnd) + 1}/${month}-${year}`
 }
 
 /**
@@ -504,6 +548,64 @@ GROUP BY
   });
 }
 
+/**
+ * Atualiza os campos metodológicos de um processo.
+ * 
+ * @param {Object} params
+ * @param {string} params.metodologia
+ * @param {string} params.estrategia
+ * @param {string} params.factos
+ * @param {string} params.objectivos
+ * @param {string} params.dataImportantes
+ * @param {number} params.processoId
+ * @returns {Promise<any>}
+ */
+async function updateProcessoMetodologias(
+  metodologia = '',
+  estrategia = '',
+  factos = '',
+  objectivos = '',
+  dataImportantes = '',
+  processoId
+) {
+
+  console.log("O meu ID ", processoId)
+  console.log("O meu ID ", metodologia)
+  console.log("O meu ID ", estrategia)
+
+  if (!processoId) {
+    throw new Error("O campo 'processoId' é obrigatório.");
+  }
+
+  const [result] = await Processos.sequelize.query(
+    `
+    UPDATE processos
+    SET 
+      metodologia = ?,
+      estrategia = ?,
+      factos = ?,
+      objectivos = ?,
+      dados_importantes = ?
+    WHERE id = ?
+    `,
+    {
+      replacements: [
+        metodologia,
+        estrategia,
+        factos,
+        objectivos,
+        dataImportantes,
+        processoId
+      ],
+    }
+  );
+
+  console.log("o result ", result)
+
+  return result;
+}
+
+
 module.exports = {
   create,
   getAllByKeyValue,
@@ -512,5 +614,6 @@ module.exports = {
   update,
   getByColaboradorId,
   getByClienteId,
-  getFacturas
+  getFacturas,
+  updateProcessoMetodologias
 };

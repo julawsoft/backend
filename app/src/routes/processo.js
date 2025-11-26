@@ -22,6 +22,9 @@ const ROUTES_PATH = {
     TASK_PROCESSO: '/tarefas_processo',
     PROCESSO_COLABORADOR: '/processo_colaborador',
     PROCESSO_FACTURA: '/processo_factura',
+    PROCESSO_INSTITUICOES: '/processo-instituicoes',
+    PROCESSO_MODO_FACTURACAO: '/processo-modo-facturacao',
+    PROCESSO_STATUS: '/processo-status'
 }
 
 processo.post(ROUTES_PATH.INDEX, validateCreateProcesso, createProcessoController)
@@ -43,5 +46,20 @@ processo.put(`${ROUTES_PATH.TASK_PROCESSO}/gestor/:id`, new ProcessoController()
 processo.put(`${ROUTES_PATH.TASK_PROCESSO}/colaborador/:id`, new ProcessoController().realizarTarefaProcesso)
 processo.post('/tarefas', validateCreateTarefa, new ProcessoController().createTarefa)
 processo.get('/tarefas_colaborador/:id', validateCreateTarefa, new ProcessoController().getAllTarefaByColaboradorId)
+
+processo.put('/processo-metodologias/:id', validateCreateTarefa, new ProcessoController().updateProcessoMetodologias)
+
+// instituições
+processo.get(`${ROUTES_PATH.PROCESSO_INSTITUICOES}`, 
+    new ProcessoController().getAllInstituicoes
+)
+// modo facturacao
+processo.get(`${ROUTES_PATH.PROCESSO_MODO_FACTURACAO}`, 
+    new ProcessoController().getAllModoFacturacao
+)
+// status
+processo.get(`${ROUTES_PATH.PROCESSO_STATUS}`, 
+    new ProcessoController().getAllProcessoStatus
+)
 
 module.exports = processo

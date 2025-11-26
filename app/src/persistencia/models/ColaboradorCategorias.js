@@ -7,11 +7,11 @@ const sequelize = SequelizeConnection.getConnection().instance;
  * Gerenciador integracao keycloak.
  * @class
  */
-class Colaborador extends Model {
+class ColaboradorCategorias extends Model {
   static associate(models) { }
 }
 
-Colaborador.init(
+ColaboradorCategorias.init(
   {
     id: {
       allowNull: false,
@@ -19,89 +19,20 @@ Colaborador.init(
       primaryKey: true,
       type: DataTypes.INTEGER
     },
-    nome_completo: {
+    descricao: {
       type: DataTypes.STRING,
       allowNull: false
-    },
-    nome_profissional: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    inicial: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    funcao: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    tipo_colaborador_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false
-    },
-    data_nascimento: {
-      type: DataTypes.DATE,
-      allowNull: true
-    },
-    token_reset: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    uuid: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true
-    },
-    taxa_horaria: {
-      type: DataTypes.INTEGER,
-      allowNull: true
     },
     status: {
-      type: DataTypes.ENUM("active", "inactive", "pending"),
+      type: DataTypes.ENUM('activo','inactivo'),
       allowNull: false,
-      defaultValue: "pending"
+      defaultValue: 'activo'
     },
-    contacto_pessoal: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    contacto_emergencia: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-    },
-    contacto_emergencia: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-    },
-    n_identificacao: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    n_cedula_ordem: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    email_pessoal: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    email_corporativo: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    categoria_id: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'colaborador_categorias',
-        key: 'id',
-      }
-    }
   },
   {
     sequelize,
-    modelName: "Colaborador",
-    tableName: "colaboradores",
+    modelName: "ColaboradorCategorias",
+    tableName: "colaborador_categorias",
     createdAt: "created_at",
     updatedAt: "updated_at"
   }
@@ -139,6 +70,8 @@ async function create({
   categoriaId
 }) {
 
+  console.log("taxa_horaria", uuid);
+  
   return Colaborador.create({
     nome_completo: nomeCompleto,
     nome_profissional: nomeProfissional,
@@ -195,7 +128,7 @@ async function update({
 }) {
   return Colaborador.update(
     {
-    nome_completo: nomeCompleto,
+      nome_completo: nomeCompleto,
     nome_profissional: nomeProfissional,
     data_nascimento: dataNascimento,
     uuid: uuid,
@@ -235,24 +168,17 @@ async function getAllByKeyValue(chave, valor) {
 }
 
 async function getAll() {
-  return await Colaborador.findAll();
+  return await ColaboradorCategorias.findAll();
 }
 
-async function getAllQuery(tipo, categoria) {
-
-  let where = 'where 1 = 1'
-  if(tipo && tipo != 'undefined')
-      where += ` AND c.tipo_colaborador_id = ${tipo}`
-  if(categoria && categoria != 'undefined')
-      where += ` AND c.categoria_id = ${categoria}`
-
+async function getAllQuery() {
   const result = await Colaborador.sequelize.query(`
   SELECT
     c.id,
     c.status,
     c.nome_completo,
     c.nome_profissional,
-    left(c.data_nascimento,10) AS data_nascimento,
+    c.data_nascimento,
     c.funcao,
     c.tipo_colaborador_id,
     c.taxa_horaria,
@@ -263,45 +189,11 @@ async function getAllQuery(tipo, categoria) {
     c.email_pessoal,
     c.email_corporativo,
     tc.description AS tipoColaborador,
-    cc.descricao AS categoria,
-    cc.id as categoria_id,
-    c.inicial
+    cc.descricao AS categoria
   FROM
     colaboradores c
     LEFT JOIN tipo_colaboradores tc ON c.tipo_colaborador_id = tc.id
     LEFT JOIN colaborador_categorias cc ON c.categoria_id = cc.id
-    ${where}
-  `);
-
-  return result[0];
-}
-
-async function getById(id) {
-  const result = await Colaborador.sequelize.query(`
-  SELECT
-    c.id,
-    c.status,
-    c.nome_completo,
-    c.nome_profissional,
-    left(c.data_nascimento,10) AS data_nascimento,
-    c.funcao,
-    c.tipo_colaborador_id,
-    c.taxa_horaria,
-    c.contacto_pessoal, 
-    c.contacto_emergencia,
-    c.n_identificacao,
-    c.n_cedula_ordem,
-    c.email_pessoal,
-    c.email_corporativo,
-    tc.description AS tipoColaborador,
-    cc.descricao AS categoria,
-    cc.id as categoria_id,
-    c.inicial
-  FROM
-    colaboradores c
-    LEFT JOIN tipo_colaboradores tc ON c.tipo_colaborador_id = tc.id
-    LEFT JOIN colaborador_categorias cc ON c.categoria_id = cc.id
-     where c.id = ${id}
   `);
 
   return result[0];
@@ -314,7 +206,7 @@ async function getTimesheetFacturaByColaboradorId(idColaborador) {
     c.status,
     c.nome_completo,
     c.nome_profissional,
-    left(c.data_nascimento,10) AS data_nascimento,
+    c.data_nascimento,
     c.funcao,
     c.tipo_colaborador_id,
     c.taxa_horaria,
@@ -370,6 +262,5 @@ module.exports = {
   update,
   getAllQuery,
   getTimesheetFacturaByColaboradorId,
-  getTimesheetByColaboradorId,
-  getById
+  getTimesheetByColaboradorId
 };

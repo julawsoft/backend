@@ -1,4 +1,4 @@
-const { getAllByKeyValue } = require("../../persistencia/models/Colaborador");
+const { getById } = require("../../persistencia/models/Colaborador");
 const getAllByKeyValueDadosContacto = require("../dadoContacto/getAllByKeyValueDadosContacto");
 const getAllByKeyValueDadosCustoFinanceiro = require("../dadocustofinanceiro/getAllByKeyValueDadosCustoFinanceiro");
 const getAllByKeyValueDadosIdentificacao = require("../dadoIdentificacao/getAllByKeyValueDadosIdentificacao");
@@ -9,7 +9,7 @@ const listTipoColaboradorById = require("../tipoDeColaborador/listTipoColaborado
  * @returns {string} valor
  */
 async function getAllByKeyValueColaborador(chave, valor) {
-  const listColaborador = await getAllByKeyValue(chave, valor);
+  const listColaborador = await getById(valor);
   return listColaborador.length ? listColaborador[0] : {};
 }
 

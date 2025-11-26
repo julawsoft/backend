@@ -10,6 +10,8 @@ const processo = require("./processo.js")
 const processoTimeSheet = require("./processoTimeSheet.js")
 const processoFacturas = require("./processoFacturas.js")
 const despesasRouter = require("./despesas.js")
+const timesheetsRouter = require("./timesheets.js")
+const tasksRouter = require("./tasks.js")
 
 const INDEX_ROUTE= "/"
 const routesRoot = Router()
@@ -24,6 +26,8 @@ routesRoot.use(processo)
 routesRoot.use(processoTimeSheet)
 routesRoot.use(processoFacturas)
 routesRoot.use(despesasRouter)
+routesRoot.use(timesheetsRouter)
+routesRoot.use(tasksRouter)
 
 routesRoot.get(INDEX_ROUTE, (req, res) => {
     return res.send({

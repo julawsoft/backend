@@ -6,6 +6,26 @@ const DespesasService = require('../../services/despesas/DespesasService.js');
 
 class DespesasController {
 
+        async updateDespesa(req, res) {
+
+                const errors = validationResult(req);
+                if (!errors.isEmpty()) {
+                        return responseHttp(res, StatusCodes.BAD_REQUEST, errosConst.VALIDATION_ERROR, {}, errors.array())
+                }
+
+                const {id} = req.params
+                const dataBody = req.body
+                const {
+                        colaboradorId, dataMovimento, valor, clienteId, tipoDespesaId, processoId
+                } = dataBody;
+                const response = await DespesasService.updateDespesa(
+                        id, {
+                             colaboradorId, dataMovimento, valor, clienteId, tipoDespesaId,processoId
+                        }
+                );
+
+                return responseHttp(res, response.status, response.message, response.data, []);
+        }
         async createDespesa(req, res) {
 
                 const errors = validationResult(req);
@@ -27,7 +47,25 @@ class DespesasController {
         }
 
         async getAll(req, res) {
-                const response = await DespesasService.findAll();
+                const {colaboradorId, processoId, clienteId, tipoDespesaId, statusId, dataInicio, dataFim} = req.query
+                const response = await DespesasService.findAll({
+                        colaboradorId,
+                        processoId,
+                        clienteId,
+                        tipoDespesaId,
+                        statusId,
+                        dataInicio,
+                        dataFim,
+                      });
+                return responseHttp(res, response.status, response.message, response.data, [])
+        }
+
+        async get(req, res) {
+                const {id} = req.params
+
+                const response = await DespesasService.findOne(
+                        id
+                      );
                 return responseHttp(res, response.status, response.message, response.data, [])
         }
 

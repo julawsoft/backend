@@ -15,6 +15,7 @@ const listByIdTipoCliente = require("../tipoCliente /listByIdTipoCliente.js")
 * @returns {Array} Cliente
 */
 async function updateCliente (
+    id,
     {
         denominacao,
         tipo_id,
@@ -23,8 +24,7 @@ async function updateCliente (
         pessoa_contacto,
         contacto_cobranca,
         nota,
-        status,
-        id
+        status
     }
 ) {    
         const newCliente = await updateById({

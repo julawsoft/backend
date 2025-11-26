@@ -10,8 +10,9 @@ const ROUTES_PATH = {
     TYPES: '/tipos-despesas',
 }
 despesasRouter.post(`${ROUTES_PATH.INDEX}`, validateCreateDespesa, new DespesaController().createDespesa)
+despesasRouter.put(`${ROUTES_PATH.INDEX}/:id`, validateCreateDespesa, new DespesaController().updateDespesa)
 despesasRouter.get(`${ROUTES_PATH.INDEX}`, new DespesaController().getAll)
-despesasRouter.get(`${ROUTES_PATH.INDEX}/:id`, new DespesaController().getAll)
+despesasRouter.get(`${ROUTES_PATH.INDEX}/:id`, new DespesaController().get)
 despesasRouter.get(`${ROUTES_PATH.TYPES}`, new DespesaController().getTiposDespesas)
 
 module.exports = despesasRouter

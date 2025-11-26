@@ -1,9 +1,13 @@
 const { StatusCodes } = require("http-status-codes");
-const { getProcessoFacturasByClienteId, createProcessoFactura, getAllFacturas, getFacturasByColaborador } = require("../../persistencia/models/ProcessoFacturas");
+const { approveHonorariosInvoice, getHonorariosInvoice, getProcessoFacturasByClienteId, createProcessoFactura, getAllFacturas, getFacturasByColaborador, getHonorarios, getProcessoFacturasById } = require("../../persistencia/models/ProcessoFacturas");
 const { createProcessoFacturaItems, getFacturaItemsByFacturaId } = require("../../persistencia/models/ProcessoFacturasItems");
 const { createPagamentoFactura, getPagamentoFactura, getPagamentoByIdFactura } = require("../../persistencia/models/PagamentoFactura");
 const { getModoPagamentos } = require("../../persistencia/models/ModoPagamentojs");
 const saveBase64Image = require("../../utils/saveBase64Image");
+
+const {changeStatus: changeStatusTimeSheet} = require("./ProcessoTimeSheetService");
+const {changeStatus: changeStatusDespesas} = require("../despesas/DespesasService");
+
 
 class ProcessoFacturasServive {
  
@@ -17,8 +21,7 @@ class ProcessoFacturasServive {
 
       if (listProcessoFacturasByCliente) {
         for await (let facturaCliente of listProcessoFacturasByCliente) {
-
-              console.log("here .... ", facturaCliente)
+          
                let items =  await getFacturaItemsByFacturaId(facturaCliente.processo_factura_id)
                let pagamentos =  await getPagamentoByIdFactura(facturaCliente.id)
 
@@ -47,7 +50,6 @@ class ProcessoFacturasServive {
     processoId,
     clienteId,
     colaboradorId,
-    horas,
     custo,
     status,
     items   
@@ -59,7 +61,6 @@ class ProcessoFacturasServive {
         processoId,
         clienteId,
         colaboradorId,
-        horas,
         custo,
         status
       }).then(async (resp) => {
@@ -69,16 +70,25 @@ class ProcessoFacturasServive {
           if(resp.id && items.length) {
 
             for await (let item of items) {
+
+            console.log(">>>>>>>> ", item)
               
             let itemSaved = await createProcessoFacturaItems({
                 "processoFacturaId": resp.id,
-                "processoTimeSheetId": item.processos_timesheet_id,
                 "horas": item.horas,
-                "custo": item.custo,
-                "dadosAdicionais": item.custo,
-                "dadosAdicionais": item.dados_adicionais,
+                "custo": item.valor,
+                "tipo": item.tipo,
+                "tipo_id": item.id,
               })
 
+              console.log("itemSaved ", item.tipo)
+
+              if(item.tipo === "timesheet") {
+                changeStatusTimeSheet(item.id, 'faturado')
+              }else{
+                changeStatusDespesas(item.id, 'faturado')
+              }
+              
               itemSavedReturn.push(itemSaved)
             }
             
@@ -221,11 +231,11 @@ class ProcessoFacturasServive {
       }
   }
 
-  static async getFacturas() {
+  static async getFacturas(idProcesso) {
 
     try {
 
-      let response = await getAllFacturas()
+      let response = await getAllFacturas(idProcesso)
      
           return {
             data: response,
@@ -261,6 +271,111 @@ class ProcessoFacturasServive {
         };
       }
   }
+
+  /**
+   * @param {*} idProcess 
+   * @param {*} idCliente 
+   * @param {*} idColaborador 
+   * @returns 
+   */
+  static async getHonorarios({idProcess, idCliente, idColaborador}) {
+
+    try {
+
+      let response = await getHonorarios({idProcess, idCliente, idColaborador})
+     
+          return {
+            data: response,
+            message: 'FACTURA:COLABORADOR:LIST',
+            status: StatusCodes.OK,
+          }
+              
+      }catch(e) {      
+        return {
+          data: __filename,
+          message: e.message,
+          status: StatusCodes.INTERNAL_SERVER_ERROR,
+        };
+      }
+  }
+  /**
+   * @param {*} id
+   * @returns 
+   */
+  static async getHonorariosInvoice(id) {
+
+    try {
+
+      let resultGetHonorarios = await getHonorariosInvoice(id)
+
+      let items =  await getFacturaItemsByFacturaId(resultGetHonorarios[0].processo_factura_id)
+      let pagamentos =  await getPagamentoByIdFactura(resultGetHonorarios[0].processo_factura_id)
+
+          return {
+            data: {...resultGetHonorarios[0], items: items, peyments: pagamentos},
+            message: 'FACTURA:COLABORADOR:LIST',
+            status: StatusCodes.OK,
+          }
+              
+      }catch(e) {      
+        return {
+          data: __filename,
+          message: e.message,
+          status: StatusCodes.INTERNAL_SERVER_ERROR,
+        };
+      }
+  }
+
+    /**
+   * @param {*} id
+   * @returns 
+   */
+    static async approveHonorariosInvoice(id, userId) {
+
+      try {
+  
+        let resultApproveHonorarios = await approveHonorariosInvoice(id, userId)
+
+        console.log("o retorno apos aprovacao", resultApproveHonorarios)
+
+        let response =  await getHonorariosInvoice(id)
+
+        console.log("O response ", response)
+        
+            return {
+              data: {...response},
+              message: 'FACTURA:COLABORADOR:LIST',
+              status: StatusCodes.OK,
+            }
+                
+        }catch(e) {      
+          return {
+            data: __filename,
+            message: e.message,
+            status: StatusCodes.INTERNAL_SERVER_ERROR,
+          };
+        }
+    }
+
+  static async getFacturaOne(idProcessoFactura) {
+    try{
+      let response = await getProcessoFacturasById(idProcessoFactura)
+      let items =  await getFacturaItemsByFacturaId(response[0].processo_facturacao_id)
+     
+      return {
+        data: {...response[0], items},
+        message: 'FACTURA:COLABORADOR:LIST',
+        status: StatusCodes.OK,
+      }
+
+    }catch(e){
+      return {
+        data: __filename,
+        message: e.message,
+        status: StatusCodes.INTERNAL_SERVER_ERROR,
+      };
+    }
+  } 
  
 }
 

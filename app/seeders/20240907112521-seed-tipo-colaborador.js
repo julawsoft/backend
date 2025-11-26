@@ -19,6 +19,11 @@ module.exports = {
         created_at: new Date(),
         updated_at: new Date(),
       },
+      {
+        description: 'Estagiário',
+        created_at: new Date(),
+        updated_at: new Date(),
+      },
   ], {});
       },
 

@@ -5,7 +5,8 @@ const responseHttp = require('../../utils/http/response.js')
 
 async function getAllClienteController(req, res) {
         try {
-                const listClienteData = await getAllCliente()
+                const {tipoClienteId} = req.query
+                const listClienteData = await getAllCliente(tipoClienteId)
                 return responseHttp(res, StatusCodes.OK, errosConst.SUCCESS, listClienteData, [])
         } catch (e) {
                 return responseHttp(res, StatusCodes.BAD_REQUEST, errosConst.ERROR, {}, e.message)

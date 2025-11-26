@@ -1,6 +1,15 @@
 const { StatusCodes } = require("http-status-codes");
-const { create, getAllOrByProcessoId, getAllOrByProcessoIdAndColaboradorId, updateProcessoTimeSheet, removeProcessoTimeSheet, getTimeSheetNaoFacturado, getAllTimeSheets } = require("../../persistencia/models/ProcessosTimeSheet");
-
+const { create, getAllOrByProcessoId, getAllOrByProcessoIdAndColaboradorId, 
+    getAllByClienteId,
+     updateProcessoTimeSheet, 
+     removeProcessoTimeSheet, 
+     getTimeSheetNaoFacturado, 
+    getAllTimeSheets, 
+    getById,getTotalTarefas, 
+    getTotalProjectos,
+    submeterTimeSheet 
+} = require("../../persistencia/models/ProcessosTimeSheet");
+const { getAllTiposTarefas } = require("../../persistencia/models/TiposTarefas");
 
 class ProcessoTimeSheetService {
 
@@ -17,6 +26,7 @@ class ProcessoTimeSheetService {
         dataInicio,
         dataFim,
         horas,
+        tarefaId
     }) {
         try {
 
@@ -33,6 +43,7 @@ class ProcessoTimeSheetService {
                 "data_inicio": dataInicio,
                 "data_fim": dataFim,
                 "horas": horas,
+                "tarefa_id": tarefaId,
             }
 
             let response = await create(dataDTO)
@@ -73,10 +84,43 @@ class ProcessoTimeSheetService {
         }
     }
 
-    static async getProcessoTimeSheets(colaboradorId) {
+    static async getProcessoTimeSheets({
+        colaboradorId,
+        clienteId,
+        processoId,
+        tarefaId,
+        dataInicio,
+        dataFim,
+        statusId,
+    }) {
         try {
 
-            let response = await getAllTimeSheets(colaboradorId)
+            let response = await getAllTimeSheets({ 
+                colaboradorId,
+                clienteId,
+                processoId,
+                tarefaId,
+                dataInicio,
+                dataFim,
+                statusId})
+            return {
+                data: response,
+                message: "TIMESHEET.LIST",
+                status: StatusCodes.OK,
+            };
+
+        } catch (e) {
+            return {
+                data: __filename,
+                message: e.message,
+                status: StatusCodes.BAD_REQUEST,
+            };
+        }
+    }
+    static async getAllByClienteId(idCliente) {
+        try {
+
+            let response = await getAllByClienteId(idCliente)
             return {
                 data: response,
                 message: "TIMESHEET.LIST",
@@ -92,19 +136,14 @@ class ProcessoTimeSheetService {
         }
     }
 
-    
     static async getProcessoTimeSheetByProcessoIdAndColaboradorId(idProcesso, idColaborador) {
         try {
-
             let response = await getAllOrByProcessoIdAndColaboradorId(idProcesso, idColaborador)
-
-
             return {
                 data: response,
                 message: "TIMESHEET.PROCESSO.COLABORADOR.LIST",
                 status: StatusCodes.OK,
             };
-
         } catch (e) {
             return {
                 data: __filename,
@@ -191,6 +230,138 @@ class ProcessoTimeSheetService {
             return {
                 data: response,
                 message: "TIMESHHET.PROCESSO.NOT.FACTURADO.LIST",
+                status: StatusCodes.OK,
+            };
+
+        } catch (e) {
+            return {
+                data: __filename,
+                message: e.message,
+                status: StatusCodes.BAD_REQUEST,
+            };
+        }
+    }
+    static async getTotalTarefas(year, idUser) {
+        try {
+
+            let response = await getTotalTarefas(year, idUser)
+
+            return {
+                data: response,
+                message: "TIMESHHET.PROCESSO.NOT.FACTURADO.LIST",
+                status: StatusCodes.OK,
+            };
+
+        } catch (e) {
+            return {
+                data: __filename,
+                message: e.message,
+                status: StatusCodes.BAD_REQUEST,
+            };
+        }
+    }
+
+    static async getTotalProjectos(year, idUser) {
+        try {
+
+            let response = await getTotalProjectos(year, idUser)
+
+            return {
+                data: response,
+                message: "TIMESHHET.PROCESSO.NOT.FACTURADO.LIST",
+                status: StatusCodes.OK,
+            };
+
+        } catch (e) {
+            return {
+                data: __filename,
+                message: e.message,
+                status: StatusCodes.BAD_REQUEST,
+            };
+        }
+    }
+
+    static async getAllTimeSheets() {
+        try {
+
+            let response = await getAllTimeSheets()
+            return {
+                data: response,
+                message: "TIMESHHET.PROCESSO.NOT.FACTURADO.LIST",
+                status: StatusCodes.OK,
+            };
+
+        } catch (e) {
+            return {
+                data: __filename,
+                message: e.message,
+                status: StatusCodes.BAD_REQUEST,
+            };
+        }
+    }
+    static async getAllTimeSheetsByProcessoId(idProcesso) {
+        try {
+
+            let response = await get()
+            return {
+                data: response,
+                message: "TIMESHHET.PROCESSO.NOT.FACTURADO.LIST",
+                status: StatusCodes.OK,
+            };
+
+        } catch (e) {
+            return {
+                data: __filename,
+                message: e.message,
+                status: StatusCodes.BAD_REQUEST,
+            };
+        }
+    }
+    static async getById(idProcessoTimeSheet) {
+        try {
+
+            let response = await getById(idProcessoTimeSheet)
+            return {
+                data: response,
+                message: "TIMESHHET.PROCESSO.NOT.FACTURADO.LIST",
+                status: StatusCodes.OK,
+            };
+
+        } catch (e) {
+            return {
+                data: __filename,
+                message: e.message,
+                status: StatusCodes.BAD_REQUEST,
+            };
+        }
+    }
+
+    static async getAllTIpoTarefas() {
+        try {
+
+            let response = await getAllTiposTarefas()
+            return {
+                data: response,
+                message: "TIMESHHET.TASK.TYPE.LIST",
+                status: StatusCodes.OK,
+            };
+
+        } catch (e) {
+            return {
+                data: __filename,
+                message: e.message,
+                status: StatusCodes.BAD_REQUEST,
+            };
+        }
+    }
+
+    static async changeStatus(idTimeSheet, status) {
+        try {
+
+            let response = await submeterTimeSheet(idTimeSheet, status)
+            return {
+                data: response,
+                message: "TIMESHHET.CHANGE.TIMESHEET.STATUS.LIST",
                 status: StatusCodes.OK,
             };
 

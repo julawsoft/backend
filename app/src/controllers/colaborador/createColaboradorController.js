@@ -8,20 +8,6 @@ const logger = require('../../utils/logger/logger.js');
 const createDadosIdentificacao = require('../../services/dadoIdentificacao/createDadosIdentificacao.js');
 const createDadosCustoFinanceiro = require('../../services/dadocustofinanceiro/createDadosCustoFinanceiro.js');
 
-const Role = Object.freeze({
-        ADMIN: 'admin',
-        CLIENTE: 'cliente',
-        ADVOGADO: 'advogado',
-        ESTAGIARIO: 'estagiario'
-});
-
-// Enum para status
-const Status = Object.freeze({
-        ACTIVE: 'active',
-        INACTIVE: 'inactive',
-        PENDING: 'pending'
-});
-
 async function createColaboradorController(req, res) {
 
         try {
@@ -42,7 +28,6 @@ async function createColaboradorController(req, res) {
                         funcao: dataBody.funcao,
                         tipoColaboradorId: dataBody.tipoColaboradorId,
                         dataNascimento: dataBody.dataNascimento,
-                        tokenReset: dataBody.tokenReset,
                         status: dataBody.status,
                         taxaHoraria: dataBody.taxaHoraria || null,
                         contactoPessoal: dataBody.contactoPessoal,

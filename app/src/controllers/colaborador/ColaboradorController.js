@@ -18,6 +18,11 @@ class ColaboradorController {
       return responseHttp(res, response.status, response.message, response.data, [])
     
     }
+
+    async getCategoriasColaboradores(req, res) {
+      const response = await ColaboradorService.getCategoriasColaboradores()
+      return responseHttp(res, response.status, response.message, response.data, [])
+    }
               
 }
 

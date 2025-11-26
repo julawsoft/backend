@@ -9,12 +9,9 @@ async function updateClienteController(req, res) {
                 if (!errors.isEmpty()) {
                     return res.status(400).json({ errors: errors.array() });
                 }
-
+                const {id} = req.params
                 const data = req.body
-                console.log("data", data);
-
-                let result = await updateCliente(data);
-
+                let result = await updateCliente( id, data);
                 return res.send(result[0])
         } catch (e) {
 

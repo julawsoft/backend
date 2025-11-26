@@ -1,20 +1,21 @@
-const responseHttp = require('../../utils/http/response');
-const ProcessoEquipasService = require('../../services/processos/ProcessoEquipasService');
+const responseHttp = require('../utils/http/response');
+const ProcessoEquipasService = require('../services/processos/ProcessoEquipasService');
 const { validationResult } = require('express-validator');
 const { StatusCodes } = require('http-status-codes');
-const { errosConst } = require('../../utils/http/erros.Const');
-const ProcessoServive = require('../../services/processos/ProcessoService');
-const ProcessoFacturasServive = require('../../services/processos/ProcessoFacturas');
-const { getPreviewPath } = require('../../utils/http/privew_files')
+const { errosConst } = require('../utils/http/erros.Const');
+const ProcessoServive = require('../services/processos/ProcessoService');
+const ProcessoTimeSheetService = require('../services/processos/ProcessoTimeSheetService');
 
-class ProcessoController {
+class TimeSheetsController {
 
+        
         async addRecursosProcesso(req, res) {
 
                 const errors = validationResult(req);
                 if (!errors.isEmpty()) {
                         return responseHttp(res, StatusCodes.BAD_REQUEST, errosConst.VALIDATION_ERROR, {}, errors.array())
                 }
+
 
                 const dataBody = req.body
                 const response = await ProcessoServive.addRecursosProcesso(
@@ -147,12 +148,8 @@ class ProcessoController {
                                 "processoId": id
                         }
                 )
-                const previewUrl = getPreviewPath(req,  response.data.fileName);
-                const dataReturned = {
-                        path: previewUrl,
-                        fileName: response.data.fileName
-                }
-                return responseHttp(res, response.status, response.message, dataReturned, [])
+
+                return responseHttp(res, response.status, response.message, response.data, [])
         }
 
         async downloadAnexoProcesso(req, res) {
@@ -174,23 +171,16 @@ class ProcessoController {
 
         async removeRecursosProcesso(req, res) {
 
-                /*
                 const errors = validationResult(req);
                 if (!errors.isEmpty()) {
                         return responseHttp(res, StatusCodes.BAD_REQUEST, errosConst.VALIDATION_ERROR, {}, errors.array())
                 }
-                */
 
-                // type === "colaborador")
-                // type === "tarefa")
-                // type === "anexo")
-                // type === "precedente")
-        
-                const {type, id} = req.query
+                const dataBody = req.body
                 const response = await ProcessoServive.removeRecursosProcesso(
                         {
-                                "type": type,
-                                "valueId": id
+                                "type": dataBody.type,
+                                "valueId": dataBody.valueId
                         }
                 )
 
@@ -341,35 +331,131 @@ class ProcessoController {
                 const response = await ProcessoServive.getAllModoFacturacao()
                 return responseHttp(res, response.status, response.message, response.data, [])
         }
-
         async getAllProcessoStatus(req, res) {
                 const processoStatus = [
                         { descricao: 'Ativo', id: 1 },
                         { descricao: 'Proposta', id: 2 },
                         { descricao: 'Suspenso', id: 3 },
                         { descricao: 'Encerrado', id: 3 },
-                ];
+                      ];
 
-                return responseHttp(res, 200, 'LIST.PROCESSO-STATUS.SUCESS', processoStatus, [])
+                return responseHttp(res, 200, 'LIST.PROCESSO-STATUS.SUCESS', processoStatus,[])
         }
 
-        async updateProcessoMetodologias(req, res) {
 
-                const {id} = req.params
-                const data = req.body
 
-                const processoStatus = {
-                        metodologia: data.metodologia,
-                        estrategia: data.estrategia,
-                        factos: data.factos,
-                        objectivo: data.objectivo,
-                        dadosImportantes:data.dadosImportantes
-                };
+        async getAll(req, res) {
+                try{
 
-                const response = await ProcessoServive.updateProcessoMetodologias(processoStatus, id)
-                return responseHttp(res, response.status, response.message, response.data, [])
+                        const {colaboradorId, clienteId, processoId, tarefaId, dataInicio, dataFim, statusId} =  req.query
+                        const responseTimeSheets = await ProcessoTimeSheetService.getProcessoTimeSheets({
+                                colaboradorId,
+                                clienteId,
+                                processoId,
+                                tarefaId,
+                                dataInicio,
+                                dataFim,
+                                statusId,
+                        })
+                        return responseHttp(res, responseTimeSheets.status, responseTimeSheets.message, responseTimeSheets.data, [])
+                }catch(e){
+                        return responseHttp(res, 500, e, {}, e.message)
+                }
         }
+
+        async getAllByProcessoId(req, res) {
+                try{
+                        const {id} = req.params
+                        console.log("id do processo ", id)
+                        const responseTimeSheets = await ProcessoTimeSheetService.getProcessoTimeSheetByProcessoId(id)
+                        return responseHttp(res, responseTimeSheets.status, responseTimeSheets.message, responseTimeSheets.data, [])
+                }catch(e){
+                        return responseHttp(res, 500, e, {}, e.message)
+                }
+        }
+        
+        async getAllByColaboradorId(req, res) {
+                try{
+                        const {id} = req.params
+                        const responseTimeSheets = await ProcessoTimeSheetService.getProcessoTimeSheets({
+                                colaboradorId: id
+                        })
+                        return responseHttp(res, responseTimeSheets.status, responseTimeSheets.message, responseTimeSheets.data, [])
+                }catch(e){
+                        return responseHttp(res, 500, e, {}, e.message)
+                }
+        }
+
+        async getAllByClienteId(req, res) {
+                try{
+                        const {id} = req.params
+                        const responseTimeSheets = await ProcessoTimeSheetService.getAllByClienteId(id)
+                        return responseHttp(res, responseTimeSheets.status, responseTimeSheets.message, responseTimeSheets.data, [])
+                }catch(e){
+                        return responseHttp(res, 500, e, {}, e.message)
+                }
+        }
+
+        async getById(req, res) {
+                try{
+                        const {id} = req.params
+                        const responseTimeSheets = await ProcessoTimeSheetService.getById(id)
+                        return responseHttp(res, responseTimeSheets.status, responseTimeSheets.message, responseTimeSheets.data, [])
+                }catch(e){
+                        return responseHttp(res, 500, e, {}, e.message)
+                }
+        }
+
+        async getAllTIpoTarefas(req, res) {
+                try{
+                        const responseTimeSheets = await ProcessoTimeSheetService.getAllTIpoTarefas()
+                        return responseHttp(res, responseTimeSheets.status, responseTimeSheets.message, responseTimeSheets.data, [])
+                }catch(e){
+                        return responseHttp(res, 500, e, {}, e.message)
+                }
+        }
+
+        async processoTimeSheetNaoFacturado(req, res) {
+                try{
+                        const  {idProcesso, idUser}  = req.query
+                        const response = await ProcessoTimeSheetService.getProcessoTimeSheetNaoFacturado(idProcesso, idUser)
+                        return responseHttp(res, response.status, response.message, response.data, [])
+                }catch(e){
+                        return responseHttp(res, 500, e, {}, e.message)
+                }
+        }
+        /** TOTAL TAREFAS  */
+        async getTotalTarefas(req, res) {
+                try{
+                        const  {year, idUser}  = req.query
+                        const response = await ProcessoTimeSheetService.getTotalTarefas(year, idUser)
+                        return responseHttp(res, response.status, response.message, response.data, [])
+                }catch(e){
+                        return responseHttp(res, 500, e, {}, e.message)
+                }
+        }
+        /** TOTAL PROJECTOS  */
+        async getTotalProjectos(req, res) {
+                try{
+                        const  {year, idUser}  = req.query
+                        const response = await ProcessoTimeSheetService.getTotalProjectos(year, idUser)
+                        return responseHttp(res, response.status, response.message, response.data, [])
+                }catch(e){
+                        return responseHttp(res, 500, e, {}, e.message)
+                }
+        }
+
+        async changeStatus(req, res) {
+                try{
+                        const  {idTimeSheet, status}  = req.query
+                        const response = await ProcessoTimeSheetService.changeStatus(idTimeSheet, status)
+                        return responseHttp(res, response.status, response.message, response.data, [])
+                }catch(e){
+                        return responseHttp(res, 500, e, {}, e.message)
+                }
+        }
+
 
 }
 
-module.exports = ProcessoController;
+module.exports = TimeSheetsController;

@@ -26,12 +26,20 @@ ProcessosTarefas.init({
     type: DataTypes.INTEGER,
     allowNull: false,
   },
+  cliente_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  tipo_tarefa_id: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+  },
   data_para_realizacao: {
     type: DataTypes.DATE,
     allowNull: false,
   },
   status: {
-    type: DataTypes.ENUM('0', '1'),
+    type: DataTypes.ENUM('0', '1', '2'),
     allowNull: false,
     defaultValue: '0',
   },
@@ -66,23 +74,36 @@ ProcessosTarefas.init({
 * @param {string} status
 * @returns {ProcessosTarefas}
 */
-async function createTarefa(
+async function create(
   {
+    processoId,
     descricao,
-    processo_id,
-    status = '0',
-    data_para_realizacao,
-    colaborador_id
+    clienteId,
+    status,
+    dataParaRealizacao,
+    colaboradorId,
+    gestorId,
+    tipoTarefaId
   }
 ) {
 
-  console.log("data realizacao tarefa ... ", descricao )
-  console.log("data realizacao tarefa ... processo_id ", processo_id )
-  console.log("data realizacao tarefa ... ", data_para_realizacao )
-  console.log("data realizacao tarefa ... ", colaborador_id )
+  console.log("data realizacao tarefa ... ", descricao)
+  console.log("data realizacao tarefa ... processo_id ", processoId)
+  console.log("data realizacao tarefa ... ", dataParaRealizacao)
+  console.log("data realizacao tarefa ... ", colaboradorId)
+  console.log("data realizacao tarefa ... ",  new Date())
 
   return await ProcessosTarefas.create({
-    descricao, processo_id, status, data_para_realizacao, colaborador_id
+    "processo_id": processoId,
+    "descricao": descricao,
+    "cliente_id": clienteId,
+    "status": status,
+    "data_para_realizacao": dataParaRealizacao,
+    "colaborador_id": colaboradorId,
+    "gestor_id": gestorId,
+    "tipo_tarefa_id": tipoTarefaId,
+    "created_at": new Date(),
+    "updated_at": new Date(),
   })
 }
 
@@ -143,9 +164,9 @@ async function updateTarefaByProcesso(id, processo_id, descricao, data = new Dat
 }
 
 async function getTarefaById(id) {
-   
+
   return ProcessosTarefas.sequelize.query(
-  `SELECT 
+    `SELECT 
   pt.id, 
    p.ref,
    pt.descricao,
@@ -173,10 +194,10 @@ async function getTarefaById(id) {
     WHERE
       pt.id = ?
   `,
-  {
-    replacements: [id],
-    type: QueryTypes.SELECT
-  })
+    {
+      replacements: [id],
+      type: QueryTypes.SELECT
+    })
 
 }
 
@@ -341,8 +362,6 @@ async function concluirTarefa(id, gestorId, status, dataAprovada) {
 
 async function realizarTarefa(id, colaboradorId, status, dataRealizada) {
 
-  console.log(id, colaboradorId, status, dataRealizada)
-
   const result = ProcessosTarefas.sequelize.query(`
     UPDATE processo_tarefas
     SET 
@@ -363,10 +382,254 @@ async function realizarTarefa(id, colaboradorId, status, dataRealizada) {
 
 }
 
+async function getAllTasks(
+  {
+    colaboradorId,
+    processoId,
+    clienteId,
+    statusId,
+    dataInicio,
+    dataFim,
+    tipoTarefa
+  }) {
+  let query = `
+    SELECT 
+      pt.id, 
+      p.ref,
+      pt.descricao,
+      pt.processo_id, 
+      p.assunto, 
+      p.gestor_id, 
+      cl.nome_completo AS colaborador,
+      cl.id as colaborador_id,
+      c.id as cliente_id,
+      tt.id as tipo_tarefa_id,
+      pt.status as status_id,
+      DATEDIFF(pt.data_para_realizacao, CURDATE()) AS dias_em_falta,
+      CASE 
+      WHEN pt.status = '0' THEN 'Criada'
+      WHEN pt.status = '1' THEN 'Em Progresso'
+      ELSE 'Concluída'
+      END AS estado,
+      ges.nome_completo AS gestor,
+      c.denominacao AS cliente,
+      tt.label AS tipoTarefa,
+      DATE_FORMAT(pt.created_at, '%d/%m/%Y %H:%i:%s') AS data_criada,
+      DATE_FORMAT(pt.data_para_realizacao, '%d/%m/%Y %H:%i:%s') AS data_para_realizacao,
+      DATE_FORMAT(pt.data_realizada, '%d/%m/%Y %H:%i:%s') AS data_realizada,
+      DATE_FORMAT(pt.data_aprovada, '%d/%m/%Y %H:%i:%s') AS data_aprovada
+    FROM processo_tarefas AS pt
+      INNER JOIN processos AS p ON pt.processo_id = p.id
+      INNER JOIN colaboradores AS cl ON pt.colaborador_id = cl.id
+      LEFT JOIN colaboradores AS ges ON pt.gestor_id = ges.id
+      LEFT JOIN clientes AS c ON p.cliente_id = c.id
+      LEFT JOIN tipos_tarefas tt ON pt.tipo_tarefa_id = tt.id
+    WHERE 1=1
+  `;
+
+  const replacements = [];
+
+  if (colaboradorId) {
+    query += " AND pt.colaborador_id = ? ";
+    replacements.push(colaboradorId);
+  }
+  if (processoId && processoId != 'undefined') {
+    query += " AND pt.processo_id = ? ";
+    replacements.push(processoId);
+  }
+  if (clienteId && clienteId != 'undefined') {
+    query += " AND p.cliente_id = ? ";
+    replacements.push(clienteId);
+  }
+  if (statusId && statusId != 'undefined') {
+    query += " AND pt.status = ? ";
+    replacements.push(statusId);
+  }
+  if (tipoTarefa && tipoTarefa != 'undefined') {
+    query += " AND pt.tipo_tarefa_id = ? ";
+    replacements.push(tipoTarefa);
+  }
+  if (dataInicio && dataFim) {
+    query += " AND pt.data_para_realizacao BETWEEN ? AND ? ";
+    replacements.push(dataInicio, dataFim);
+  }
+
+  query += " ORDER BY pt.data_para_realizacao ASC";
+
+  const results = await ProcessosTarefas.sequelize.query(query, {
+    replacements,
+    type: QueryTypes.SELECT,
+  });
+
+  return results;
+}
+
+
+async function getByIdTask(
+  taskId
+  ) {
+  let query = `
+    SELECT 
+    pt.id, 
+    p.ref,
+    pt.descricao,
+    pt.processo_id, 
+    p.assunto, 
+    p.gestor_id, 
+    cl.nome_completo AS colaborador,
+    cl.id as colaborador_id,
+    c.id as cliente_id,
+    tt.id as tipo_tarefa_id,
+    pt.status as status_id,
+    DATEDIFF(pt.data_para_realizacao, CURDATE()) AS dias_em_falta,
+    CASE 
+    WHEN pt.status = '0' THEN 'Criada'
+    WHEN pt.status = '1' THEN 'Em Progresso'
+    ELSE 'Concluída'
+    END AS estado,
+    ges.nome_completo AS gestor,
+    c.denominacao AS cliente,
+    tt.label AS tipoTarefa,
+      DATEDIFF(pt.data_para_realizacao, CURDATE()) AS dias_em_falta,
+      CASE 
+      WHEN pt.status = '0' THEN 'Criada'
+      WHEN pt.status = '1' THEN 'Em Progresso'
+      ELSE 'Concluída'
+      END AS estado,
+      ges.nome_completo AS gestor,
+      c.denominacao AS cliente,
+      tt.label AS tipoTarefa,
+      DATE_FORMAT(pt.created_at, '%d/%m/%Y %H:%i:%s') AS data_criada,
+      DATE_FORMAT(pt.data_para_realizacao, '%d/%m/%Y %H:%i:%s') AS data_para_realizacao,
+      DATE_FORMAT(pt.data_realizada, '%d/%m/%Y %H:%i:%s') AS data_realizada,
+      DATE_FORMAT(pt.data_aprovada, '%d/%m/%Y %H:%i:%s') AS data_aprovada
+    FROM processo_tarefas AS pt
+      INNER JOIN processos AS p ON pt.processo_id = p.id
+      INNER JOIN colaboradores AS cl ON pt.colaborador_id = cl.id
+      LEFT JOIN colaboradores AS ges ON pt.gestor_id = ges.id
+      LEFT JOIN clientes AS c ON p.cliente_id = c.id
+      LEFT JOIN tipos_tarefas tt ON pt.tipo_tarefa_id = tt.id
+    WHERE 1=1
+  `;
+
+  const replacements = [];
+  if (taskId) {
+    query += " AND pt.id = ? ";
+    replacements.push(taskId);
+    }
+  /*
+  if (processoId) {
+    query += " AND pt.processo_id = ? ";
+    replacements.push(processoId);
+  }
+  if (clienteId) {
+    query += " AND p.cliente_id = ? ";
+    replacements.push(clienteId);
+  }
+  if (statusId) {
+    query += " AND pt.status = ? ";
+    replacements.push(statusId);
+  }
+  if (dataInicio && dataFim) {
+    query += " AND pt.data_para_realizacao BETWEEN ? AND ? ";
+    replacements.push(dataInicio, dataFim);
+  }
+
+  query += " ORDER BY pt.data_para_realizacao ASC";
+  */
+
+  const results = await ProcessosTarefas.sequelize.query(query, {
+    replacements,
+    type: QueryTypes.SELECT,
+  });
+
+  return results;
+}
+
+/**
+ * Atualiza uma tarefa pelo ID.
+ * @param {number} id 
+ * @param {Object} fields - Campos a atualizar, ex: { descricao: "nova", status: "1", data_para_realizacao: new Date() }
+ * @returns {Promise<[number, ProcessosTarefas[]]>} 
+ */
+async function updateTask(id, fields) {
+
+  if (!id) throw new Error('ID da tarefa é obrigatório');
+  if (!fields || Object.keys(fields).length === 0) throw new Error('Nenhum campo para atualizar');
+
+  fields.updated_at = new Date();
+
+   const [affectedRows] = await ProcessosTarefas.update(fields, {
+    where: { id }
+  });
+
+  if (affectedRows === 0) {
+    throw new Error('Nenhuma tarefa encontrada para atualizar');
+  }
+
+  const updatedTask = await ProcessosTarefas.findByPk(id);
+  return updatedTask;
+
+}
+
+/**
+ * Remove uma tarefa pelo ID
+ * @param {number} id - ID da tarefa a ser removida
+ * @returns {Promise<boolean>} true se a tarefa foi removida, false caso não exista
+ */
+async function removeTask(id) {
+  if (!id) throw new Error('ID da tarefa é obrigatório');
+
+  const deletedRows = await ProcessosTarefas.destroy({
+    where: { id }
+  });
+
+  return deletedRows > 0; // true se removeu, false se não encontrou
+}
+
+
+/**
+ * Atualiza parcialmente uma tarefa (PATCH)
+ * @param {number} id - ID da tarefa a ser atualizada
+ * @param {Object} fields - Campos que podem ser atualizados: status, data_realizada, data_aprovada
+ * @returns {Promise<ProcessosTarefas>} Tarefa atualizada
+ */
+async function patchTask(id, fields) {
+  if (!id) throw new Error('ID da tarefa é obrigatório');
+
+  // Permitir apenas os campos específicos
+  const allowedFields = ['status', 'data_realizada', 'data_aprovada', 'gestor_id', 'colaborador_id'];
+  const updateData = {};
+
+  for (const key of allowedFields) {
+    if (fields[key] !== undefined) {
+      updateData[key] = fields[key];
+    }
+  }
+
+  if (Object.keys(updateData).length === 0) {
+    throw new Error('Nenhum campo válido para atualizar');
+  }
+
+  updateData.updated_at = new Date();
+
+  const [affectedRows] = await ProcessosTarefas.update(updateData, {
+    where: { id }
+  });
+
+  if (affectedRows === 0) {
+    throw new Error('Tarefa não encontrada');
+  }
+
+  // Retorna a tarefa atualizada
+  const updatedTask = await ProcessosTarefas.findByPk(id);
+  return updatedTask;
+}
+
 
 
 module.exports = {
-  createTarefa,
+  create,
   getAll,
   getAllByKeyValue,
   removeTarefaByProcesso,
@@ -378,5 +641,10 @@ module.exports = {
   getAllTarefaByProcessoId,
   concluirTarefa,
   realizarTarefa,
-  getTarefaByColaboradorGestorId
+  getTarefaByColaboradorGestorId,
+  getAllTasks,
+  getByIdTask,
+  updateTask,
+  removeTask,
+  patchTask
 };

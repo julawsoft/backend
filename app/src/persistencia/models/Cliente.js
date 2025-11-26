@@ -99,16 +99,16 @@ async function create(
 ) {
 
   return await Cliente.create({
-      "denominacao": denominacao,
-      "tipo_id": tipoId,
-      "nif": nif,
-      "endereco": endereco,
-      "pessoa_contacto": pessoaContacto,
-      "contacto_cobranca": contactoCobranca,
-      "e_mail": e_mail,
-      "nota": nota,
-      "status": status,
-      "uuid": uuid,
+    "denominacao": denominacao,
+    "tipo_id": tipoId,
+    "nif": nif,
+    "endereco": endereco,
+    "pessoa_contacto": pessoaContacto,
+    "contacto_cobranca": contactoCobranca,
+    "e_mail": e_mail,
+    "nota": nota,
+    "status": status,
+    "uuid": uuid,
   })
 }
 
@@ -116,8 +116,16 @@ async function create(
 /**
  * @returns {Object} ClienteEntity
  */
-async function getAll() {
-  return await Cliente.findAll()
+async function getAll(tipoClienteId) {
+
+  if (tipoClienteId && tipoClienteId !== 'undefined')
+    return await Cliente.findAll({
+      where: {
+        tipo_id: tipoClienteId
+      }
+    })
+  else
+    return await Cliente.findAll()
 }
 
 /**
@@ -125,7 +133,6 @@ async function getAll() {
  * @returns {string} valor
  */
 async function getAllByKeyValue(chave, valor) {
-  console.log(chave)
   return await Cliente.findAll({
     where: {
       [chave]: valor
@@ -160,7 +167,6 @@ async function updateById(
 
   try {
 
-    console.log(`THIS IS BEFORE UPDATE`);
     const result = Cliente.sequelize.query(`
       UPDATE clientes
       SET 
@@ -175,16 +181,16 @@ async function updateById(
       WHERE id = ? 
     `, {
       replacements: [
-        denominacao,nif,endereco,nota,status,
-        pessoaContacto,tipoId,contactoCobranca,id
+        denominacao, nif, endereco, nota, status,
+        pessoaContacto, tipoId, contactoCobranca, id
       ]
     });
-  
+
     return (await result);
-    
+
   } catch (error) {
-    
-    console.log(`ERROR ON UPDATE: `,error);
+
+    console.log(`ERROR ON UPDATE: `, error);
 
   }
   return result;

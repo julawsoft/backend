@@ -11,7 +11,7 @@ class ProcessoInstituacao extends Model {
   static associate(models) { }
 }
 
-ProcessoEstado.init({
+ProcessoInstituacao.init({
   id: {
     allowNull: false,
     autoIncrement: true,
@@ -49,7 +49,8 @@ async function create(
 /**
  * @returns {ProcessoInstituacao}
  */
-async function getAll() {
+async function getAllInstituicoes() {
+  console.log("a lo")
   return await ProcessoInstituacao.findAll()
 }
 
@@ -68,6 +69,6 @@ async function getAllByKeyValue(chave, valor) {
 
 module.exports = {
   create,
-  getAll,
+  getAllInstituicoes,
   getAllByKeyValue,
 };

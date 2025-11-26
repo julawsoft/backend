@@ -11,8 +11,8 @@ async function getAllColaboradorService() {
 
 }
 
-async function getAllColaborador() {
-        return await getAllQuery();
+async function getAllColaborador(tipo, categoria) {
+        return await getAllQuery(tipo, categoria);
 }
 
 module.exports = getAllColaboradorService;

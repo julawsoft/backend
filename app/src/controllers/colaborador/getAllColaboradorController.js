@@ -7,7 +7,8 @@ const { COLABORADOR } = require('../../utils/http/erros.Const.js')
 async function getAllColaboradorController(req, res) {
 
         try {
-                const responseColabData = await service.getAll();
+                const {tipo, categoria} = req.query
+                const responseColabData = await service.getAll(tipo, categoria);
                 return responseHttp(res, StatusCodes.OK, COLABORADOR.COLABORADOR_LIST_ALL, responseColabData, [])
         } catch (e) {
                 logger.error(e.message)

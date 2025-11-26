@@ -8,7 +8,8 @@ const {
   update,
   getByColaboradorId,
   getByClienteId,
-  getFacturas
+  getFacturas,
+  updateProcessoMetodologias
 } = require("../../persistencia/models/Processos");
 const {
   getAllByKeyValue: TarefaGetByKey,
@@ -36,6 +37,8 @@ const {
 } = require("../../persistencia/models/ProcessosEquipa");
 const saveBase64Image = require("../../utils/saveBase64Image");
 const { createAnexo, getByProcessosId, getAllByKeyValue, removeAnexoByProcesso } = require('../../persistencia/models/ProcessosAnexos');
+const { getAllInstituicoes } = require('../../persistencia/models/ProcessoInstituicoes');
+const { getAllModoFacturacao } = require('../../persistencia/models/ModoFacturacao');
 const { STORAGE_PATH } = require('../../const');
 
 
@@ -155,9 +158,13 @@ class ProcessoServive {
     }
   }
 
-  static async getProcesso() {
+  static async getProcesso({
+    clientId, instituicaoId, fase, estadoId, gestorId, colaboradorId, mFacturacaoId,dataInicio, dataFim
+  }) {
     try {
-      const processos = await getAll();
+      const processos = await getAll({
+        clientId, instituicaoId, fase, estadoId, gestorId, colaboradorId, mFacturacaoId,dataInicio, dataFim
+      });
 
       let processoDTO = [];
 
@@ -740,7 +747,73 @@ class ProcessoServive {
     }
   }
 
+  static async getAllInstituicoes() {
+    try {
+      const instituicoesList = await getAllInstituicoes();
+      console.log(" list a >>> :: >>> ", instituicoesList)
+      return {
+        data: instituicoesList,
+        message: "INSTITUICOES:LIST.SUCCESS.OK",
+        status: StatusCodes.OK,
+      };
+    } catch (e) {
+      console.log("o erro aqui ::: ",e)
+      return {
+        data: __filename,
+        message: e.message,
+        status: StatusCodes.INTERNAL_SERVER_ERROR,
+      };
+    }
+  }
+  static async getAllModoFacturacao() {
+    try {
+      const instituicoesList = await getAllModoFacturacao();
+      console.log(" list a >>> :: >>> ", instituicoesList)
+      return {
+        data: instituicoesList,
+        message: "MODO-FACTURACAO:LIST.SUCCESS.OK",
+        status: StatusCodes.OK,
+      };
+    } catch (e) {
+      console.log("o erro aqui ::: ",e)
+      return {
+        data: __filename,
+        message: e.message,
+        status: StatusCodes.INTERNAL_SERVER_ERROR,
+      };
+    }
+  }
 
+  static async updateProcessoMetodologias(data, id) {
+    try {
+
+
+      console.log("O data >>> ", data)
+      console.log("O data >>> ID ", id)
+
+
+        const dataResponse = await updateProcessoMetodologias(
+          data.metodologia, 
+          data.estrategia,
+          data.factos,
+          data.objectivo,
+          data.dadosImportantes,
+          Number(id)
+        )
+
+      return {
+        data: dataResponse,
+        message: "PROCESSO.UPDATED.SUCCESS.OK",
+        status: StatusCodes.OK,
+      };
+    } catch (e) {
+      return {
+        data: __filename,
+        message: e.message,
+        status: StatusCodes.INTERNAL_SERVER_ERROR,
+      };
+    }
+  }
 
 }
 

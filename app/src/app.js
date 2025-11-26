@@ -8,7 +8,6 @@ const { corsOptions } = require('./cors.js')
 const SequelizeConnection = require('./persistencia/SequelizeConnection.js')
 const KeycloakConnection = require("./infra/keycloak/KeycloakConnection.js") 
 
-
 new KeycloakConnection()
 new SequelizeConnection().init()
 

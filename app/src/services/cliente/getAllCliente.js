@@ -4,10 +4,10 @@ const listByIdTipoCliente = require("../tipoCliente /listByIdTipoCliente.js")
 /**
  * @returns {Object} clienteDTO
 */
-async function getAllCliente() {
+async function getAllCliente(tipoClienteId) {
 
     try {
-        const listClienteData = await getAll()
+        const listClienteData = await getAll(tipoClienteId)
         const clienteDTO = Array()
         for (cliente of listClienteData) {
             let tipoCliente = await  listByIdTipoCliente(cliente.tipo_id)

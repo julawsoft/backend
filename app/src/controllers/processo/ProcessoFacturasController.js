@@ -6,6 +6,21 @@ const ProcessoFacturasServive = require('../../services/processos/ProcessoFactur
 
 class ProcessoFacturasController {
 
+        async saveHonorarios(req, res) {
+
+                const dataBody = req.body
+                let response = await ProcessoFacturasServive.createFacturaProcesso({
+                        "processoId": dataBody.processoId,
+                        "clienteId": dataBody.clienteId,
+                        "colaboradorId": dataBody.colaboradorId,
+                        "custo": dataBody.custo,
+                        "status": dataBody.status,
+                        "items": dataBody.items ?? []                   
+                })
+
+                return responseHttp(res, response.status, response.message, response.data, [])
+        }   
+        
         async createFacturaProcesso(req, res) {
 
                 const errors = validationResult(req);
@@ -92,9 +107,17 @@ class ProcessoFacturasController {
         }  
 
         async getFacturas(req, res) {
-                let response = await ProcessoFacturasServive.getFacturas()
+                let { idProcesso } = req.query;
+                let response = await ProcessoFacturasServive.getFacturas(idProcesso)
+                return responseHttp(res, response.status, response.message, response.data, [])
+        } 
+        
+        async getFacturaOne(req, res) {
+                let { id } = req.params;
+                let response = await ProcessoFacturasServive.getFacturaOne(id)
                 return responseHttp(res, response.status, response.message, response.data, [])
         }  
+  
         async getFacturasByColaborador(req, res) {
                 let { id } = req.params;
                 let response = await ProcessoFacturasServive.getFacturasByColaborador(id)
@@ -103,6 +126,23 @@ class ProcessoFacturasController {
 
         async getModoPagamentos(req, res) {
                 let response = await ProcessoFacturasServive.getModoPagamentos()
+                return responseHttp(res, response.status, response.message, response.data, [])
+        } 
+
+        async getHonorarios(req, res) {
+                const {idProcess, idCliente, idColaborador} = req.query
+                let response = await ProcessoFacturasServive.getHonorarios({idProcess, idCliente, idColaborador})
+                return responseHttp(res, response.status, response.message, response.data, [])
+        }  
+        async getHonorarioInvoice(req, res) {
+                const {id} = req.params
+                let response = await ProcessoFacturasServive.getHonorariosInvoice(id)
+                return responseHttp(res, response.status, response.message, response.data, [])
+        }  
+        async approveHonorarioInvoice(req, res) {
+                const {id} = req.params
+                const {userId} = req.body
+                let response = await ProcessoFacturasServive.approveHonorariosInvoice(id, userId)
                 return responseHttp(res, response.status, response.message, response.data, [])
         }  
         

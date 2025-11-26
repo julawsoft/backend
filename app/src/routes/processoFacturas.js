@@ -7,11 +7,13 @@ const validateCreatePagamentoFactura = require('../middlewares/validatePagamento
 const processoFacturas = express.Router()
 
 const ROUTES_PATH = {
-    PROCESSO_FACTURA: '/processo_factura',
-    PROCESSO_FACTURA_COLABORADOR: '/processo_factura_colaborador',
-    PROCESSO_FACTURA_PAGAMENTO: '/pagamento_factura',
-    PAGAMENTOS_FACTURA: '/pagamentos_facturas_by_id',
-    MODO_PAGAMENTOS: '/modo_pagamentos',
+    PROCESSO_FACTURA: '/processo-factura',
+    PROCESSO_FACTURA_COLABORADOR: '/processo-factura-colaborador',
+    PROCESSO_FACTURA_PAGAMENTO: '/pagamento-factura',
+    PAGAMENTOS_FACTURA: '/pagamentos-facturas-by-id',
+    MODO_PAGAMENTOS: '/modo-pagamentos',
+    HONORARIOS: '/honorarios',
+    HONORARIO_INVOICE: '/honorario_invoice',
 }
 
 processoFacturas.post(ROUTES_PATH.PROCESSO_FACTURA, validateCreateFacturaProcesso, new ProcessoFacturasController().createFacturaProcesso)
@@ -21,6 +23,11 @@ processoFacturas.get(ROUTES_PATH.PROCESSO_FACTURA_PAGAMENTO, new ProcessoFactura
 processoFacturas.get(`${ROUTES_PATH.PAGAMENTOS_FACTURA}/:id`, new ProcessoFacturasController().getPagamentoByIdFactura)
 processoFacturas.get(`${ROUTES_PATH.MODO_PAGAMENTOS}`, new ProcessoFacturasController().getModoPagamentos)
 processoFacturas.get(`${ROUTES_PATH.PROCESSO_FACTURA}`, new ProcessoFacturasController().getFacturas)
+processoFacturas.get(`${ROUTES_PATH.PROCESSO_FACTURA}/:id`, new ProcessoFacturasController().getFacturaOne)
 processoFacturas.get(`${ROUTES_PATH.PROCESSO_FACTURA_COLABORADOR}/:id`, new ProcessoFacturasController().getFacturasByColaborador)
+processoFacturas.get(`${ROUTES_PATH.HONORARIOS}`, new ProcessoFacturasController().getHonorarios)
+processoFacturas.post(`${ROUTES_PATH.HONORARIOS}`, new ProcessoFacturasController().saveHonorarios)
+processoFacturas.get(`${ROUTES_PATH.HONORARIO_INVOICE}/:id`, new ProcessoFacturasController().getHonorarioInvoice)
+processoFacturas.put(`${ROUTES_PATH.HONORARIO_INVOICE}/:id`, new ProcessoFacturasController().approveHonorarioInvoice)
 
 module.exports = processoFacturas;

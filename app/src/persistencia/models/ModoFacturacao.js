@@ -11,7 +11,7 @@ class ModoFacturacao extends Model {
   static associate(models) { }
 }
 
-ProcessoEstado.init({
+ModoFacturacao.init({
   id: {
     allowNull: false,
     autoIncrement: true,
@@ -22,9 +22,15 @@ ProcessoEstado.init({
     type: DataTypes.STRING,
     allowNull: false,
   },
-  obesevacao: {
-    type: DataTypes.STRING,
-    allowNull: true,
+  is_payment: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    defaultValue: 1,
+  },
+  is_unique_payment: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    defaultValue: 1,
   },
 }, {
   sequelize,
@@ -57,7 +63,7 @@ async function create(
 /**
  * @returns {ModoFacturacao}
  */
-async function getAll() {
+async function getAllModoFacturacao() {
   return await ModoFacturacao.findAll()
 }
 
@@ -76,6 +82,6 @@ async function getAllByKeyValue(chave, valor) {
 
 module.exports = {
   create,
-  getAll,
+  getAllModoFacturacao,
   getAllByKeyValue,
 };
