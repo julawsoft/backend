@@ -20,8 +20,8 @@ infra/sql_volume
 
 app/API.md
 app/src/infra/keycloak/config.json
-#docker-compose.yml
-infra/docker-compose.yml
+# docker-compose.yml
+# infra/docker-compose.yml
 start-app.sh
 start-db.sh
 
