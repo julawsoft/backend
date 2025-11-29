@@ -39,8 +39,6 @@ async function createColaborador({
     let keyCloakColaborador;
   try {
 
-    /*
-
     const defaultPassword = "julaw";
     const role = funcao;
     const [firstName, lastName] = nomeCompleto.split(" ");
@@ -48,16 +46,14 @@ async function createColaborador({
     keyCloakColaborador = await createKeycloakColaborador({
       username: username,
       password: defaultPassword,
-      email: "",
+      email: emailCorporativo ??  "",
       firstName: firstName,
       lastName: lastName ?? username,
-      groups: role
+      groups: role.toString().toLowerCase() === "root" ? [ROLES.ROOT] : [switchRole(role)]
     });
     
-    */
-
-    // console.log("keyCloakColaborador ", keyCloakColaborador)
-    // console.log("keyCloakColaborador here ...  ", keyCloakColaborador.uuid)
+    if(!keyCloakColaborador.uuid)
+      throw new Error("Erro ao criar colaborador no Keycloak");
 
     const dataToSave = {
       username,
@@ -75,13 +71,11 @@ async function createColaborador({
       nCedulaOrdem,
       emailPessoal,
       emailCorporativo,
-      "uuid": Math.random().toString().slice(2) + new Date().getTime().toString(),
-      // uuid: keyCloakColaborador.uuid.toString(),
+      //"uuid": Math.random().toString().slice(2) + new Date().getTime().toString(),
+      uuid: keyCloakColaborador.uuid.toString(),
       inicial: inicial?? makeInitialColaborador(nomeCompleto),
       categoriaId
     };
-
-    console.log("dataToSave ::", dataToSave.uuid)
 
     const dataColaborador = await create({ ...dataToSave });
    
@@ -91,16 +85,12 @@ async function createColaborador({
       status: StatusCodes.CREATED
     };
   } catch (e) {
-    console.log("error creating colaborador", e);
-    let message = e.toString().includes("User exists with same username") ? "Nome de usuário já existe, altere-o" : e.message ?? e;
-    if (!e.toString().includes("User exists with same username"))
-        removeKeycloakColaborador(keyCloakColaborador.uuid);
+    if(e.toString().includes("User exists with same username")) 
+        throw new Error("Nome de usuário já existe, altere-o")
+    if(e.toString().includes("User exists with same email")) 
+      throw new Error("E-mail de usuário já existe, altere-o")
     
-    return {
-        data: {},
-        message: message,
-        status: StatusCodes.BAD_REQUEST
-      };
+   throw(e.responseData)
   }
 }
 
@@ -108,12 +98,14 @@ function switchRole(role) {
   switch (role) {
     case ROLES.ROOT:
       return ROLES.ROOT;
-    case ROLES.ADV_ESTAGIARIO:
-      return ROLES.ADV_ESTAGIARIO;
-    case ROLES.ADV_JUNIOR:
-      return ROLES.ADV_JUNIOR;
-    case ROLES.ADV_SENIOR:
-      return ROLES.ADV_SENIOR;
+    case ROLES.ADVOGADO:
+      return ROLES.ADVOGADO;
+    case ROLES.ESTAGIARIO:
+      return ROLES.ESTAGIARIO;
+    case ROLES.CONSULTOR:
+      return ROLES.CONSULTOR;
+    case ROLES.CLIENTE:
+      return ROLES.CLIENTE;
     default:
       return ROLES.ADMIN;
   }

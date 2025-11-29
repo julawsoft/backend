@@ -10,10 +10,20 @@ async function loginKeycloak({username, password }) {
         const returnUserKeycloak = await Keycloak.login(username, password)
         return returnUserKeycloak 
     }catch (e) {
+        
+        console.log("Teste de erro no login keycloak ", e)
+        console.log("Teste de erro no login keycloak ", e.errorMessage)
+        
         if(String(e).includes("Invalid user credentials"))
             throw new Error("Invalid user credentials")
 
-        throw new Error(e.errorMessage)
+        if(String(e).includes("Failed to fetch"))
+            throw new Error("Keycloak server is unavailable")
+    
+        if(String(e).includes("invalid_grant (Account disabled)"))
+            throw new Error("Usuário desativado")
+
+        throw new Error(e.errorMessage ?? e.message ?? e)
     }
 }
 

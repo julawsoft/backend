@@ -13,13 +13,12 @@ async function createKeycloakColaborador({username, password, email, firstName, 
 
     try {
         const returnUserKeycloak = await Keycloak.createUser(username, password, email, firstName, lastName, groups)
-        return { "uuid": returnUserKeycloak.id }
+        if(!returnUserKeycloak.status)
+            throw new Error("Erro ao criar o usuario")
+        return { "uuid": returnUserKeycloak.userId }
     }catch (e) { 
-        console.log("error creating keycloak", e.errorMessage)
-        if(e.toString().includes("User exists with same username")) {
-            throw new Error("Usuário já existe no Keycloak")
-        }
-        throw new Error(e.errorMessage)
+       throw(e)
     }
 }
+
 module.exports = createKeycloakColaborador

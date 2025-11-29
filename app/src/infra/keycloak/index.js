@@ -1,180 +1,143 @@
-const KeycloakConnection = require('./KeycloakConnection.js');
-const { Issuer } = require('openid-client');
+// src/infra/keycloak/Keycloak.js
+
+const { createKeycloakClient } = require("./KeycloakConnection.js");
+const { Issuer } = require("openid-client");
 const { jwtDecode } = require("jwt-decode");
+const { realm, clientId, clientSecret, discover, grantType } = require("./config.json");
 
-const { realm, authServerURL, clientId, userAdmin, pwdAdmin, grantType, clientSecret, discover } = require('./config.json');
-
-/**
- * Gerenciador integracao keycloak.
- * @class
- */
 class Keycloak {
 
-  /**
-  *  @param {string} username 
-  *  @param {string} password 
-  *  @param {string} email 
-  *  @param {string} firstName 
-  *  @param {string} lastName 
-  *  @param {string[]} groups 
-  */
-  static async createUser(username, password, email, firstName, lastName, groups) {
-
-    if (username == null || username == undefined) return new Error("Username cannot be null or undefined");
-
-    const userDataToSave = {
-      enabled: true,
-      emailVerified: true,
-      username: username,
-      email: email,
-      firstName: firstName,
-      lastName: lastName,
-      groups: [groups],
-      credentials: [
-        {
-          type: "password",
-          temporary: false,
-          value: password,
-        },
-      ],
-    }
+  // ----------------------------------------------------------------------------
+  // 🔹 CREATE USER
+  // ----------------------------------------------------------------------------
+  static async createUser(username, password, email, firstName, lastName, groupName) {
+    if (!username) throw new Error("username is required");
 
     try {
+      const kc = await createKeycloakClient();
 
-      const keycloak =  new KeycloakConnection()
-      const keycloakConnection = await keycloak.init()
-
-      const keycloakResponse = await keycloakConnection.users.create(realm, userDataToSave)
-      return keycloakResponse;
-    } catch (e) {
-      throw e;
-    }
-
-  }
-
-
-  static async removeUser(userId) {
-
-    if (userId == null || userId == undefined) return new Error("userId cannot be null or undefined");
-
-    try {
-
-      const keycloak =  new KeycloakConnection()
-      const keycloakConnection = await keycloak.init()
-
-      const keycloakResponse = await keycloakConnection.users.remove(realm, userId)
-      return keycloakResponse;
-    } catch (e) {
-      throw e;
-    }
-
-  }
-
-
-  /**
-  *  @param {string} username 
-  *  @param {string} password 
-  */
-  static async login(username, password) {
-
-    try {
-
-      const keycloakIssuer = await Issuer.discover(
-        `${discover}`,
-      );
-
-      const cliente = new keycloakIssuer.Client({
-        client_id: `${clientId}`,
-        client_secret: `${clientSecret}`,
+      const user = await kc.users.create({
+        realm,
+        enabled: true,
+        emailVerified: true,
+        username,
+        email,
+        firstName,
+        lastName,
       });
 
-      const tokenSet = await cliente.grant({
+      const allGroups = await kc.groups.find({ realm });
+      const group = allGroups.find(g => g.name.toLowerCase() === groupName[0].toLowerCase());
+
+      if (!group)
+        throw new Error("Group not found")
+      
+      await kc.users.addToGroup({
+          realm,
+          id: user.id,
+          groupId: group.id,
+      });
+      
+      await kc.users.resetPassword({
+        realm,
+        id: user.id,
+        credential: {
+          type: "password",
+          value: password,
+          temporary: false,
+        },
+      });
+
+      return {
+        status: true,
+        userId: user.id,
+        group: groupName,
+      };
+
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  // ----------------------------------------------------------------------------
+  // 🔹 REMOVE USER
+  // ----------------------------------------------------------------------------
+  static async removeUser(userId) {
+    if (!userId) throw new Error("userId is required");
+
+    try {
+      const kc = await createKeycloakClient();
+      await kc.users.del({ realm, id: userId });
+
+      return { status: true };
+    } catch (e) {
+      console.error("Error removing user:", e);
+      throw e;
+    }
+  }
+
+  // ----------------------------------------------------------------------------
+  // 🔹 LOGIN (openid-client)
+  // ----------------------------------------------------------------------------
+  static async login(username, password) {
+    try {
+      const keycloakIssuer = await Issuer.discover(discover);
+
+      const client = new keycloakIssuer.Client({
+        client_id: clientId,
+        client_secret: clientSecret,
+      });
+
+      const tokenSet = await client.grant({
         grant_type: grantType,
         username,
         password,
-        scope: 'openid profile email',
+        scope: "openid profile email",
       });
 
-      const userInfo = await cliente.userinfo(tokenSet.access_token)
+      const userInfo = await client.userinfo(tokenSet.access_token);
       const decoded = jwtDecode(tokenSet.access_token);
 
-      const roles = decoded.resource_access[clientId] && decoded.resource_access[clientId].roles
-        ? decoded.resource_access[clientId].roles
-        : [];
+      const roles =
+        decoded.resource_access?.[clientId]?.roles || [];
 
       return {
-        tokenSet: tokenSet,
-        userInfo: userInfo,
-        //groups: groups ? groups.map(group => group.name) : [],
-        roles: [...roles],
-      }
+        token: tokenSet,
+        userInfo,
+        roles,
+      };
 
     } catch (e) {
-      console.log(e)
+      console.error("Login error:", e);
       throw e;
     }
-
   }
 
+  // ----------------------------------------------------------------------------
+  // 🔹 UPDATE PASSWORD
+  // ----------------------------------------------------------------------------
+  static async updatePassword(userId, password) {
+    if (!userId || !password) throw new Error("userId and password are required");
 
-  static async updatePassword(password, userId) {
     try {
-      const keycloak =  new KeycloakConnection()
-      const keycloakConnection = await keycloak.init()
+      const kc = await createKeycloakClient();
 
-      console.log(">>>>>>>>>><<<<<<<<<<<<<<<<<< ", password, userId)
+      await kc.users.resetPassword({
+        realm,
+        id: userId,
+        credential: {
+          type: "password",
+          value: password,
+          temporary: false,
+        },
+      });
 
-     // console.log(">>>>>>>>>><<<<<<<<<<<<<<<<<<", await keycloakConnection.users.resetPassword(realm, {userId}))
-
-        const result =  await keycloakConnection.users.resetPassword(
-          realm,
-          userId,
-          {
-            type: 'password',
-            value: password,
-            temporary: false, // Define se o usuário precisará trocar a senha no próximo login
-          },
-      );
-
-      return {status: true};
-    } catch (error) {
-      console.log("erro", error)
-      return { status: false, data: [], message: error };
+      return { status: true };
+    } catch (err) {
+      console.error("Password update error:", err);
+      return { status: false, message: err.message };
     }
   }
-
-  async getUserGroups(userId) {
-
-  }
-  async getUserRoles(userId) {
-
-  }
-  async getRolesByGroup(groupId) {
-
-  }
-  async deleteUser(username) { }
-  async updateUser(username, email, firstName, lastName) { }
-  async getUsers() { }
-  async getClient(clientId) { }
-  async updateClient(clientId, clientName, enabled, redirectUris, webOrigins) { }
-  async deleteClient(clientId) { }
-  async getRealmRoles() { }
-  async getRealmUsers() { }
-  async getRealmClients() { }
-  async getRealmClient(clientId) { }
-  async getRealmClientSecret(clientId) { }
-  async updateRealmClientSecret(clientId, newSecret) { }
-  async getRealmUser(username) { }
-  async updateRealmUser(username, firstName, lastName, email) { }
-  async deleteRealmUser(username) { }
-  async getRealmUserGroups(username) { }
-  async getRealmUserRealmRoles(username) { }
-  async getRealmUserClientRoles(username, clientId) { }
-  async getRealmUserFederatedIdentities(username) { }
-  async getRealmUserFederatedIdentity(username, federatedId) { }
-  async deleteRealmUserFederatedIdentity(username, federatedId) { }
-  async getRealmUserProtocolMappers(username) { }
-
 }
 
 module.exports = Keycloak;

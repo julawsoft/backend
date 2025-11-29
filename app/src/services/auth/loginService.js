@@ -14,22 +14,19 @@ async function loginService({ username, password }) {
         password,
     })
 
-    
     const dataColaborador = await getAllByKeyValueColaborador("uuid", returnLogin.userInfo.sub)
-    console.log("O login ", dataColaborador)
     if(dataColaborador) {
         return {
-                ...dataColaborador.dataValues, 
+                ...dataColaborador, 
                 auth: {
-                    accessToken: returnLogin.tokenSet.access_token,
-                    refreshToken: returnLogin.tokenSet.refresh_token,
+                    accessToken: returnLogin.token.access_token,
+                    refreshToken: returnLogin.token.refresh_token,
                     userInfo: returnLogin.userInfo,
-                   // groups: returnLogin.groups,
+                    groups: returnLogin.groups,
                     roles: returnLogin.roles,
                 }
         }
     }else{
-        // verificar se não é cliente
         const dataCliente = await getAllByKeyValueCliente("uuid", returnLogin.userInfo.sub)
 
         if(!dataCliente.length) throw new Error("Cliente não enconstrado no Banco de Dados")
@@ -66,7 +63,7 @@ async function loginService({ username, password }) {
                     accessToken: returnLogin.tokenSet.access_token,
                     refreshToken: returnLogin.tokenSet.refresh_token,
                     userInfo: returnLogin.userInfo,
-                   // groups: returnLogin.groups,
+                    groups: returnLogin.groups,
                     roles: returnLogin.roles,
                 }
         }

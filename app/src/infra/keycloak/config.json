@@ -1,10 +1,10 @@
 {
   "realm": "julaw-realm",
-  "authServerURL": "https://5.252.53.178:8443",
+  "authServerURL": "http://localhost:8080",
   "clientId": "julaw-client",
-  "clientSecret": "OWKhQMktmEstSdjADMVKKPQ9vFvFKox5",
-  "userAdmin": "adminjl",
+  "clientSecret": "ncMPmpTo10DTSHO1eD8H2lWAMCnk6Az6",
+  "userAdmin": "adminjulaw",
   "pwdAdmin": "Zsxdc@law1",
   "grantType": "password",
-  "discover": "https://5.252.53.178:8443/realms/julaw-realm"
+  "discover": "http://localhost:8080/realms/julaw-realm"
 }

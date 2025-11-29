@@ -6,9 +6,10 @@ const PORT = process.env.API_PORT || 3000
 const ROLES = {
     ROOT: "root",
     ADMIN: "administrativo",
-    ADV_JUNIOR: "adv_junior",
-    ADV_SENIOR: "adv_senior",
-    ADV_ESTAGIARIO: "adv_estagiario",
+    ADVOGADO: "advogado",
+    ESTAGIARIO: "estagiario",
+    CONSULTOR: "consultor",
+    CLIENTE: "cliente",
 }
 
 const STORAGE_PATH = path.join(__dirname, '/storage');

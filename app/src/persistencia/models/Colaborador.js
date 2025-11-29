@@ -301,7 +301,7 @@ async function getById(id) {
     colaboradores c
     LEFT JOIN tipo_colaboradores tc ON c.tipo_colaborador_id = tc.id
     LEFT JOIN colaborador_categorias cc ON c.categoria_id = cc.id
-     where c.id = ${id}
+     where c.id = "${id}" OR c.uuid = "${id}"
   `);
 
   return result[0];

@@ -1,49 +1,31 @@
-// const {KcAdminClient} = require('@keycloak/keycloak-admin-client')
-const KcAdminClient = require("keycloak-admin-client");
-const {
-  realm,
-  authServerURL,
-  clientId,
-  userAdmin,
-  pwdAdmin,
-  grantType,
-  clientSecret
-} = require("./config.json");
-const logger = require("../../utils/logger/logger");
+let kcInstance = null;
 
-console.log(realm, authServerURL, clientId, userAdmin, pwdAdmin);
-process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
-
-class KeycloakConnection {
-  static instance = null;
-
-  constructor() { }
-
-  async init() {
-    return new Promise((resolve) => {
-      KcAdminClient({
-        baseUrl: authServerURL,
-        realmName: realm,
-        username: userAdmin,
-        password: pwdAdmin,
-        grant_type: grantType,
-        client_id: clientId,
-        client_secret: clientSecret
-      })
-        .then((response) => {
-          console.log("keycloak response >>>  ", response);
-          KeycloakConnection.instance = response;
-          resolve(response);
-          logger.info(`keycloak server connected successfully`);
-        })
-        .catch((error) => {
-          logger.error(`${error.error ?? error}`);
-        })
-        .finally(() => {
-          logger.http(`keycloak server`);
-        });
-    });
+async function createKeycloakClient() {
+  if (kcInstance) {
+    return kcInstance;
   }
+
+  const { default: KcAdminClient } = await import("@keycloak/keycloak-admin-client");
+
+  const kc = new KcAdminClient({
+    baseUrl: process.env.KEYCLOAK_BASE_URL,
+    realmName: process.env.KEYCLOAK_REALM,
+  });
+
+  await kc.auth({
+    grantType: "password",
+    clientId: process.env.KEYCLOAK_CLIENT_ID,
+    clientSecret: process.env.KEYCLOAK_CLIENT_SECRET,
+    username: process.env.KEYCLOAK_USER,
+    password: process.env.KEYCLOAK_PASSWORD
+  });
+
+  kc.setConfig({
+    realmName: process.env.KEYCLOAK_REALM,
+  });
+
+  kcInstance = kc; // Singleton
+  return kcInstance;
 }
 
-module.exports = KeycloakConnection;
+module.exports = { createKeycloakClient };
