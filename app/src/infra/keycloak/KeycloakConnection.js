@@ -28,4 +28,6 @@ async function createKeycloakClient() {
   return kcInstance;
 }
 
+console.log("At KeycloakConnection.js",  process.env.KEYCLOAK_BASE_URL);
+
 module.exports = { createKeycloakClient };

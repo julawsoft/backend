@@ -10,10 +10,6 @@ async function loginKeycloak({username, password }) {
         const returnUserKeycloak = await Keycloak.login(username, password)
         return returnUserKeycloak 
     }catch (e) {
-        
-        console.log("Teste de erro no login keycloak ", e)
-        console.log("Teste de erro no login keycloak ", e.errorMessage)
-        
         if(String(e).includes("Invalid user credentials"))
             throw new Error("Invalid user credentials")
 
