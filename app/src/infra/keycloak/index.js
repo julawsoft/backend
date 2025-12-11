@@ -14,8 +14,7 @@ class Keycloak {
     if (!username) throw new Error("username is required");
 
     try {
-      const kc = await createKeycloakClient();
-
+     const kc = await createKeycloakClient();
       const user = await kc.users.create({
         realm,
         enabled: true,

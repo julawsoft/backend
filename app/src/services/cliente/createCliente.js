@@ -31,6 +31,7 @@ async function createCliente (
 
         try {
 
+          /*
           const defaultPassword = "julaw"
           const role = "client_julaw"
       
@@ -42,8 +43,9 @@ async function createCliente (
               "lastName": pessoaContacto,
               "groups": role
           })
-
           console.log("keyCloakUser keyCloakUser ", keyCloakUser)
+          return 0
+          */
 
             const newCliente = await create({
                 "denominacao": denominacao,
@@ -55,7 +57,8 @@ async function createCliente (
                 "e_mail": e_mail,
                 "nota": nota,
                 "status": status,
-                "uuid": keyCloakUser.uuid.toString()
+                "uuid": Math.random().toString().slice(2) + new Date().getTime().toString()
+               // "uuid": keyCloakUser.uuid.toString()
             })
             
             let tipoCliente = await  listByIdTipoCliente(newCliente.tipo_id)

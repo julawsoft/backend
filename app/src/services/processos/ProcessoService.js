@@ -82,12 +82,10 @@ class ProcessoServive {
     dataEmissaoFactura,
     nProcessoJudicial
   }) {
-    // Implementar logica para criacao do processo
-    // Inserir dados no banco de dados
+
     try {
 
-      console.log("data para criar o processo:: ", nProcessoJudicial )
-
+      let totalValue = valorTotal === "" ? 0 : valorTotal
       const processoCreated = await create({
         assunto,
         area,
@@ -109,7 +107,7 @@ class ProcessoServive {
         dataImportantes,
         statusId,
         horasMes,
-        valorTotal,
+        valorTotal: totalValue,
         dataEmissaoFactura,
         nProcessoJudicial
       });

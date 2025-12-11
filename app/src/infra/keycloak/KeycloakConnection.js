@@ -24,10 +24,8 @@ async function createKeycloakClient() {
     realmName: process.env.KEYCLOAK_REALM,
   });
 
-  kcInstance = kc; // Singleton
+  kcInstance = kc;
   return kcInstance;
 }
-
-console.log("At KeycloakConnection.js",  process.env.KEYCLOAK_BASE_URL);
 
 module.exports = { createKeycloakClient };

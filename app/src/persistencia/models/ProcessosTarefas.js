@@ -87,12 +87,6 @@ async function create(
   }
 ) {
 
-  console.log("data realizacao tarefa ... ", descricao)
-  console.log("data realizacao tarefa ... processo_id ", processoId)
-  console.log("data realizacao tarefa ... ", dataParaRealizacao)
-  console.log("data realizacao tarefa ... ", colaboradorId)
-  console.log("data realizacao tarefa ... ",  new Date())
-
   return await ProcessosTarefas.create({
     "processo_id": processoId,
     "descricao": descricao,
@@ -107,7 +101,6 @@ async function create(
   })
 }
 
-
 /**
  * @returns {ProcessosTarefas}
  */
@@ -115,7 +108,6 @@ async function getAll() {
   return await ProcessosTarefas.findAll()
 }
 
-// here ...
 /**
  * @returns {string} chave
  * @returns {string} valor

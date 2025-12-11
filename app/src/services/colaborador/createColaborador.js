@@ -89,6 +89,12 @@ async function createColaborador({
         throw new Error("Nome de usuário já existe, altere-o")
     if(e.toString().includes("User exists with same email")) 
       throw new Error("E-mail de usuário já existe, altere-o")
+
+    if(e.toString().includes("Unable to find matching target resource method")) 
+      throw new Error("Auth - Unable to find matching target resource method")
+    
+    if(e.toString().includes("HTTP 403 Forbidden")) 
+      throw new Error("Auth - HTTP 403 Forbidden")
     
    throw(e.responseData)
   }

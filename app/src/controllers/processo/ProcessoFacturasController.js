@@ -130,8 +130,9 @@ class ProcessoFacturasController {
         } 
 
         async getHonorarios(req, res) {
-                const {idProcess, idCliente, idColaborador} = req.query
-                let response = await ProcessoFacturasServive.getHonorarios({idProcess, idCliente, idColaborador})
+                const {idProcess, idCliente, idColaborador, statusId, dataInicio, dataFim} = req.query
+
+                let response = await ProcessoFacturasServive.getHonorarios({idProcess, idCliente, idColaborador,  statusId, dataInicio, dataFim})
                 return responseHttp(res, response.status, response.message, response.data, [])
         }  
         async getHonorarioInvoice(req, res) {

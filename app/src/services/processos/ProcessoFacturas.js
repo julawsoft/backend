@@ -278,11 +278,11 @@ class ProcessoFacturasServive {
    * @param {*} idColaborador 
    * @returns 
    */
-  static async getHonorarios({idProcess, idCliente, idColaborador}) {
+  static async getHonorarios({idProcess, idCliente, idColaborador,  statusId, dataInicio, dataFim}) {
 
     try {
 
-      let response = await getHonorarios({idProcess, idCliente, idColaborador})
+      let response = await getHonorarios({idProcess, idCliente, idColaborador,  statusId, dataInicio, dataFim})
      
           return {
             data: response,
@@ -307,6 +307,8 @@ class ProcessoFacturasServive {
     try {
 
       let resultGetHonorarios = await getHonorariosInvoice(id)
+
+      console.log("O resultado do get honorarios invoice ", resultGetHonorarios)
 
       let items =  await getFacturaItemsByFacturaId(resultGetHonorarios[0].processo_factura_id)
       let pagamentos =  await getPagamentoByIdFactura(resultGetHonorarios[0].processo_factura_id)

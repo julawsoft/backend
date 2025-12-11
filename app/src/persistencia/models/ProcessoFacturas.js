@@ -242,24 +242,35 @@ pf.created_at desc`;
  * @param {*} idColaborador 
  * @returns 
  */
-async function getHonorarios({idProcess, idCliente, idColaborador}) {
+async function getHonorarios({idProcess, idCliente, idColaborador,  statusId, dataInicio, dataFim}) {
     // Construção dinâmica dos filtros
     const whereClauses = [];
     const replacements = {};
   
-    if (idProcess) {
+    if (idProcess &&  idProcess !== 'undefined') {
       whereClauses.push('p.id = :idProcess');
       replacements.idProcess = idProcess;
     }
   
-    if (idCliente) {
+    if (idCliente &&  idCliente !== 'undefined') {
       whereClauses.push('c.id = :idCliente');
       replacements.idCliente = idCliente;
     }
   
-    if (idColaborador) {
+    if (idColaborador &&  idColaborador !== 'undefined') {
       whereClauses.push('cd.id = :idColaborador');
       replacements.idColaborador = idColaborador;
+    }
+
+    if (dataInicio && dataFim && dataInicio !== 'undefined' && dataFim !== 'undefined') {
+      whereClauses.push('pf.created_at >= :dataInicio AND pf.created_at <= :dataFim');
+      replacements.dataInicio = dataInicio;
+      replacements.dataFim = dataFim;
+    }
+
+    if (statusId && statusId !== '' && statusId !== 'undefined') {
+      whereClauses.push('pf.status = :statusId');
+      replacements.statusId = statusId;
     }
   
     const whereClause = whereClauses.length ? `WHERE ${whereClauses.join(' AND ')}` : '';
@@ -340,11 +351,13 @@ async function getHonorariosInvoice(id) {
   const replacements = {};
 
   if (id) {
-    whereClauses.push('p.id = :id');
+    whereClauses.push('pf.id = :id');
     replacements.id = id;
   }
 
   const whereClause = `WHERE ${whereClauses}`;
+
+
 
   const queryString = `
   SELECT 

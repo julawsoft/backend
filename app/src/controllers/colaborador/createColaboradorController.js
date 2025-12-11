@@ -5,8 +5,8 @@ const { StatusCodes } = require('http-status-codes');
 const { errosConst, COLABORADOR } = require('../../utils/http/erros.Const.js');
 const createDadosContacto = require('../../services/dadoContacto/createDadosContacto.js');
 const logger = require('../../utils/logger/logger.js');
-const createDadosIdentificacao = require('../../services/dadoIdentificacao/createDadosIdentificacao.js');
-const createDadosCustoFinanceiro = require('../../services/dadocustofinanceiro/createDadosCustoFinanceiro.js');
+// const createDadosIdentificacao = require('../../services/dadoIdentificacao/createDadosIdentificacao.js');
+// const createDadosCustoFinanceiro = require('../../services/dadocustofinanceiro/createDadosCustoFinanceiro.js');
 
 async function createColaboradorController(req, res) {
 
@@ -16,10 +16,7 @@ async function createColaboradorController(req, res) {
                         return responseHttp(res, StatusCodes.BAD_REQUEST, errosConst.VALIDATION_ERROR, {}, errors.array())
                 }
                 const dataBody = req.body
-                // verificar o tipo de colaborador Id
-                // verificar a funcao
 
-                // levar as function para o service ou crie um use-case
                 const dataReturned = await createColaborador({
                         username: dataBody.userName,
                         nomeCompleto: dataBody.nomeCompleto,
