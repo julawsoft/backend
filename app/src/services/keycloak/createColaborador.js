@@ -17,6 +17,7 @@ async function createKeycloakColaborador({username, password, email, firstName, 
             throw new Error("Erro ao criar o usuario")
         return { "uuid": returnUserKeycloak.userId }
     }catch (e) { 
+        console.log("03", e)
        throw(e)
     }
 }

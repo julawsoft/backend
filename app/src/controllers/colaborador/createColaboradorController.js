@@ -43,6 +43,7 @@ async function createColaboradorController(req, res) {
                 }
 
         } catch (e) {
+                console.log("01", e)
                 logger.error({
                         label: "error", message: `${COLABORADOR.COLABORADOR_ERROR_CREATED} : ${e.message}`
                 })

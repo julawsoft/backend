@@ -54,6 +54,7 @@ class Keycloak {
       };
 
     } catch (err) {
+      console.log("01", err)
       throw err;
     }
   }

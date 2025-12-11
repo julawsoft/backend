@@ -85,6 +85,7 @@ async function createColaborador({
       status: StatusCodes.CREATED
     };
   } catch (e) {
+    console.log("02", e)
     if(e.toString().includes("User exists with same username")) 
         throw new Error("Nome de usuário já existe, altere-o")
     if(e.toString().includes("User exists with same email")) 

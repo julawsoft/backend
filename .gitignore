@@ -9,7 +9,6 @@ app/jsdocs
 
 app/src/storage
 
-
 db/data
 
 infra/kc_volume/*
